@@ -1,0 +1,5 @@
+# sensitive files
+.env
+
+# npm stuff
+node_modules/

@@ -1,10 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Index } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Index, BaseEntity } from 'typeorm';
 import { UserHost } from './UserHost';
 import { Tag } from './Tag';
 import { TagHost } from './TagHost';
 
 @Entity({ name: 'users' })
-export class User {
+export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 

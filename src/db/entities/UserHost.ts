@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, Index } from 'typeorm';
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    JoinColumn,
+    Index,
+    BaseEntity,
+} from 'typeorm';
 import { User } from './User';
 import { Host } from './Host';
 
@@ -12,7 +20,7 @@ export enum PermLevel {
 
 @Entity({ name: 'user_hosts' })
 @Index(['userId', 'hostId'], { unique: true })
-export class UserHost {
+export class UserHost extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 

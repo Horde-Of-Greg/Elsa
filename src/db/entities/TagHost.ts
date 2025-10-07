@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, Index } from 'typeorm';
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    JoinColumn,
+    Index,
+    BaseEntity,
+} from 'typeorm';
 import { Tag } from './Tag';
 import { User } from './User';
 import { Host } from './Host';
@@ -11,7 +19,7 @@ export enum TagHostStatus {
 
 @Entity({ name: 'tag_hosts' })
 @Index(['hostId', 'tagId'], { unique: true })
-export class TagHost {
+export class TagHost extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 

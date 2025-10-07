@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    OneToMany,
+    JoinColumn,
+    BaseEntity,
+} from 'typeorm';
 import { User } from './User';
 import { TagHost } from './TagHost';
 import { TagElement } from './TagElement';
@@ -6,7 +14,7 @@ import { CategoryTag } from './CategoryTag';
 import { TagAlias } from './TagAlias';
 
 @Entity({ name: 'tags' })
-export class Tag {
+export class Tag extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 

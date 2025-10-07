@@ -1,11 +1,19 @@
 // src/db/entities/CategoryTag.ts
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, Index } from 'typeorm';
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    JoinColumn,
+    Index,
+    BaseEntity,
+} from 'typeorm';
 import { Category } from './Category';
 import { Tag } from './Tag';
 
 @Entity({ name: 'category_tags' })
 @Index(['categoryId', 'tagId'], { unique: true })
-export class CategoryTag {
+export class CategoryTag extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 

@@ -1,10 +1,18 @@
 // src/db/entities/HostAlias.ts
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, Index } from 'typeorm';
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    JoinColumn,
+    Index,
+    BaseEntity,
+} from 'typeorm';
 import { Host } from './Host';
 
 @Entity({ name: 'host_aliases' })
 @Index(['name', 'hostId'], { unique: true })
-export class HostAlias {
+export class HostAlias extends BaseEntity {
     @PrimaryGeneratedColumn() id: number;
 
     @Column({

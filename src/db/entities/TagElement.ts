@@ -1,10 +1,18 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, Index } from 'typeorm';
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    JoinColumn,
+    Index,
+    BaseEntity,
+} from 'typeorm';
 import { Tag } from './Tag';
 import { TagHost } from './TagHost';
 
 @Entity({ name: 'tag_elements' })
 @Index(['name', 'tagId'], { unique: true })
-export class TagElement {
+export class TagElement extends BaseEntity {
     @PrimaryGeneratedColumn() id: number;
 
     @Column({

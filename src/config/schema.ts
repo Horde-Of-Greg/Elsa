@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isDiscordToken } from './regexes';
+import { isDiscordToken } from './tests';
 
 export const EnvSchema = z.object({
     ENVIRONMENT: z.enum(['development', 'test', 'production']).default('development'),

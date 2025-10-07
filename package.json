@@ -6,7 +6,10 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
-    "migrate": "psql -U $POSTGRES_USER -d $POSTGRES_DB -f src/database/migrate.sql"
+    "db:migration:gen": "npm run typeorm -- migration:generate src/db/migrations/Init",
+    "db:migrate": "npm run typeorm -- migration:run",
+    "db:revert": "npm run typeorm -- migration:revert"
+
   },
   "dependencies": {
     "discord.js": "^14.14.1",

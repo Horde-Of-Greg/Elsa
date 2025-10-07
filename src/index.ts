@@ -5,12 +5,12 @@ import { handleAddTag } from './commands/addtag';
 import { handleSetRank } from './commands/setrank';
 import { AppDataSource } from './db/dataSource';
 import { Seeder } from './db/seeding/Seeder';
-import { config, seedConfig } from './config/config';
+import { env, config, seederConfig } from './config/config';
 
 AppDataSource.initialize()
     .then(async () => {
-        if (process.env.ENVIRONMENT === 'development') {
-            const seeder = new Seeder(seedConfig);
+        if (env.ENVIRONMENT === 'development') {
+            const seeder = new Seeder(seederConfig);
             await seeder.seed;
         }
     })
@@ -31,7 +31,7 @@ client.once('ready', async () => {
 
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
-    const parsed = parseCommand(message.content, config.prefix);
+    const parsed = parseCommand(message.content, config.PREFIX);
     if (!parsed) return;
     const { command, args } = parsed;
     try {
@@ -47,11 +47,11 @@ client.on('messageCreate', async (message) => {
                 break;
             case 'cm': // command menu
                 await message.reply(
-                    `**${config.prefix} Command Menu**\n` +
-                        `\`${config.prefix}tag <tag> <subtag>\`  –  show saved message (rank 0+)\n` +
-                        `\`${config.prefix}addtag "tag" "subtag" "https://...msg-link"\`  –  save message (rank 3+)\n` +
-                        `\`${config.prefix}setrank @User 0-5\`  –  change user rank (rank 4+)\n` +
-                        `\`${config.prefix}CM\`  –  show this menu`,
+                    `**${config.PREFIX} Command Menu**\n` +
+                        `\`${config.PREFIX}tag <tag> <subtag>\`  –  show saved message (rank 0+)\n` +
+                        `\`${config.PREFIX}addtag "tag" "subtag" "https://...msg-link"\`  –  save message (rank 3+)\n` +
+                        `\`${config.PREFIX}setrank @User 0-5\`  –  change user rank (rank 4+)\n` +
+                        `\`${config.PREFIX}CM\`  –  show this menu`,
                 );
                 break;
         }
@@ -61,4 +61,4 @@ client.on('messageCreate', async (message) => {
     }
 });
 
-client.login(process.env.DISCORD_TOKEN);
+client.login(env.DISCORD_TOKEN);

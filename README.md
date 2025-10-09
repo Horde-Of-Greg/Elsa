@@ -20,7 +20,7 @@ find . -name '*.template' -exec sh -c 'cp "$0" "${0%.template}"' {} \;
 
 Figure it out lol
 
-### 4. Set up the configs
+## 4. Set up the configs
 Edit the values in the `.env` (required) and the configs (optional)
-### 5. Run the bot
+## 5. Run the bot
 Run `npm start` (or `npm run dev` if you're in a dev env)

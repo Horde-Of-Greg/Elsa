@@ -1,18 +1,36 @@
-export interface ParsedCommand {
-  command: string;
-  args: string[];
-}
+import assert from 'assert';
+import { config } from '../config/config';
 
-export function parseCommand(content: string, prefix: string): ParsedCommand | null {
-  if (!content.startsWith(prefix)) return null;
-  const args = content.slice(prefix.length).trim().split(/ +/);
-  const command = args.shift()?.toLowerCase();
-  return command ? { command, args } : null;
-}
+export type ParsedMessage = {
+    prefix: string;
+    command: string | null;
+    server: string | null;
 
-export function parseAddTagArgs(args: string[]): { tag: string; subtag: string; messageLink: string } {
-  const joined = args.join(' ');
-  const m = joined.match(/"([^"]+)"\s*"([^"]+)"\s*"([^"]+)"/);
-  if (!m) throw new Error('Invalid format. Use: !px addtag "tag" "subtag" "message_link"');
-  return { tag: m[1].trim(), subtag: m[2].trim(), messageLink: m[3].trim() };
+    tag: string | null;
+    args: Array<string> | null;
+};
+
+export function parseMessage(messageText: string): ParsedMessage | null {
+    const rawTester = `^${config.PREFIX}([a-z0-9]+)`;
+    const tester: RegExp = new RegExp(rawTester, 'i');
+
+    if (!tester.test(messageText)) {
+        return null;
+    }
+
+    const rawMatcher: string = `^(${config.PREFIX})([a-z0-9]+)(-([a-z0-9]*))?(\s(\w+))?(\s([\w\s]+))?`;
+    const matcher: RegExp = new RegExp(rawMatcher, 'gi');
+
+    const parsed = messageText.match(matcher);
+    assert(parsed, 'error during parsing');
+
+    const parsedMessage: ParsedMessage = {
+        prefix: parsed[0],
+        command: parsed[1],
+        server: parsed[3],
+        tag: parsed[5],
+        args: parsed.slice(7),
+    };
+
+    return parsedMessage;
 }

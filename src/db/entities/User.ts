@@ -1,10 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Index, BaseEntity } from 'typeorm';
-import { UserHost } from './UserHost';
-import { Tag } from './Tag';
-import { TagHost } from './TagHost';
+import { UserHostTable } from './UserHost';
+import { TagTable } from './Tag';
+import { TagHostTable } from './TagHost';
 
 @Entity({ name: 'users' })
-export class User extends BaseEntity {
+export class UserTable {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -12,12 +12,12 @@ export class User extends BaseEntity {
     @Column({ type: 'varchar', length: 32 })
     discordId: string;
 
-    @OneToMany(() => UserHost, (uh) => uh.user)
-    userHosts: UserHost[];
+    @OneToMany(() => UserHostTable, (uh) => uh.user)
+    userHosts: UserHostTable[];
 
-    @OneToMany(() => Tag, (t) => t.author)
-    tags: Tag[];
+    @OneToMany(() => TagTable, (t) => t.author)
+    tags: TagTable[];
 
-    @OneToMany(() => TagHost, (th) => th.userOverride)
-    overrides: TagHost[];
+    @OneToMany(() => TagHostTable, (th) => th.userOverride)
+    overrides: TagHostTable[];
 }

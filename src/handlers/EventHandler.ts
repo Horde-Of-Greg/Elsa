@@ -1,5 +1,5 @@
 import type { Client, Message } from 'discord.js';
-import { parseCommand } from '../utils/parser';
+import { parseCommand, ParsedMessage, parseMessage } from '../utils/parser';
 import { config } from '../config/config';
 import { handleTag } from '../commands/tag';
 import { handleAddTag } from '../commands/addtag';
@@ -15,16 +15,16 @@ export class EventHandler {
     async onMessageCreate(message: Message) {
         // TODO: Refactor this to be WAY shorter
         if (message.author.bot) return;
-        const parsed = parseCommand(message.content, config.PREFIX);
+        const parsed = parseMessage(message.content);
         if (!parsed) return;
-        const { command, args } = parsed;
+
         try {
             switch (command) {
                 case 'tag':
-                    await handleTag(message, args);
+                    await handleTag(message, parsedMessage);
                     break;
                 case 'addtag':
-                    await handleAddTag(message, args);
+                    await handleAddTag(message, parsedMessage);
                     break;
                 case 'setrank':
                     await handleSetRank(message, args);
@@ -40,8 +40,8 @@ export class EventHandler {
                     break;
             }
         } catch (e) {
-            console.error(e);
             message.reply('Internal error.');
+            throw new Error(`Error during onMessageCreate process: ${e}`);
         }
     }
 }

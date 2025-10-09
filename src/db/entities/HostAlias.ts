@@ -8,11 +8,11 @@ import {
     Index,
     BaseEntity,
 } from 'typeorm';
-import { Host } from './Host';
+import { HostTable } from './Host';
 
 @Entity({ name: 'host_aliases' })
 @Index(['name', 'hostId'], { unique: true })
-export class HostAlias extends BaseEntity {
+export class HostAliasTable {
     @PrimaryGeneratedColumn() id: number;
 
     @Column({
@@ -23,7 +23,7 @@ export class HostAlias extends BaseEntity {
 
     @Column()
     hostId: number;
-    @ManyToOne(() => Host, (h) => h.aliases, { onDelete: 'CASCADE' })
+    @ManyToOne(() => HostTable, (h) => h.aliases, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'host_id' })
-    host: Host;
+    host: HostTable;
 }

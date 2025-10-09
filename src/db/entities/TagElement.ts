@@ -7,12 +7,12 @@ import {
     Index,
     BaseEntity,
 } from 'typeorm';
-import { Tag } from './Tag';
-import { TagHost } from './TagHost';
+import { TagTable } from './Tag';
+import { TagHostTable } from './TagHost';
 
 @Entity({ name: 'tag_elements' })
 @Index(['name', 'tagId'], { unique: true })
-export class TagElement extends BaseEntity {
+export class TagElementTable {
     @PrimaryGeneratedColumn() id: number;
 
     @Column({
@@ -32,13 +32,13 @@ export class TagElement extends BaseEntity {
 
     @Column({ nullable: true })
     tagId: number | null;
-    @ManyToOne(() => Tag, (t) => t.elements, { onDelete: 'CASCADE' })
+    @ManyToOne(() => TagTable, (t) => t.elements, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'tag_id' })
-    tag: Tag | null;
+    tag: TagTable | null;
 
     @Column({ nullable: true })
     tagHostId: number | null;
-    @ManyToOne(() => TagHost, (th) => th.id, { onDelete: 'CASCADE' })
+    @ManyToOne(() => TagHostTable, (th) => th.id, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'tag_host_id' })
-    tagHost: TagHost | null;
+    tagHost: TagHostTable | null;
 }

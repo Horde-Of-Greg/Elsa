@@ -7,8 +7,8 @@ import {
     Index,
     BaseEntity,
 } from 'typeorm';
-import { User } from './User';
-import { Host } from './Host';
+import { UserTable } from './User';
+import { HostTable } from './Host';
 
 export enum PermLevel {
     DEFAULT,
@@ -20,7 +20,7 @@ export enum PermLevel {
 
 @Entity({ name: 'user_hosts' })
 @Index(['userId', 'hostId'], { unique: true })
-export class UserHost extends BaseEntity {
+export class UserHostTable {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -33,13 +33,13 @@ export class UserHost extends BaseEntity {
 
     @Column()
     userId: number;
-    @ManyToOne(() => User, (u) => u.userHosts, { onDelete: 'CASCADE' })
+    @ManyToOne(() => UserTable, (u) => u.userHosts, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'user_id' })
-    user: User;
+    user: UserTable;
 
     @Column()
     hostId: number;
-    @ManyToOne(() => Host, (h) => h.userHosts, { onDelete: 'CASCADE' })
+    @ManyToOne(() => HostTable, (h) => h.userHosts, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'host_id' })
-    host: Host;
+    host: HostTable;
 }

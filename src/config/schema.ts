@@ -13,6 +13,11 @@ export const EnvSchema = z.object({
 
 export const ConfigSchema = z.object({
     PREFIX: z.string().min(1).max(3).default('!'),
+    CMD_RANKS: z.object({
+        TAG: z.number().int().max(4),
+        ADD_TAG: z.number().int().max(4),
+        SET_RANK: z.number().int().max(4),
+    }),
 });
 
 export const SeederConfigSchema = z.object({

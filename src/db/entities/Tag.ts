@@ -7,32 +7,32 @@ import {
     JoinColumn,
     BaseEntity,
 } from 'typeorm';
-import { User } from './User';
-import { TagHost } from './TagHost';
-import { TagElement } from './TagElement';
-import { CategoryTag } from './CategoryTag';
-import { TagAlias } from './TagAlias';
+import { UserTable } from './User';
+import { TagHostTable } from './TagHost';
+import { TagElementTable } from './TagElement';
+import { CategoryTagTable } from './CategoryTag';
+import { TagAliasTable } from './TagAlias';
 
 @Entity({ name: 'tags' })
-export class Tag extends BaseEntity {
+export class TagTable {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
     authorId: number;
-    @ManyToOne(() => User, (u) => u.tags, { onDelete: 'SET NULL' })
+    @ManyToOne(() => UserTable, (u) => u.tags, { onDelete: 'SET NULL' })
     @JoinColumn({ name: 'author_id' })
-    author: User;
+    author: UserTable;
 
-    @OneToMany(() => TagHost, (th) => th.tag)
-    tagHosts: TagHost[];
+    @OneToMany(() => TagHostTable, (th) => th.tag)
+    tagHosts: TagHostTable[];
 
-    @OneToMany(() => TagElement, (te) => te.tag)
-    elements: TagElement[];
+    @OneToMany(() => TagElementTable, (te) => te.tag)
+    elements: TagElementTable[];
 
-    @OneToMany(() => CategoryTag, (ct) => ct.tag)
-    categoryLinks: CategoryTag[];
+    @OneToMany(() => CategoryTagTable, (ct) => ct.tag)
+    categoryLinks: CategoryTagTable[];
 
-    @OneToMany(() => TagAlias, (ta) => ta.tag)
-    tagAliases: TagAlias[];
+    @OneToMany(() => TagAliasTable, (ta) => ta.tag)
+    aliases: TagAliasTable[];
 }

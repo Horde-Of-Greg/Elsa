@@ -1,3 +1,8 @@
 {
-    "prefix": "!"
+    "prefix": "!",
+    "cmdRanks": {
+        "tag": 0,
+        "addTag": 3,
+        "setRank": 4
+    }
 }

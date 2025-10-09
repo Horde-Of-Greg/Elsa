@@ -7,9 +7,9 @@ import {
     Index,
     BaseEntity,
 } from 'typeorm';
-import { Tag } from './Tag';
-import { User } from './User';
-import { Host } from './Host';
+import { TagTable } from './Tag';
+import { UserTable } from './User';
+import { HostTable } from './Host';
 
 export enum TagHostStatus {
     ACCEPTED,
@@ -19,21 +19,21 @@ export enum TagHostStatus {
 
 @Entity({ name: 'tag_hosts' })
 @Index(['hostId', 'tagId'], { unique: true })
-export class TagHost extends BaseEntity {
+export class TagHostTable {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
     tagId: number;
-    @ManyToOne(() => Tag, (t) => t.tagHosts, { onDelete: 'CASCADE' })
+    @ManyToOne(() => TagTable, (t) => t.tagHosts, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'tag_id' })
-    tag: Tag;
+    tag: TagTable;
 
     @Column()
     hostId: number;
-    @ManyToOne(() => Host, (h) => h.tagHosts, { onDelete: 'CASCADE' })
+    @ManyToOne(() => HostTable, (h) => h.tagHosts, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'host_id' })
-    host: Host;
+    host: HostTable;
 
     @Column({
         type: 'enum',
@@ -44,7 +44,7 @@ export class TagHost extends BaseEntity {
 
     @Column({ nullable: true })
     userOverrideId: number | null;
-    @ManyToOne(() => User, (u) => u.overrides, { onDelete: 'SET NULL' })
+    @ManyToOne(() => UserTable, (u) => u.overrides, { onDelete: 'SET NULL' })
     @JoinColumn({ name: 'user_override_id' })
-    userOverride: User | null;
+    userOverride: UserTable | null;
 }

@@ -1,36 +1,48 @@
 import { Message } from 'discord.js';
-import { query } from '../database/connection';
-import { parseAddTagArgs } from '../utils/parser';
-import { hasRank } from '../utils/permissions';
 import { config } from '../config/config';
 import { promises as fs } from 'fs';
 import path from 'path';
-export async function handleAddTag(message: Message, args: string[]): Promise<void> {
-  if (!(await hasRank(message.member!, config.cmdMinRank.addtag))) {
-    await message.reply('Admin+ rank required.');
-    return;
-  }
-  try {
-    const { tag, subtag, messageLink } = parseAddTagArgs(args);
-    const urlMatch = messageLink.match(/^https:\/\/discord\.com\/channels\/(\d+)\/(\d+)\/(\d+)$/);
-    if (!urlMatch) { await message.reply('Bad Discord message link.'); return; }
+import { UserTable } from '../db/entities/User';
+import { AppDataSource } from '../db/dataSource';
+import { TagTable } from '../db/entities/Tag';
+import { TagElementTable } from '../db/entities/TagElement';
+import { TagHostStatus, TagHostTable } from '../db/entities/TagHost';
+import { HostTable } from '../db/entities/Host';
 
-    const [, , channelId, msgId] = urlMatch;
-    const channel = await message.client.channels.fetch(channelId);
-    if (!channel || !channel.isTextBased()) { await message.reply('Cannot fetch channel.'); return; }
-    const srcMsg = await channel.messages.fetch(msgId);
+export async function addTag(
+    tagName: string,
+    body: string,
+    message: Message,
+    host: HostTable,
+    user: UserTable,
+): Promise<void> {
+    try {
+        const tagRepo = AppDataSource.getRepository(TagTable);
+        const tagElementsRepo = AppDataSource.getRepository(TagElementTable);
+        const tagHostRepo = AppDataSource.getRepository(TagHostTable);
 
-    const dir = path.join(config.storagePath, tag);
-    await fs.mkdir(dir, { recursive: true });
-    const filePath = path.join(dir, `${subtag}.txt`);
-    await fs.writeFile(filePath, srcMsg.content || 'No text', 'utf-8');
+        const tagElements = tagElementsRepo.create({
+            name: tagName,
+            body: body,
+        });
 
-    await query(
-      'INSERT INTO tags (tag_name, subtag_name, message_link, file_path, created_by) VALUES ($1,$2,$3,$4,$5)',
-      [tag.toLowerCase(), subtag.toLowerCase(), messageLink, filePath, message.author.id]
-    );
-    await message.reply('Tag created.');
-  } catch (e: any) {
-    await message.reply(e.message.includes('format') ? e.message : 'Unknown error.');
-  }
+        const tag = tagRepo.create({
+            author: user,
+            elements: [tagElements],
+        });
+
+        const tagHost = tagHostRepo.create({
+            host: host,
+            tag: tag,
+            status: TagHostStatus.PENDING,
+        });
+
+        await tagRepo.save(tag);
+        await tagElementsRepo.save(tagElements);
+        await tagHostRepo.save(tagHost);
+
+        await message.reply(`Tag ${tagName} created.`);
+    } catch (e: any) {
+        await message.reply(e.message ? e.message : 'Unknown error.');
+    }
 }

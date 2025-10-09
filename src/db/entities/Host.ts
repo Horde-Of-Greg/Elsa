@@ -1,10 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Index, BaseEntity } from 'typeorm';
-import { UserHost } from './UserHost';
-import { TagHost } from './TagHost';
-import { HostAlias } from './HostAlias';
+import { UserHostTable } from './UserHost';
+import { TagHostTable } from './TagHost';
+import { HostAliasTable } from './HostAlias';
 
 @Entity({ name: 'hosts' })
-export class Host extends BaseEntity {
+export class HostTable {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -21,12 +21,12 @@ export class Host extends BaseEntity {
     })
     name: string;
 
-    @OneToMany(() => UserHost, (uh) => uh.host)
-    userHosts: UserHost[];
+    @OneToMany(() => UserHostTable, (uh) => uh.host)
+    userHosts: UserHostTable[];
 
-    @OneToMany(() => TagHost, (th) => th.host)
-    tagHosts: TagHost[];
+    @OneToMany(() => TagHostTable, (th) => th.host)
+    tagHosts: TagHostTable[];
 
-    @OneToMany(() => HostAlias, (ha) => ha.host)
-    aliases: HostAlias[];
+    @OneToMany(() => HostAliasTable, (ha) => ha.host)
+    aliases: HostAliasTable[];
 }

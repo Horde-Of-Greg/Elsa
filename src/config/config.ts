@@ -4,7 +4,7 @@ import path from 'path';
 import { validateConfigs, validateEnvs, validateSeederConfigs } from './validate';
 import { Config, Env, SeederConfig } from './schema';
 
-const CONFIGS_PATH: string = '/config/';
+const CONFIGS_PATH: string = 'config';
 
 const configPath: string = path.join(CONFIGS_PATH, 'config.json');
 const seedConfigPath: string = path.join(CONFIGS_PATH, 'seeder_config.json');

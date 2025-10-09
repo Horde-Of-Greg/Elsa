@@ -31,14 +31,14 @@ export class TagElementTable {
     isScript: boolean;
 
     @Column({ nullable: true })
-    tagId: number | null;
+    tagId: number;
     @ManyToOne(() => TagTable, (t) => t.elements, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'tag_id' })
-    tag: TagTable | null;
+    tag: TagTable;
 
     @Column({ nullable: true })
-    tagHostId: number | null;
+    tagHostId: number;
     @ManyToOne(() => TagHostTable, (th) => th.id, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'tag_host_id' })
-    tagHost: TagHostTable | null;
+    tagHost: TagHostTable;
 }

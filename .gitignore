@@ -1,5 +1,8 @@
-# sensitive files
+# Sensitive Files
 .env
 
-# npm stuff
+# Npm Stuff
 node_modules/
+
+# Configs
+config/*.json

@@ -10,12 +10,12 @@ export type ParsedMessage = {
     args: Array<string> | null;
 };
 
-export function parseMessage(messageText: string): ParsedMessage | null {
+export function parseMessage(messageText: string): ParsedMessage {
     const rawTester = `^${config.PREFIX}([a-z0-9]+)`;
     const tester: RegExp = new RegExp(rawTester, 'i');
 
     if (!tester.test(messageText)) {
-        return null;
+        throw new Error('Could not parse message');
     }
 
     const rawMatcher: string = `^(${config.PREFIX})([a-z0-9]+)(-([a-z0-9]*))?(\s(\w+))?(\s([\w\s]+))?`;

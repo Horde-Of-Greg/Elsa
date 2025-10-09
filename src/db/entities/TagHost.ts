@@ -43,8 +43,8 @@ export class TagHostTable {
     status: TagHostStatus;
 
     @Column({ nullable: true })
-    userOverrideId: number | null;
+    userOverrideId: number;
     @ManyToOne(() => UserTable, (u) => u.overrides, { onDelete: 'SET NULL' })
     @JoinColumn({ name: 'user_override_id' })
-    userOverride: UserTable | null;
+    userOverride: UserTable;
 }

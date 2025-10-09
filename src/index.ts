@@ -1,15 +1,18 @@
 import { bootstrap } from './bootstrap';
-import { makeClient } from './client/client';
+import { BotClient, getDcClient } from './client/client';
 import { EventHandler } from './handlers/EventHandler';
 
 async function main() {
     await bootstrap();
 
-    const client = makeClient();
-    const handler = new EventHandler(client);
+    const botClient = new BotClient();
+    const dcClient = getDcClient();
+    const handler = new EventHandler(dcClient);
 
-    client.once('ready', () => handler.onReady());
-    client.on('messageCreate', (m) => void handler.onMessageCreate(m));
+    dcClient.once('ready', () => handler.onReady());
+    dcClient.on('messageCreate', (m) => void handler.onMessageCreate(m));
+
+    console.log('Bot Successfully Started');
 }
 
 main().catch((e) => {

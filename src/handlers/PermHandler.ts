@@ -41,7 +41,12 @@ export class PermHandler {
         return (await this.getRankByHost(user, host)) === this.addTagPermLevel;
     }
 
-    async userCanSetRanks(user: UserTable, host: HostTable) {
+    async userCanSetRanks(
+        user: UserTable,
+        host: HostTable,
+        targetUser: UserTable,
+        targetRank: Number,
+    ) {
         return (await this.getRankByHost(user, host)) === this.setRankPermLevel;
     }
 }

@@ -1,5 +1,6 @@
 {
     "prefix": "!",
+    "name": "Elsa",
     "cmdRanks": {
         "tag": 0,
         "addTag": 3,

@@ -10,10 +10,8 @@ async function main() {
     const dcClient = getDcClient();
     const handler = new EventHandler(dcClient);
 
-    dcClient.once('ready', () => handler.onReady());
+    dcClient.once('clientReady', () => handler.onReady());
     dcClient.on('messageCreate', (m) => void handler.onMessageCreate(m));
-
-    console.log('Bot Successfully Started');
 
     dcClient.login(env.DISCORD_TOKEN);
 }

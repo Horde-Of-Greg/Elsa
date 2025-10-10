@@ -1,5 +1,6 @@
 import { bootstrap } from './bootstrap';
-import { BotClient, getDcClient } from './client/client';
+import { BotClient, getDcClient } from './client/BotClient';
+import { env } from './config/config';
 import { EventHandler } from './handlers/EventHandler';
 
 async function main() {
@@ -13,6 +14,8 @@ async function main() {
     dcClient.on('messageCreate', (m) => void handler.onMessageCreate(m));
 
     console.log('Bot Successfully Started');
+
+    dcClient.login(env.DISCORD_TOKEN);
 }
 
 main().catch((e) => {

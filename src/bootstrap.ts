@@ -1,6 +1,7 @@
 import { env, seederConfig } from './config/config';
 import { AppDataSource } from './db/dataSource';
 import { Seeder } from './db/seeding/Seeder';
+import { initDbHandler } from './handlers/DbHandler';
 
 export async function bootstrap() {
     await AppDataSource.initialize()
@@ -11,4 +12,6 @@ export async function bootstrap() {
             }
         })
         .catch((error) => console.log(error));
+
+    await initDbHandler();
 }

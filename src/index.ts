@@ -8,10 +8,10 @@ async function main() {
 
     const botClient = new BotClient();
     const dcClient = getDcClient();
-    const handler = new EventHandler(dcClient);
+    const eventHandler = new EventHandler(dcClient);
 
-    dcClient.once('clientReady', () => handler.onReady());
-    dcClient.on('messageCreate', (m) => void handler.onMessageCreate(m));
+    dcClient.once('clientReady', () => eventHandler.onReady());
+    dcClient.on('messageCreate', (m) => void eventHandler.onMessageCreate(m));
 
     dcClient.login(env.DISCORD_TOKEN);
 }

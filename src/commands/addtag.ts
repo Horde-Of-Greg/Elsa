@@ -8,34 +8,16 @@ import { TagTable } from '../db/entities/Tag';
 import { TagElementTable } from '../db/entities/TagElement';
 import { TagHostStatus, TagHostTable } from '../db/entities/TagHost';
 import { HostTable } from '../db/entities/Host';
+import { getDbHandler } from '../handlers/DbHandler';
 
 export async function addTag(
     tagName: string,
     body: string,
-    host: HostTable,
     user: UserTable,
+    host: HostTable,
+    message: Message,
 ): Promise<void> {
-    const tagRepo = AppDataSource.getRepository(TagTable);
-    const tagElementsRepo = AppDataSource.getRepository(TagElementTable);
-    const tagHostRepo = AppDataSource.getRepository(TagHostTable);
+    getDbHandler().createNewTag(tagName, body, user, host);
 
-    const tagElements = tagElementsRepo.create({
-        name: tagName,
-        body: body,
-    });
-
-    const tag = tagRepo.create({
-        author: user,
-        elements: [tagElements],
-    });
-
-    const tagHost = tagHostRepo.create({
-        host: host,
-        tag: tag,
-        status: TagHostStatus.PENDING,
-    });
-
-    await tagRepo.save(tag);
-    await tagElementsRepo.save(tagElements);
-    await tagHostRepo.save(tagHost);
+    await message.reply(`Tag ${tagName} created.`);
 }

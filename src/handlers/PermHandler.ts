@@ -5,6 +5,8 @@ import { UserHostTable } from '../db/entities/UserHost';
 import { UserTable } from '../db/entities/User';
 import { HostTable } from '../db/entities/Host';
 
+let permHandler: PermHandler | null = null;
+
 export class PermHandler {
     userRepo: Repository<UserTable>;
     userHostRepo: Repository<UserHostTable>;
@@ -49,4 +51,15 @@ export class PermHandler {
     ) {
         return (await this.getRankByHost(user, host)) === this.setRankPermLevel;
     }
+}
+
+export async function initPermHandler(): Promise<PermHandler> {
+    if (permHandler) return permHandler;
+    permHandler = new PermHandler();
+    return permHandler;
+}
+
+export function getPermHandler(): PermHandler {
+    if (!permHandler) throw new Error('DB not initialized. Call initPermHandler() first.');
+    return permHandler;
 }

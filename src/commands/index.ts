@@ -11,22 +11,18 @@ import { findDcIdByUsername } from '../utils/discordIdUtil';
 import { getCommandName, getRankEnum } from '../utils/commandUtil';
 import { setRank } from './setrank';
 import { executeTag } from './tag';
+import { DbHandler, getDbHandler } from '../handlers/DbHandler';
 
 //TODO: class?
 export async function handleCommand(message: Message, parsedMessage: ParsedMessage) {
-    const userRepo = AppDataSource.getRepository(UserTable);
-    const hostRepo = AppDataSource.getRepository(HostTable);
-    const userHostRepo = AppDataSource.getRepository(UserHostTable);
+    const dbHandler = getDbHandler();
 
-    const user = await userRepo.findOneBy({
-        discordId: message.member?.id,
-    });
+    const user = await dbHandler.findOrCreateUser(message.author.id);
     //TODO: Impl a way to override the host with the parsedMessage.server
     const host = await hostRepo.findOneBy({
-        discordId: message.id,
+        discordId: message.guildId ? message.guildId : '0',
     });
-    assert(host, 'No Host Found');
-    assert(user, 'User Not Found');
+    assert(host, 'Host Not Found. Hosts need to be explicitely created.');
 
     const userHost = await userHostRepo.findOneBy({
         user: user,
@@ -54,9 +50,7 @@ export async function handleCommand(message: Message, parsedMessage: ParsedMessa
             const tagBody: string = args.splice(1).join('');
 
             try {
-                await addTag(tagName, tagBody, host, user);
-
-                await message.reply(`Tag ${tagName} created.`);
+                await addTag(tagName, tagBody, user, host, message);
             } catch (e: any) {
                 await message.reply(e.message ? e.message : 'Unknown error.');
             }

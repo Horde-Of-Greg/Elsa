@@ -16,27 +16,27 @@ import { DbHandler, getDbHandler } from '../handlers/DbHandler';
 //TODO: class?
 export async function handleCommand(message: Message, parsedMessage: ParsedMessage) {
     const dbHandler = getDbHandler();
-
-    const user = await dbHandler.findOrCreateUser(message.author.id);
-    //TODO: Impl a way to override the host with the parsedMessage.server
-    const host = await hostRepo.findOneBy({
-        discordId: message.guildId ? message.guildId : '0',
-    });
-    assert(host, 'Host Not Found. Hosts need to be explicitely created.');
-
-    const userHost = await userHostRepo.findOneBy({
-        user: user,
-        host: host,
-    });
-    assert(userHost, 'No User Host Found');
-
     const permHandler = new PermHandler();
 
-    const commandName = getCommandName(parsedMessage.command);
-    assert(commandName, 'No Command Name Found');
+    //TODO: Impl a way to override the host with the parsedMessage.server
+    const userAndHost = await dbHandler.findUserAndHost(message.author.id, message.guildId);
+    if (!userAndHost) {
+        await message.reply('Error during fetching server');
+        return;
+    }
+    const { user, host, userHost } = userAndHost;
 
-    const args: Array<string> | null = parsedMessage.args;
-    assert(args, 'No Args Found');
+    const commandName = getCommandName(parsedMessage.command);
+    if (!commandName) {
+        await message.reply('Error during fetching command name');
+        return;
+    }
+
+    const args = parsedMessage.args;
+    if (!args) {
+        await message.reply('Error during fetching args');
+        return;
+    }
 
     switch (commandName) {
         case 'add':
@@ -62,21 +62,18 @@ export async function handleCommand(message: Message, parsedMessage: ParsedMessa
             const targetUserId: string | null = await findDcIdByUsername(targetUserName);
             //TODO: Handle ID and Display Name
             if (!targetUserId) {
-                message.reply(`Could not find user: ${targetUserName}.`);
+                await message.reply(`Could not find user: ${targetUserName}.`);
                 return;
             }
+
             const targetRankLvl: string = args[1];
             const targetRank = getRankEnum(targetRankLvl);
             if (!targetRank) {
-                message.reply(`Could not find rank: ${targetRankLvl}`);
+                await message.reply(`Could not find rank: ${targetRankLvl}`);
                 return;
             }
 
-            const targetUser = await userRepo.findOneBy({
-                discordId: targetUserId,
-            });
-            assert(targetUser, 'No Target User Found');
-
+            const targetUser = await dbHandler.findOrCreateUser(targetUserId);
             if (!permHandler.userCanSetRanks(user, host, targetUser, targetRank)) {
                 await message.reply('you do not have the permissions to do this.');
                 return;
@@ -98,7 +95,10 @@ export async function handleCommand(message: Message, parsedMessage: ParsedMessa
             const tagToRun = args[0];
             const argsForTag = args.splice(1);
             if (argsForTag) {
-                message.reply('Args not yet implemented. Run the command again without args.');
+                await message.reply(
+                    'Args not yet implemented. Run the command again without args.',
+                );
+                return;
             }
 
             if (!permHandler.userCanUseTags(user, host)) {

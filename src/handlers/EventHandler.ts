@@ -13,9 +13,13 @@ export class EventHandler {
     async onMessageCreate(message: Message) {
         try {
             const parsedMessage: ParsedMessage = parseMessage(message.content);
-            assert(parsedMessage, 'Could not parse message');
-            handleCommand(message, parsedMessage);
+            await handleCommand(message, parsedMessage);
         } catch (e) {
+            // If the message couldn't be parsed, it's not a command - just ignore it
+            if (e instanceof Error && e.message === 'Could not parse message') {
+                return;
+            }
+            // For actual errors, reply and log
             message.reply('Internal error.');
             throw new Error(`Error during onMessageCreate process: ${e}`);
         }

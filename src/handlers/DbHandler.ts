@@ -75,8 +75,35 @@ export class DbHandler {
             user = this.userRepo.create({
                 discordId: userDiscordId,
             });
+            await this.saveEntity(user);
         }
         return user;
+    }
+
+    async findHost(guildId: string): Promise<HostTable | null> {
+        const host = this.hostRepo.findOneBy({
+            discordId: guildId,
+        });
+        if (!host) return null;
+        return host;
+    }
+
+    async findUserAndHost(
+        userDiscordId: string,
+        guildId: string | null,
+    ): Promise<{ user: UserTable; host: HostTable; userHost: UserHostTable } | null> {
+        if (!guildId) return null;
+        const user = await this.findOrCreateUser(userDiscordId);
+        const host = await this.findHost(guildId);
+        if (!host) return null;
+
+        const userHost = await this.userHostRepo.findOneBy({
+            user: user,
+            host: host,
+        });
+        if (!userHost) return null;
+
+        return { user: user, host: host, userHost: userHost };
     }
 
     async saveEntity(entity: ValidEntity) {
@@ -85,13 +112,13 @@ export class DbHandler {
     }
 
     repoFromEntity(entity: ValidEntity) {
-        return AppDataSource.getRepository(entity as any);
+        return AppDataSource.getRepository(entity.constructor as any);
     }
 }
 
 export async function initDbHandler(): Promise<DbHandler> {
     if (dbHandler) return dbHandler;
-    const ds = await AppDataSource.initialize();
+    const ds = AppDataSource;
     dbHandler = new DbHandler(ds);
     return dbHandler;
 }

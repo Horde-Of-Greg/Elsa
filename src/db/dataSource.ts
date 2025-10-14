@@ -9,6 +9,7 @@ export const AppDataSource = new DataSource({
     password: env.POSTGRES_PASSWORD,
     database: env.POSTGRES_DB,
 
+    synchronize: env.ENVIRONMENT === 'development', // Auto-create tables in development
     migrations: ['src/db/migrations/*.ts'],
     entities: ['src/db/entities/*.ts'],
 });

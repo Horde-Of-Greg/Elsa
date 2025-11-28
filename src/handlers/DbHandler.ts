@@ -6,7 +6,7 @@ import { HostTable } from '../db/entities/Host';
 import { HostAliasTable } from '../db/entities/HostAlias';
 import { TagTable } from '../db/entities/Tag';
 import { TagAliasTable } from '../db/entities/TagAlias';
-import { TagElementTable } from '../db/entities/TagElement';
+import { TagOverridesTable } from '../db/entities/TagOverrides';
 import { TagHostTable } from '../db/entities/TagHost';
 import { UserTable } from '../db/entities/User';
 import { UserHostTable } from '../db/entities/UserHost';
@@ -21,7 +21,7 @@ export class DbHandler {
     hostAliasRepo: Repository<HostAliasTable>;
     tagRepo: Repository<TagTable>;
     tagAliasRepo: Repository<TagAliasTable>;
-    tagElementRepo: Repository<TagElementTable>;
+    TagOverrideRepo: Repository<TagOverridesTable>;
     tagHostRepo: Repository<TagHostTable>;
     userRepo: Repository<UserTable>;
     userHostRepo: Repository<UserHostTable>;
@@ -34,7 +34,7 @@ export class DbHandler {
         this.hostAliasRepo = AppDataSource.getRepository(HostAliasTable);
         this.tagRepo = AppDataSource.getRepository(TagTable);
         this.tagAliasRepo = AppDataSource.getRepository(TagAliasTable);
-        this.tagElementRepo = AppDataSource.getRepository(TagElementTable);
+        this.TagOverrideRepo = AppDataSource.getRepository(TagOverridesTable);
         this.tagHostRepo = AppDataSource.getRepository(TagHostTable);
         this.userRepo = AppDataSource.getRepository(UserTable);
         this.userHostRepo = AppDataSource.getRepository(UserHostTable);
@@ -61,7 +61,7 @@ export class DbHandler {
          */
         /* Save:
          * 1. Tag
-         * 2. TagElements
+         * 2. TagOverrides
          * 3. TagHost
          */
         return 0;

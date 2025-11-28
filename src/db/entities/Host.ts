@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Index, BaseEntity } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Index } from 'typeorm';
 import { UserHostTable } from './UserHost';
 import { TagHostTable } from './TagHost';
 import { HostAliasTable } from './HostAlias';
+import { TagAliasTable } from './TagAlias';
 
 @Entity({ name: 'hosts' })
 export class HostTable {
@@ -28,5 +29,5 @@ export class HostTable {
     tagHosts: TagHostTable[];
 
     @OneToMany(() => HostAliasTable, (ha) => ha.host)
-    aliases: HostAliasTable[];
+    hostAliases: HostAliasTable[];
 }

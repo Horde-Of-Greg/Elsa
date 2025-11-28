@@ -1,7 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Index, BaseEntity } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Index } from 'typeorm';
 import { UserHostTable } from './UserHost';
 import { TagTable } from './Tag';
-import { TagHostTable } from './TagHost';
+import { TagOverridesTable } from './TagOverrides';
 
 @Entity({ name: 'users' })
 export class UserTable {
@@ -18,6 +18,6 @@ export class UserTable {
     @OneToMany(() => TagTable, (t) => t.author)
     tags: TagTable[];
 
-    @OneToMany(() => TagHostTable, (th) => th.userOverride)
-    overrides: TagHostTable[];
+    @OneToMany(() => TagOverridesTable, (to) => to.authorOverride)
+    tagOverrides: TagOverridesTable[];
 }

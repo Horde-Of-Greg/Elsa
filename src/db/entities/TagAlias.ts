@@ -1,17 +1,18 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, BaseEntity } from 'typeorm';
-import { UserTable } from './User';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { TagTable } from './Tag';
+import { HostTable } from './Host';
 
 @Entity({ name: 'tag_aliases' })
+@Index(['name'], { unique: true })
 export class TagAliasTable {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ type: 'varchar', length: 128 })
     name: string;
 
     @Column()
-    authorId: number;
+    tagId: number;
     @ManyToOne(() => TagTable, (t) => t.aliases, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'tag_id' })
     tag: TagTable;

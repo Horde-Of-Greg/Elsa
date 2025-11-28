@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { config } from '../config/config';
+import { config } from '../../config/config';
 
 export type ParsedMessage = {
     prefix: string;
@@ -18,7 +18,7 @@ export function parseMessage(messageText: string): ParsedMessage {
         throw new Error('Could not parse message');
     }
 
-    const rawMatcher: string = `^(${config.PREFIX})([a-z0-9]+)(-([a-z0-9]*))?(\s(\w+))?(\s([\w\s]+))?`;
+    const rawMatcher: string = `^(${config.PREFIX})([a-z0-9]+)(?:-([a-z0-9]*))?(?:\s(\w+))?(?:\s([\w\s]+))?`;
     const matcher: RegExp = new RegExp(rawMatcher, 'gi');
 
     const parsed = messageText.match(matcher);
@@ -27,9 +27,9 @@ export function parseMessage(messageText: string): ParsedMessage {
     const parsedMessage: ParsedMessage = {
         prefix: parsed[0],
         command: parsed[1],
-        server: parsed[3],
-        tag: parsed[5],
-        args: parsed.slice(7),
+        server: parsed[2],
+        tag: parsed[3],
+        args: parsed.slice(4),
     };
 
     return parsedMessage;

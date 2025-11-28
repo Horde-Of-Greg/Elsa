@@ -3,13 +3,13 @@ import {
     PrimaryGeneratedColumn,
     Column,
     ManyToOne,
+    OneToOne,
     JoinColumn,
     Index,
-    BaseEntity,
 } from 'typeorm';
 import { TagTable } from './Tag';
-import { UserTable } from './User';
 import { HostTable } from './Host';
+import { TagOverridesTable } from './TagOverrides';
 
 export enum TagHostStatus {
     ACCEPTED,
@@ -42,9 +42,6 @@ export class TagHostTable {
     })
     status: TagHostStatus;
 
-    @Column({ nullable: true })
-    userOverrideId: number;
-    @ManyToOne(() => UserTable, (u) => u.overrides, { onDelete: 'SET NULL' })
-    @JoinColumn({ name: 'user_override_id' })
-    userOverride: UserTable;
+    @OneToOne(() => TagOverridesTable, (to) => to.tagHost, { nullable: true })
+    override: TagOverridesTable | null;
 }

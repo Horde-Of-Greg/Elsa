@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { ParsedMessage } from '../utils/parser';
+import { ParsedMessage } from '../utils/parsing/parser';
 import assert from 'assert';
 import { AppDataSource } from '../db/dataSource';
 import { HostTable } from '../db/entities/Host';
@@ -7,8 +7,8 @@ import { UserTable } from '../db/entities/User';
 import { PermHandler } from '../handlers/PermHandler';
 import { addTag } from './addtag';
 import { UserHostTable } from '../db/entities/UserHost';
-import { findDcIdByUsername } from '../utils/discordIdUtil';
-import { getCommandName, getRankEnum } from '../utils/commandUtil';
+import { findDcIdByUsername } from '../helpers/discord/discordIdHelper';
+import { getCommandName, getRankEnum } from '../helpers/commandHelper';
 import { setRank } from './setrank';
 import { executeTag } from './tag';
 import { DbHandler, getDbHandler } from '../handlers/DbHandler';

@@ -1,14 +1,15 @@
-import { bootstrap } from './bootstrap';
+import { bootstrap, Events } from './Events';
 import { BotClient, getDcClient } from './client/BotClient';
 import { env } from './config/config';
-import { EventHandler } from './handlers/EventHandler';
+import { BotEventHandler } from './bot/BotEventHandler';
 
 async function main() {
     await bootstrap();
+    Events.initEssentials();
 
     const botClient = new BotClient();
     const dcClient = getDcClient();
-    const eventHandler = new EventHandler(dcClient);
+    const eventHandler = new BotEventHandler(dcClient);
 
     dcClient.once('clientReady', () => eventHandler.onReady());
     dcClient.on('messageCreate', (m) => void eventHandler.onMessageCreate(m));

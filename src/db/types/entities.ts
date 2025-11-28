@@ -4,7 +4,7 @@ import { HostTable } from '../entities/Host';
 import { HostAliasTable } from '../entities/HostAlias';
 import { TagTable } from '../entities/Tag';
 import { TagAliasTable } from '../entities/TagAlias';
-import { TagElementTable } from '../entities/TagElement';
+import { TagOverridesTable } from '../entities/TagOverrides';
 import { TagHostTable } from '../entities/TagHost';
 import { UserTable } from '../entities/User';
 import { UserHostTable } from '../entities/UserHost';
@@ -16,7 +16,7 @@ export type ValidEntity =
     | HostAliasTable
     | TagTable
     | TagAliasTable
-    | TagElementTable
+    | TagOverridesTable
     | TagHostTable
     | UserTable
     | UserHostTable;

@@ -5,11 +5,11 @@ import {
     ManyToOne,
     OneToMany,
     JoinColumn,
-    BaseEntity,
+    Index,
 } from 'typeorm';
 import { UserTable } from './User';
 import { TagHostTable } from './TagHost';
-import { TagElementTable } from './TagElement';
+import { TagOverridesTable } from './TagOverrides';
 import { CategoryTagTable } from './CategoryTag';
 import { TagAliasTable } from './TagAlias';
 
@@ -17,6 +17,20 @@ import { TagAliasTable } from './TagAlias';
 export class TagTable {
     @PrimaryGeneratedColumn()
     id: number;
+
+    @Index({ unique: true })
+    @Column({ type: 'varchar', length: 128 })
+    name: string;
+
+    @Column({ type: 'text' })
+    body: string;
+
+    @Index({ unique: true })
+    @Column({ type: 'bytea' })
+    bodyHash: Buffer;
+
+    @Column({ type: 'boolean', default: false })
+    isScript: boolean;
 
     @Column()
     authorId: number;
@@ -27,8 +41,8 @@ export class TagTable {
     @OneToMany(() => TagHostTable, (th) => th.tag)
     tagHosts: TagHostTable[];
 
-    @OneToMany(() => TagElementTable, (te) => te.tag)
-    elements: TagElementTable[];
+    @OneToMany(() => TagOverridesTable, (to) => to.tag)
+    overrides: TagOverridesTable[];
 
     @OneToMany(() => CategoryTagTable, (ct) => ct.tag)
     categoryLinks: CategoryTagTable[];

@@ -5,7 +5,7 @@ import path from 'path';
 import { UserTable } from '../db/entities/User';
 import { AppDataSource } from '../db/dataSource';
 import { TagTable } from '../db/entities/Tag';
-import { TagElementTable } from '../db/entities/TagElement';
+import { TagOverridesTable } from '../db/entities/TagOverrides';
 import { TagHostStatus, TagHostTable } from '../db/entities/TagHost';
 import { HostTable } from '../db/entities/Host';
 import { getDbHandler } from '../handlers/DbHandler';

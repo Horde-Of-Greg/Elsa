@@ -2,16 +2,16 @@ import { Message } from 'discord.js';
 import { AppDataSource } from '../db/dataSource';
 import { HostTable } from '../db/entities/Host';
 import { TagTable } from '../db/entities/Tag';
-import { TagElementTable } from '../db/entities/TagElement';
+import { TagOverrideTable } from '../db/entities/TagOverrides';
 export async function executeTag(tagName: string, host: HostTable, message: Message) {
-    const tagElementsRepo = AppDataSource.getRepository(TagElementTable);
+    const TagOverridesRepo = AppDataSource.getRepository(TagOverrideTable);
 
-    const tagElements = await tagElementsRepo.findOneBy({
+    const TagOverrides = await TagOverridesRepo.findOneBy({
         name: tagName,
     });
-    if (!tagElements) {
+    if (!TagOverrides) {
         message.reply('Could not find tag');
         return;
     }
-    message.reply(tagElements.body);
+    message.reply(TagOverrides.body);
 }

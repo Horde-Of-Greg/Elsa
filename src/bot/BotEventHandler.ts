@@ -1,13 +1,14 @@
 import type { Client, Message } from 'discord.js';
-import { ParsedMessage, parseMessage } from '../utils/parser';
+import { ParsedMessage, parseMessage } from '../utils/parsing/parser';
 import { handleCommand } from '../commands';
 import { assert } from 'console';
+import { getLogger } from '../utils/Logger';
 
-export class EventHandler {
+export class BotEventHandler {
     constructor(private readonly client: Client) {}
 
     async onReady() {
-        console.log(`Bot ready as ${this.client.user?.tag}`);
+        getLogger().simpleLog('info', `Bot ready as ${this.client.user?.tag}`);
     }
 
     async onMessageCreate(message: Message) {

@@ -5,10 +5,7 @@
     "scripts": {
         "build": "tsc",
         "start": "node dist/index.js",
-        "dev": "ts-node src/index.ts",
-        "db:migration:gen": "npm run typeorm -- migration:generate src/db/migrations/Init",
-        "db:migrate": "npm run typeorm -- migration:run",
-        "db:revert": "npm run typeorm -- migration:revert"
+        "dev": "ts-node src/index.ts"
     },
     "dependencies": {
         "discord.js": "^14.14.1",

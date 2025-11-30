@@ -1,7 +1,8 @@
 import { BaseRepository } from './BaseRepository';
 import { UserTable } from '../entities/User';
 import { HostTable } from '../entities/Host';
-import { PermLevel } from '../entities/UserHost';
+import { PermLevel, UserHostTable } from '../entities/UserHost';
+import { StandardError } from '../../types/error/StandardError';
 
 export class UserRepository extends BaseRepository<UserTable> {
     constructor() {
@@ -21,5 +22,8 @@ export class UserRepository extends BaseRepository<UserTable> {
         return user;
     }
 
-    async getPermLevel(user: UserTable, host: HostTable) {}
+    async getPermLevel(user: UserTable, host: HostTable): Promise<PermLevel | null> {
+        const userHost = await this.findOneByJoin(UserHostTable, user, host);
+        return userHost?.permLevel ?? null;
+    }
 }

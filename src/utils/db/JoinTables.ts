@@ -57,23 +57,30 @@ export class JoinTables {
         return result;
     }
 
+    static isValidJoin(
+        joinTable: new () => ValidEntity,
+        thisTable: new () => ValidEntity,
+        thatTable: new () => ValidEntity,
+    ): boolean {
+        const key = this.makeKey(thisTable, thatTable);
+        const lookup = JoinTables.joinMap.get(key);
+        if (!lookup) return false;
+        return lookup === joinTable;
+    }
+
     private static joinMap = new Map<string, new () => ValidEntity>([
         [JoinTables.makeKey(UserTable, HostTable), UserHostTable],
         [JoinTables.makeKey(TagTable, HostTable), TagHostTable],
         [JoinTables.makeKey(CategoryTable, TagTable), CategoryTagTable],
     ]);
 
-    // Reverse map: JunctionTable -> [EntityA, EntityB]
-    private static reverseMap = new Map<
-        string,
-        [new () => ValidEntity, new () => ValidEntity]
-    >([
+    private static reverseMap = new Map<string, [new () => ValidEntity, new () => ValidEntity]>([
         ['UserHostTable', [UserTable, HostTable]],
         ['TagHostTable', [TagTable, HostTable]],
         ['CategoryTagTable', [CategoryTable, TagTable]],
     ]);
 
-    private static makeKey(a: Function, b: Function): string {
+    static makeKey(a: Function, b: Function): string {
         return [a.name, b.name].sort().join('-');
     }
 }

@@ -5,11 +5,13 @@ import {
     ObjectLiteral,
     JoinTable,
     FindOptionsSelect,
+    FindOptionsRelations,
 } from 'typeorm';
 import { AppDataSource } from '../dataSource';
 import { JoinTables } from '../../utils/db/JoinTables';
 import { ValidEntity } from '../types/entities';
 import { ErrorProne } from '../../utils/parentClasses/ErrorProne';
+import { StandardError } from '../../types/error/StandardError';
 
 /**
  * Base repository providing common CRUD operations for all entities.
@@ -43,49 +45,69 @@ export abstract class BaseRepository<T extends ValidEntity> extends ErrorProne {
      * Find all entities. Optionally filter by criteria.
      *
      * @param where (optional) Criteria to restrict results by.
+     * @param relations (optional) Relations to load.
      * @returns An array of Entities that match the criteria.
      */
-    protected async findAll(where?: FindOptionsWhere<T>): Promise<T[]> {
-        return where ? this.repo.findBy(where) : this.repo.find();
+    protected async findAll(
+        where?: FindOptionsWhere<T>,
+        relations?: FindOptionsRelations<T>,
+    ): Promise<T[]> {
+        return where ? this.repo.find({ where, relations }) : this.repo.find();
     }
 
     /**
      * Find a single entity matching the given criteria.
      *
-     * @param where (optional) Criteria to restrict results by.
+     * @param where Criteria to restrict results by.
+     * @param relations (optional) Relations to load.
      * @returns An array of Entities that match the criteria, or null if none/multiple were found.
      */
-    protected async findOne(where: FindOptionsWhere<T>): Promise<T | null> {
-        return this.repo.findOneBy(where);
+    protected async findOne(
+        where: FindOptionsWhere<T>,
+        relations?: FindOptionsRelations<T>,
+    ): Promise<T | null> {
+        return this.repo.findOne({ where, relations });
     }
 
     /**
-     * Find a junction table record by providing entity instances.
-     * Automatically infers the junction table and builds the WHERE clause.
+     * Find a single entity matching the given criteria, on a different Table than the one taken as parameter.
+     *
+     * @param otherTable Table to make a lookup on.
+     * @param where Criteria to restrict results by.
+     * @param relations (optional) Relations to load.
+     * @returns An array of Entities that match the criteria, or null if none/multiple were found.
+     */
+    protected async findOneOnOtherTable<J extends ValidEntity>(
+        otherTable: new () => J,
+        where: FindOptionsWhere<J>,
+        relations?: FindOptionsRelations<J>,
+    ): Promise<J | null> {
+        return AppDataSource.getRepository(otherTable).findOne({ where, relations });
+    }
+
+    /**
+     * Find a junction table record by providing the junction table class and entity instances.
+     * The return type is automatically inferred from the junction table parameter.
      *
      * @param joinTable - The junction table entity class
      * @param thisEntity - Instance of this entity (e.g., a User)
      * @param otherEntity - Instance of the other entity (e.g., a Host)
-     * @returns The junction table record, or null if not found
+     * @returns The junction table record, or null if not found, or error
      *
      * @example
      * // In UserRepository:
      * const userHost = await this.findByJoin(UserHostTable, user, host);
+     * // userHost is typed as UserHostTable | null | StandardError
      */
-    protected async findByJoin<J extends ValidEntity, O extends ValidEntity>(
+    protected async findOneByJoin<J extends ValidEntity, O extends ValidEntity>(
         joinTable: new () => J,
         thisEntity: T,
         otherEntity: O,
     ): Promise<J | null> {
-        const connectedTables = JoinTables.getConnectedTables(joinTable);
-        if (this.isError(connectedTables)) {
-            return this.propagateError(connectedTables, 'Find by join failed.') as any;
-        }
-
+        const thisTable = thisEntity.constructor as new () => T;
         const otherTable = otherEntity.constructor as new () => O;
 
-        // Figure out which field names to use based on connected tables
-        const thisFieldName = this.getEntityIdField(this.entityClass.name);
+        const thisFieldName = this.getEntityIdField(thisTable.name);
         const otherFieldName = this.getEntityIdField(otherTable.name);
 
         const where = {
@@ -111,9 +133,9 @@ export abstract class BaseRepository<T extends ValidEntity> extends ErrorProne {
      * // With filter:
      * const adminHosts = await this.findAllJoins(UserHostTable, user, { permLevel: PermLevel.ADMIN });
      */
-    protected async findAllJoins<J extends ValidEntity>(
+    protected async findAllByJoin<J extends ValidEntity, O extends ValidEntity>(
         joinTable: new () => J,
-        thisEntity: T,
+        thatEntity: O,
         where?: Partial<FindOptionsWhere<J>>,
     ): Promise<J[]> {
         const connectedTables = JoinTables.getConnectedTables(joinTable);
@@ -124,7 +146,7 @@ export abstract class BaseRepository<T extends ValidEntity> extends ErrorProne {
         const thisFieldName = this.getEntityIdField(this.entityClass.name);
 
         const fullWhere = {
-            [thisFieldName]: thisEntity.id,
+            [thisFieldName]: thatEntity.id,
             ...where,
         } as FindOptionsWhere<J>;
 

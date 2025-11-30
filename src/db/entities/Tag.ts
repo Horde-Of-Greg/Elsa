@@ -12,6 +12,7 @@ import { TagHostTable } from './TagHost';
 import { TagOverridesTable } from './TagOverrides';
 import { CategoryTagTable } from './CategoryTag';
 import { TagAliasTable } from './TagAlias';
+import { SHA256Hash } from '../../utils/crypto/sha256Hash';
 
 @Entity({ name: 'tags' })
 export class TagTable {
@@ -27,7 +28,7 @@ export class TagTable {
 
     @Index({ unique: true })
     @Column({ type: 'bytea' })
-    bodyHash: Buffer;
+    bodyHash: SHA256Hash;
 
     @Column({ type: 'boolean', default: false })
     isScript: boolean;

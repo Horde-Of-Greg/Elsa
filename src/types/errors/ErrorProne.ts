@@ -1,4 +1,4 @@
-import { StandardError } from '../../types/error/StandardError';
+import { StandardError } from './StandardError';
 
 export abstract class ErrorProne {
     protected error: StandardError;

@@ -2,9 +2,9 @@ import { env, seederConfig } from './config/config';
 import { AppDataSource } from './db/dataSource';
 import { Seeder } from './db/seeding/Seeder';
 import { initDbHandler } from './handlers/DbHandler';
-import { initLogger } from './utils/Logger';
-import { ErrorProne } from './utils/parentClasses/ErrorProne';
-import { startTimer } from './utils/Timer';
+import { initLogger } from './core/Logger';
+import { ErrorProne } from './types/errors/ErrorProne';
+import { startTimer } from './core/Timer';
 
 export async function bootstrap() {
     await AppDataSource.initialize()
@@ -20,7 +20,7 @@ export async function bootstrap() {
 }
 
 export class Events extends ErrorProne {
-    static initEssentials() {
+    static initCore() {
         startTimer('main');
         initLogger();
     }

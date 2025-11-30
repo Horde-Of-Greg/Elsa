@@ -8,10 +8,10 @@ import {
     FindOptionsRelations,
 } from 'typeorm';
 import { AppDataSource } from '../dataSource';
-import { JoinTables } from '../../utils/db/JoinTables';
 import { ValidEntity } from '../types/entities';
-import { ErrorProne } from '../../utils/parentClasses/ErrorProne';
-import { StandardError } from '../../types/error/StandardError';
+import { ErrorProne } from '../../types/errors/ErrorProne';
+import { StandardError } from '../../types/errors/StandardError';
+import { getConnectedTables } from '../utils/JoinTables';
 
 /**
  * Base repository providing common CRUD operations for all entities.
@@ -137,8 +137,9 @@ export abstract class BaseRepository<T extends ValidEntity> extends ErrorProne {
         joinTable: new () => J,
         thatEntity: O,
         where?: Partial<FindOptionsWhere<J>>,
+        relations?: FindOptionsRelations<J>,
     ): Promise<J[]> {
-        const connectedTables = JoinTables.getConnectedTables(joinTable);
+        const connectedTables = getConnectedTables(joinTable);
         if (this.isError(connectedTables)) {
             return this.propagateError(connectedTables, 'Find all joins failed.') as any;
         }
@@ -150,7 +151,7 @@ export abstract class BaseRepository<T extends ValidEntity> extends ErrorProne {
             ...where,
         } as FindOptionsWhere<J>;
 
-        return AppDataSource.getRepository(joinTable).find({ where: fullWhere });
+        return AppDataSource.getRepository(joinTable).find({ where: fullWhere, relations });
     }
 
     /**
@@ -186,6 +187,22 @@ export abstract class BaseRepository<T extends ValidEntity> extends ErrorProne {
     }
 
     /**
+     * Create a new entity instance on another table (not yet saved to database).
+     *
+     * @param table The table on which to create the data on.
+     * @param data Partial entity data. All fields are optional and nested objects are recursively optional.
+     *   DeepPartial allows you to provide only the fields you need (e.g., just discordId for a User),
+     *   while auto-generated fields (like id) and relations can be omitted.
+     * @returns A new entity instance ready to be saved on the table given.
+     */
+    protected createOnOtherTable<J extends ValidEntity>(
+        table: new () => J,
+        data: DeepPartial<J>,
+    ): J {
+        return AppDataSource.getRepository(table).create(data);
+    }
+
+    /**
      * Save an entity to the database (insert or update).
      *
      * @param entity The entity you want to save to the repo.
@@ -193,6 +210,40 @@ export abstract class BaseRepository<T extends ValidEntity> extends ErrorProne {
      */
     protected async save(entity: T): Promise<T> {
         return this.repo.save(entity);
+    }
+
+    /**
+     * Bulk save multiple entities to the database (insert or update).
+     *
+     * @param entities Array of entities to save
+     * @returns A promise resolving to the saved entities
+     */
+    protected async saveAll(entities: T[]): Promise<T[]> {
+        return this.repo.save(entities);
+    }
+
+    /**
+     * Save an entity to the database on another table (insert or update).
+     *
+     * @param table The table on which to save the data on.
+     * @param entity The entity you want to save to the repo.
+     * @returns A promise resolving to your entity, once it successfully saved on the table given.
+     */
+    protected async saveOnOtherTable<J extends ValidEntity>(entity: J): Promise<J> {
+        const table = entity.constructor as new () => J;
+        return AppDataSource.getRepository(table).save(entity);
+    }
+
+    /**
+     * Bulk save multiple entities on another table (insert or update).
+     *
+     * @param entities Array of entities to save
+     * @returns A promise resolving to the saved entities
+     */
+    protected async saveAllOnOtherTable<J extends ValidEntity>(entities: J[]): Promise<J[]> {
+        if (entities.length === 0) return [];
+        const table = entities[0].constructor as new () => J;
+        return AppDataSource.getRepository(table).save(entities);
     }
 
     /**

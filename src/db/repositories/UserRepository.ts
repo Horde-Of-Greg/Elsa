@@ -2,7 +2,7 @@ import { BaseRepository } from './BaseRepository';
 import { UserTable } from '../entities/User';
 import { HostTable } from '../entities/Host';
 import { PermLevel, UserHostTable } from '../entities/UserHost';
-import { StandardError } from '../../types/error/StandardError';
+import { StandardError } from '../../types/errors/StandardError';
 
 export class UserRepository extends BaseRepository<UserTable> {
     constructor() {

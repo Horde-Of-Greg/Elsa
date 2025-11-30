@@ -1,6 +1,6 @@
 import { config } from '../config/config';
-import { TimeHelper } from '../helpers/TimeHelper';
 import { LogType } from '../types/logs/StandardLog';
+import { getTimestampNow } from '../utils/time';
 import { queryTimer } from './Timer';
 
 let logger: Logger | null = null;
@@ -70,7 +70,7 @@ export class Logger {
 
     private logPrefix(type: LogType | 'format'): string {
         const logName = `[${this.name}:${type.toUpperCase()}]`;
-        const logTimestamp = `[${TimeHelper.getTimestampNow()}]`;
+        const logTimestamp = `[${getTimestampNow()}]`;
         const padding = ' '.repeat(this.maxTypeLength - type.length);
 
         return `${logName}${padding}@${logTimestamp}`;

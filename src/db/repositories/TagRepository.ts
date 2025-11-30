@@ -7,11 +7,117 @@ import { FindOptionsRelations } from 'typeorm';
 import { HostTable } from '../entities/Host';
 import { CategoryTable } from '../entities/Category';
 import { CategoryTagTable } from '../entities/CategoryTag';
+import { SHA256Hash } from '../../utils/crypto/sha256Hash';
+
+export type TagElements = {
+    name: string;
+    body: string;
+    bodyHash: SHA256Hash;
+    author: UserTable;
+};
+
+export type TagHostElements = {
+    host: HostTable;
+    status?: TagHostStatus;
+};
 
 export class TagRepository extends BaseRepository<TagTable> {
     constructor() {
         super(TagTable);
     }
+
+    /*
+     * Create
+     */
+
+    createTag(elements: TagElements): TagTable {
+        return this.create({
+            name: elements.name,
+            body: elements.body,
+            bodyHash: elements.bodyHash,
+            authorId: elements.author.id,
+            isScript: false, //TODO: impl script tags
+        });
+    }
+
+    createAllTags(elements: TagElements[]): TagTable[] {
+        const tags = [];
+        for (const element of elements) {
+            tags.push(
+                this.create({
+                    name: element.name,
+                    body: element.body,
+                    bodyHash: element.bodyHash,
+                    authorId: element.author.id,
+                    isScript: false, //TODO: impl script tags
+                }),
+            );
+        }
+        return tags;
+    }
+
+    async saveTag(tag: TagTable, elements: TagHostElements): Promise<TagTable> {
+        await this.save(tag);
+
+        const tagHost = this.createOnOtherTable(TagHostTable, {
+            tagId: tag.id,
+            hostId: elements.host.id,
+            status: elements.status ?? TagHostStatus.PENDING,
+        });
+        await this.saveOnOtherTable(tagHost);
+
+        return tag;
+    }
+
+    async saveAllTags(elements: Map<TagTable, TagHostElements>): Promise<TagTable[]> {
+        const tags = Array.from(elements.keys());
+
+        await this.saveAll(tags);
+
+        const tagHosts = tags.map((tag) => {
+            const hostElements = elements.get(tag)!;
+            return this.createOnOtherTable(TagHostTable, {
+                tagId: tag.id,
+                hostId: hostElements.host.id,
+                status: hostElements.status ?? TagHostStatus.PENDING,
+            });
+        });
+
+        await this.saveAllOnOtherTable(tagHosts);
+
+        return tags;
+    }
+
+    async createAndSaveTag(
+        elements: TagElements,
+        statusOnHost: TagHostElements,
+    ): Promise<TagTable> {
+        return this.saveTag(this.createTag(elements), statusOnHost);
+    }
+
+    async createAndSaveAllTags(elements: Map<TagElements, TagHostElements>): Promise<TagTable[]> {
+        const tags = Array.from(elements.keys()).map((tagElements) => this.createTag(tagElements));
+
+        await this.saveAll(tags);
+
+        const tagHosts = tags.map((tag, index) => {
+            const tagElements = Array.from(elements.keys())[index];
+            const hostElements = elements.get(tagElements)!;
+            return this.createOnOtherTable(TagHostTable, {
+                tagId: tag.id,
+                hostId: hostElements.host.id,
+                status: hostElements.status ?? TagHostStatus.PENDING,
+            });
+        });
+
+        await this.saveAllOnOtherTable(tagHosts);
+
+        return tags;
+    }
+
+    /*
+     * Read
+     */
 
     async findAllByAuthor(author: UserTable): Promise<TagTable[]> {
         return this.findAll({ authorId: author.id });
@@ -30,12 +136,8 @@ export class TagRepository extends BaseRepository<TagTable> {
     }
 
     async findAllByHost(host: HostTable, status?: TagHostStatus): Promise<TagTable[]> {
-        const tagHosts = await this.findAllByJoin(TagHostTable, host, { status });
-        const tags: TagTable[] = [];
-        for (const tagHost of tagHosts) {
-            tags.push(tagHost.tag);
-        }
-        return tags;
+        const tagHosts = await this.findAllByJoin(TagHostTable, host, { status }, { tag: true });
+        return tagHosts.map((th) => th.tag);
     }
 
     async findAllByHostName(hostName: string, status?: TagHostStatus): Promise<TagTable[] | null> {
@@ -45,12 +147,10 @@ export class TagRepository extends BaseRepository<TagTable> {
     }
 
     async findAllByCategory(category: CategoryTable): Promise<TagTable[]> {
-        const categoryTags = await this.findAllByJoin(CategoryTagTable, category);
-        const tags: TagTable[] = [];
-        for (const categoryTag of categoryTags) {
-            tags.push(categoryTag.tag);
-        }
-        return tags;
+        const categoryTags = await this.findAllByJoin(CategoryTagTable, category, undefined, {
+            tag: true,
+        });
+        return categoryTags.map((ct) => ct.tag);
     }
 
     async findAllByCategoryName(categoryName: string): Promise<TagTable[] | null> {
@@ -84,4 +184,14 @@ export class TagRepository extends BaseRepository<TagTable> {
     async findWithRelations(id: number): Promise<TagTable | null> {
         return this.findOne({ id }, { overrides: true, author: true, tagHosts: true });
     }
+
+    async hashExists(hash: Buffer) {}
+
+    /*
+     * Update
+     */
+
+    /*
+     * Delete
+     */
 }

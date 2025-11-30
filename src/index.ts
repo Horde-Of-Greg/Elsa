@@ -5,7 +5,7 @@ import { BotEventHandler } from './bot/BotEventHandler';
 
 async function main() {
     await bootstrap();
-    Events.initEssentials();
+    Events.initCore();
 
     const botClient = new BotClient();
     const dcClient = getDcClient();

@@ -2,7 +2,7 @@ import type { Client, Message } from 'discord.js';
 import { ParsedMessage, parseMessage } from '../utils/parsing/parser';
 import { handleCommand } from '../commands';
 import { assert } from 'console';
-import { getLogger } from '../utils/Logger';
+import { getLogger } from '../core/Logger';
 
 export class BotEventHandler {
     constructor(private readonly client: Client) {}

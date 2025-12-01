@@ -22,9 +22,9 @@ import { app } from '../../core/App';
 export abstract class BaseRepository<T extends ValidEntity> extends ErrorProne {
     protected repo: Repository<T>;
 
-    constructor(private entityClass: new () => T) {
+    constructor(entityClass: new () => T) {
         super();
-        this.repo = app.database.dataSource.getRepository(this.entityClass);
+        this.repo = app.database.dataSource.getRepository(entityClass);
     }
 
     /**
@@ -123,7 +123,7 @@ export abstract class BaseRepository<T extends ValidEntity> extends ErrorProne {
      * Automatically adds the foreign key constraint for this entity.
      *
      * @param joinTable - The junction table entity class
-     * @param thisEntity - Instance of this entity (e.g., a User)
+     * @param thatEntity - Instance of another entity (e.g., a User on HostRepository)
      * @param where - Optional additional WHERE conditions
      * @returns Array of junction table records
      *
@@ -138,16 +138,18 @@ export abstract class BaseRepository<T extends ValidEntity> extends ErrorProne {
         thatEntity: O,
         where?: Partial<FindOptionsWhere<J>>,
         relations?: FindOptionsRelations<J>,
-    ): Promise<J[]> {
+    ): Promise<J[] | StandardError> {
         const connectedTables = getConnectedTables(joinTable);
         if (this.isError(connectedTables)) {
-            return this.propagateError(connectedTables, 'Find all joins failed.') as any;
+            return this.propagateError(connectedTables, 'Find all joins failed.');
         }
 
-        const thisFieldName = this.getEntityIdField(this.entityClass.name);
+        const thatTable = thatEntity.constructor as new () => O;
+
+        const thatFieldName = this.getEntityIdField(thatTable.name);
 
         const fullWhere = {
-            [thisFieldName]: thatEntity.id,
+            [thatFieldName]: thatEntity.id,
             ...where,
         } as FindOptionsWhere<J>;
 

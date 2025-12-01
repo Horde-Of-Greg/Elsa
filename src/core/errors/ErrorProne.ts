@@ -1,3 +1,4 @@
+import { string } from 'zod';
 import { StandardError } from './StandardError';
 
 export abstract class ErrorProne {

@@ -12,8 +12,8 @@ export class UserTable {
     @Column({ type: 'varchar', length: 32 })
     discordId: string;
 
-    @Column({ type: 'varchar', length: 64 })
-    name: string;
+    @Column({ type: 'varchar', length: 64, nullable: true, default: 'Unknown' })
+    name: string | null;
 
     @OneToMany(() => UserHostTable, (uh) => uh.user)
     userHosts: UserHostTable[];

@@ -15,7 +15,7 @@ export class Events extends ErrorProne {
             .then(async () => {
                 if (env.ENVIRONMENT === 'development') {
                     const seeder = new Seeder(seederConfig);
-                    seeder.seed;
+                    seeder.seed();
                 }
             })
             .catch((error) => console.log(error));

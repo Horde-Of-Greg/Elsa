@@ -8,6 +8,7 @@ import { HostTable } from '../entities/Host';
 import { CategoryTable } from '../entities/Category';
 import { CategoryTagTable } from '../entities/CategoryTag';
 import { SHA256Hash } from '../../utils/crypto/sha256Hash';
+import { StandardError } from '../../core/errors/StandardError';
 
 export type TagElements = {
     name: string;
@@ -96,13 +97,13 @@ export class TagRepository extends BaseRepository<TagTable> {
     }
 
     async createAndSaveManyTags(elements: Map<TagElements, TagHostElements>): Promise<TagTable[]> {
-        const tags = Array.from(elements.keys()).map((tagElements) => this.createTag(tagElements));
+        const entries = Array.from(elements.entries());
+        const tags = entries.map(([tagElements]) => this.createTag(tagElements));
 
         await this.saveMany(tags);
 
         const tagHosts = tags.map((tag, index) => {
-            const tagElements = Array.from(elements.keys())[index];
-            const hostElements = elements.get(tagElements)!;
+            const [_, hostElements] = entries[index];
             return this.createOnOtherTable(TagHostTable, {
                 tagId: tag.id,
                 hostId: hostElements.host.id,
@@ -135,28 +136,67 @@ export class TagRepository extends BaseRepository<TagTable> {
         return this.findAllByAuthor(author);
     }
 
-    async findAllByHost(host: HostTable, status?: TagHostStatus): Promise<TagTable[]> {
+    async findAllByHost(
+        host: HostTable,
+        status?: TagHostStatus,
+    ): Promise<TagTable[] | StandardError> {
         const tagHosts = await this.findAllByJoin(TagHostTable, host, { status }, { tag: true });
+
+        if (this.isError(tagHosts)) {
+            return this.propagateError(
+                tagHosts,
+                'Could not find tags by category. Join Table not found.',
+            );
+        }
         return tagHosts.map((th) => th.tag);
     }
 
-    async findAllByHostName(hostName: string, status?: TagHostStatus): Promise<TagTable[] | null> {
+    async findAllByHostName(
+        hostName: string,
+        status?: TagHostStatus,
+    ): Promise<TagTable[] | StandardError | null> {
         const host = await this.findOneOnOtherTable(HostTable, { name: hostName });
         if (!host) return null;
-        return this.findAllByHost(host, status);
+
+        const all = this.findAllByHost(host, status);
+        if (this.isError(all)) {
+            return this.propagateError(
+                all,
+                'Could not tags by Host Name. Find all tags by host failed.',
+            );
+        }
+
+        return all;
     }
 
-    async findAllByCategory(category: CategoryTable): Promise<TagTable[]> {
+    async findAllByCategory(category: CategoryTable): Promise<TagTable[] | StandardError> {
         const categoryTags = await this.findAllByJoin(CategoryTagTable, category, undefined, {
             tag: true,
         });
+
+        if (this.isError(categoryTags)) {
+            return this.propagateError(
+                categoryTags,
+                'Could not find tags by category. Join Table not found.',
+            );
+        }
         return categoryTags.map((ct) => ct.tag);
     }
 
-    async findAllByCategoryName(categoryName: string): Promise<TagTable[] | null> {
-        const category = await this.findOneOnOtherTable(HostTable, { name: categoryName });
+    async findAllByCategoryName(categoryName: string): Promise<TagTable[] | StandardError | null> {
+        const category = await this.findOneOnOtherTable(CategoryTable, { name: categoryName });
         if (!category) return null;
-        return this.findAllByHost(category);
+        this.findAllByCategory(category);
+
+        const all = this.findAllByCategory(category);
+        if (this.isError(all)) {
+            return this.propagateError(
+                all,
+                'Could not tags by Host Name. Find all tags by host failed.',
+            );
+        }
+
+        return all;
     }
 
     async findByName(name: string): Promise<TagTable | null> {
@@ -176,8 +216,8 @@ export class TagRepository extends BaseRepository<TagTable> {
     }
 
     async findByNameOrAlias(nameOrAlias: string): Promise<TagTable | null> {
-        let tag = this.findByName(nameOrAlias);
-        if (!tag) tag = this.findByAlias(nameOrAlias);
+        let tag = await this.findByName(nameOrAlias);
+        if (!tag) tag = await this.findByAlias(nameOrAlias);
         return tag;
     }
 

@@ -1,6 +1,6 @@
 # Scope: DB
 
-1. Finish repository layer
+1. Finish repository layer - DONE
 2. Make the DB services layer
 3. Add seeding
 4. Refactor configs

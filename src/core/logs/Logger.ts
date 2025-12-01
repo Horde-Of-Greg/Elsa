@@ -1,9 +1,6 @@
-import { config } from '../config/config';
-import { LogType } from '../types/logs/StandardLog';
-import { getTimestampNow } from '../utils/time';
-import { queryTimer } from './Timer';
-
-let logger: Logger | null = null;
+import { config } from '../../config/config';
+import { LogType } from './StandardLog';
+import { getTimestampNow } from '../../utils/time';
 
 enum AnsiColor {
     ERROR = '\x1b[31m',
@@ -89,15 +86,4 @@ export class Logger {
 
         return `|${dashes} ${title} ${dashes}${extraDash}|`;
     }
-}
-
-export function initLogger(): Logger {
-    if (logger) return logger;
-    logger = new Logger();
-    return logger;
-}
-
-export function getLogger(): Logger {
-    if (!logger) throw new Error('Logger not initialized. Call initLogger() first.');
-    return logger;
 }

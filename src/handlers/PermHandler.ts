@@ -1,9 +1,9 @@
 import { Repository } from 'typeorm';
-import { AppDataSource } from '../db/dataSource';
 import { config } from '../config/config';
 import { UserHostTable } from '../db/entities/UserHost';
 import { UserTable } from '../db/entities/User';
 import { HostTable } from '../db/entities/Host';
+import { app } from '../core/App';
 
 let permHandler: PermHandler | null = null;
 
@@ -17,9 +17,9 @@ export class PermHandler {
     setRankPermLevel: Number;
 
     constructor() {
-        this.userRepo = AppDataSource.getRepository(UserTable);
-        this.userHostRepo = AppDataSource.getRepository(UserHostTable);
-        this.hostRepo = AppDataSource.getRepository(HostTable);
+        this.userRepo = app.database.dataSource.getRepository(UserTable);
+        this.userHostRepo = app.database.dataSource.getRepository(UserHostTable);
+        this.hostRepo = app.database.dataSource.getRepository(HostTable);
 
         this.tagPermLevel = config.CMD_RANKS.TAG;
         this.addTagPermLevel = config.CMD_RANKS.ADD_TAG;

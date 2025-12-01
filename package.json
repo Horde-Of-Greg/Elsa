@@ -4,8 +4,12 @@
     "main": "dist/index.js",
     "scripts": {
         "build": "tsc",
-        "start": "node dist/index.js",
-        "dev": "ts-node src/index.ts"
+        "start": "node dist/main.js",
+        "dev": "ts-node src/main.ts",
+        "db:drop": "node scripts/db-drop.js",
+        "db:create": "node scripts/db-create.js",
+        "db:reset": "node scripts/db-reset.js",
+        "db:psql": "node scripts/db-psql.js"
     },
     "dependencies": {
         "discord.js": "^14.14.1",

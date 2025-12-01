@@ -1,5 +1,5 @@
-import { Repository, Entity } from 'typeorm';
-import { AppDataSource } from '../db/dataSource';
+import { app } from './../core/App';
+import { Repository, Entity, DataSource } from 'typeorm';
 import { CategoryTable } from '../db/entities/Category';
 import { CategoryTagTable } from '../db/entities/CategoryTag';
 import { HostTable } from '../db/entities/Host';
@@ -26,22 +26,18 @@ export class DbHandler {
     userRepo: Repository<UserTable>;
     userHostRepo: Repository<UserHostTable>;
 
-    constructor(private readonly appDataSource: typeof AppDataSource) {
+    constructor(appDataSource: DataSource) {
         // Initialize all repos. Yes, this is ugly but I don't want recursion either.
-        this.categoryRepo = AppDataSource.getRepository(CategoryTable);
-        this.categoryTagRepo = AppDataSource.getRepository(CategoryTagTable);
-        this.hostRepo = AppDataSource.getRepository(HostTable);
-        this.hostAliasRepo = AppDataSource.getRepository(HostAliasTable);
-        this.tagRepo = AppDataSource.getRepository(TagTable);
-        this.tagAliasRepo = AppDataSource.getRepository(TagAliasTable);
-        this.TagOverrideRepo = AppDataSource.getRepository(TagOverridesTable);
-        this.tagHostRepo = AppDataSource.getRepository(TagHostTable);
-        this.userRepo = AppDataSource.getRepository(UserTable);
-        this.userHostRepo = AppDataSource.getRepository(UserHostTable);
-    }
-
-    getDataSource() {
-        return this.appDataSource;
+        this.categoryRepo = appDataSource.getRepository(CategoryTable);
+        this.categoryTagRepo = appDataSource.getRepository(CategoryTagTable);
+        this.hostRepo = appDataSource.getRepository(HostTable);
+        this.hostAliasRepo = appDataSource.getRepository(HostAliasTable);
+        this.tagRepo = appDataSource.getRepository(TagTable);
+        this.tagAliasRepo = appDataSource.getRepository(TagAliasTable);
+        this.TagOverrideRepo = appDataSource.getRepository(TagOverridesTable);
+        this.tagHostRepo = appDataSource.getRepository(TagHostTable);
+        this.userRepo = appDataSource.getRepository(UserTable);
+        this.userHostRepo = appDataSource.getRepository(UserHostTable);
     }
 
     async createNewTag(
@@ -112,13 +108,13 @@ export class DbHandler {
     }
 
     repoFromEntity(entity: ValidEntity) {
-        return AppDataSource.getRepository(entity.constructor as any);
+        return app.database.dataSource.getRepository(entity.constructor as any);
     }
 }
 
 export async function initDbHandler(): Promise<DbHandler> {
     if (dbHandler) return dbHandler;
-    const ds = AppDataSource;
+    const ds = app.database.dataSource;
     dbHandler = new DbHandler(ds);
     return dbHandler;
 }

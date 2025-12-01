@@ -40,7 +40,7 @@ export class TagRepository extends BaseRepository<TagTable> {
         });
     }
 
-    createAllTags(elements: TagElements[]): TagTable[] {
+    createManyTags(elements: TagElements[]): TagTable[] {
         const tags = [];
         for (const element of elements) {
             tags.push(
@@ -69,10 +69,10 @@ export class TagRepository extends BaseRepository<TagTable> {
         return tag;
     }
 
-    async saveAllTags(elements: Map<TagTable, TagHostElements>): Promise<TagTable[]> {
+    async saveManyTags(elements: Map<TagTable, TagHostElements>): Promise<TagTable[]> {
         const tags = Array.from(elements.keys());
 
-        await this.saveAll(tags);
+        await this.saveMany(tags);
 
         const tagHosts = tags.map((tag) => {
             const hostElements = elements.get(tag)!;
@@ -83,7 +83,7 @@ export class TagRepository extends BaseRepository<TagTable> {
             });
         });
 
-        await this.saveAllOnOtherTable(tagHosts);
+        await this.saveManyOnOtherTable(tagHosts);
 
         return tags;
     }
@@ -95,10 +95,10 @@ export class TagRepository extends BaseRepository<TagTable> {
         return this.saveTag(this.createTag(elements), statusOnHost);
     }
 
-    async createAndSaveAllTags(elements: Map<TagElements, TagHostElements>): Promise<TagTable[]> {
+    async createAndSaveManyTags(elements: Map<TagElements, TagHostElements>): Promise<TagTable[]> {
         const tags = Array.from(elements.keys()).map((tagElements) => this.createTag(tagElements));
 
-        await this.saveAll(tags);
+        await this.saveMany(tags);
 
         const tagHosts = tags.map((tag, index) => {
             const tagElements = Array.from(elements.keys())[index];
@@ -110,7 +110,7 @@ export class TagRepository extends BaseRepository<TagTable> {
             });
         });
 
-        await this.saveAllOnOtherTable(tagHosts);
+        await this.saveManyOnOtherTable(tagHosts);
 
         return tags;
     }
@@ -185,11 +185,55 @@ export class TagRepository extends BaseRepository<TagTable> {
         return this.findOne({ id }, { overrides: true, author: true, tagHosts: true });
     }
 
-    async hashExists(hash: Buffer) {}
+    async hashExists(hash: SHA256Hash) {
+        return this.exists({ bodyHash: hash });
+    }
 
     /*
      * Update
      */
+
+    async safeUpdateOne(tag: TagTable): Promise<boolean> {
+        if (await this.exists({ id: tag.id })) {
+            return false;
+        }
+        await this.save(tag);
+        return true;
+    }
+
+    async safeUpdateMany(tags: TagTable[]): Promise<void> {
+        tags.filter((tag) => !this.exists({ id: tag.id }));
+        await this.saveMany(tags);
+    }
+
+    async forceUpdateOne(tag: TagTable): Promise<void> {
+        await this.save(tag);
+    }
+
+    async forceUpdateMany(tags: TagTable[]): Promise<void> {
+        await this.saveMany(tags);
+    }
+
+    async banTagOnHost(tag: TagTable, host: HostTable): Promise<TagTable | null> {
+        const tagHost = await this.findOneByJoin(TagHostTable, tag, host);
+        if (!tagHost) return null;
+        if (tagHost.status === TagHostStatus.BANNED) return null;
+        tagHost.status = TagHostStatus.BANNED;
+        this.saveOnOtherTable(tagHost);
+        return tag;
+    }
+
+    async banManyTagsOnHost(tags: TagTable[], host: HostTable): Promise<TagTable[]> {
+        const tagHosts: TagHostTable[] = [];
+        for (const tag of tags) {
+            const tagHost = await this.findOneByJoin(TagHostTable, tag, host);
+            if (!tagHost) continue;
+            tagHost.status = TagHostStatus.BANNED;
+            tagHosts.push(tagHost);
+        }
+        this.saveManyOnOtherTable(tagHosts);
+        return tags;
+    }
 
     /*
      * Delete

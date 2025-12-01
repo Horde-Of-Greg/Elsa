@@ -7,11 +7,11 @@ import {
     FindOptionsSelect,
     FindOptionsRelations,
 } from 'typeorm';
-import { AppDataSource } from '../dataSource';
 import { ValidEntity } from '../types/entities';
-import { ErrorProne } from '../../types/errors/ErrorProne';
-import { StandardError } from '../../types/errors/StandardError';
+import { ErrorProne } from '../../core/errors/ErrorProne';
+import { StandardError } from '../../core/errors/StandardError';
 import { getConnectedTables } from '../utils/JoinTables';
+import { app } from '../../core/App';
 
 /**
  * Base repository providing common CRUD operations for all entities.
@@ -24,7 +24,7 @@ export abstract class BaseRepository<T extends ValidEntity> extends ErrorProne {
 
     constructor(private entityClass: new () => T) {
         super();
-        this.repo = AppDataSource.getRepository(this.entityClass);
+        this.repo = app.database.dataSource.getRepository(this.entityClass);
     }
 
     /**
@@ -82,7 +82,7 @@ export abstract class BaseRepository<T extends ValidEntity> extends ErrorProne {
         where: FindOptionsWhere<J>,
         relations?: FindOptionsRelations<J>,
     ): Promise<J | null> {
-        return AppDataSource.getRepository(otherTable).findOne({ where, relations });
+        return app.database.dataSource.getRepository(otherTable).findOne({ where, relations });
     }
 
     /**
@@ -115,7 +115,7 @@ export abstract class BaseRepository<T extends ValidEntity> extends ErrorProne {
             [otherFieldName]: otherEntity.id,
         } as FindOptionsWhere<J>;
 
-        return AppDataSource.getRepository(joinTable).findOne({ where });
+        return app.database.dataSource.getRepository(joinTable).findOne({ where });
     }
 
     /**
@@ -151,7 +151,9 @@ export abstract class BaseRepository<T extends ValidEntity> extends ErrorProne {
             ...where,
         } as FindOptionsWhere<J>;
 
-        return AppDataSource.getRepository(joinTable).find({ where: fullWhere, relations });
+        return app.database.dataSource
+            .getRepository(joinTable)
+            .find({ where: fullWhere, relations });
     }
 
     /**
@@ -199,7 +201,7 @@ export abstract class BaseRepository<T extends ValidEntity> extends ErrorProne {
         table: new () => J,
         data: DeepPartial<J>,
     ): J {
-        return AppDataSource.getRepository(table).create(data);
+        return app.database.dataSource.getRepository(table).create(data);
     }
 
     /**
@@ -218,7 +220,7 @@ export abstract class BaseRepository<T extends ValidEntity> extends ErrorProne {
      * @param entities Array of entities to save
      * @returns A promise resolving to the saved entities
      */
-    protected async saveAll(entities: T[]): Promise<T[]> {
+    protected async saveMany(entities: T[]): Promise<T[]> {
         return this.repo.save(entities);
     }
 
@@ -231,7 +233,7 @@ export abstract class BaseRepository<T extends ValidEntity> extends ErrorProne {
      */
     protected async saveOnOtherTable<J extends ValidEntity>(entity: J): Promise<J> {
         const table = entity.constructor as new () => J;
-        return AppDataSource.getRepository(table).save(entity);
+        return app.database.dataSource.getRepository(table).save(entity);
     }
 
     /**
@@ -240,10 +242,10 @@ export abstract class BaseRepository<T extends ValidEntity> extends ErrorProne {
      * @param entities Array of entities to save
      * @returns A promise resolving to the saved entities
      */
-    protected async saveAllOnOtherTable<J extends ValidEntity>(entities: J[]): Promise<J[]> {
+    protected async saveManyOnOtherTable<J extends ValidEntity>(entities: J[]): Promise<J[]> {
         if (entities.length === 0) return [];
         const table = entities[0].constructor as new () => J;
-        return AppDataSource.getRepository(table).save(entities);
+        return app.database.dataSource.getRepository(table).save(entities);
     }
 
     /**

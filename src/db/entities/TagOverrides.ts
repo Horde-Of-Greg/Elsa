@@ -27,7 +27,7 @@ export class TagOverridesTable {
     @JoinColumn({ name: 'tag_host_id' })
     tagHost: TagHostTable;
 
-    @Column({ nullable: true })
+    @Column({ type: 'integer', nullable: true })
     authorOverrideId: number | null;
     @ManyToOne(() => UserTable, { onDelete: 'SET NULL' })
     @JoinColumn({ name: 'author_override_id' })

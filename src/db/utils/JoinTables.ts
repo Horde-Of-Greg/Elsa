@@ -1,4 +1,4 @@
-import { StandardError } from '../../types/errors/StandardError';
+import { StandardError } from '../../core/errors/StandardError';
 import { CategoryTable } from '../entities/Category';
 import { CategoryTagTable } from '../entities/CategoryTag';
 import { HostTable } from '../entities/Host';

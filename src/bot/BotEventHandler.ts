@@ -1,20 +1,18 @@
 import type { Client, Message } from 'discord.js';
 import { ParsedMessage, parseMessage } from '../utils/parsing/parser';
-import { handleCommand } from '../commands';
 import { assert } from 'console';
-import { getLogger } from '../core/Logger';
+import { app } from '../core/App';
 
 export class BotEventHandler {
     constructor(private readonly client: Client) {}
 
     async onReady() {
-        getLogger().simpleLog('info', `Bot ready as ${this.client.user?.tag}`);
+        app.core.logger.simpleLog('info', `Bot ready as ${this.client.user?.tag}`);
     }
 
     async onMessageCreate(message: Message) {
         try {
             const parsedMessage: ParsedMessage = parseMessage(message.content);
-            await handleCommand(message, parsedMessage);
         } catch (e) {
             // If the message couldn't be parsed, it's not a command - just ignore it
             if (e instanceof Error && e.message === 'Could not parse message') {

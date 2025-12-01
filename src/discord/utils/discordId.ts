@@ -1,7 +1,6 @@
-import { User } from 'discord.js';
-import { getBotClient, getDcClient } from '../../client/BotClient';
+import { app } from '../../core/App';
 
 export async function findDcIdByUsername(discordUsername: string): Promise<string | null> {
-    const user = await getDcClient().users.fetch(discordUsername);
+    const user = await app.discord.dcClient.users.fetch(discordUsername);
     return user?.id ? user.id : null;
 }

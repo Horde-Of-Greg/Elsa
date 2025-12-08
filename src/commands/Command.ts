@@ -7,9 +7,20 @@ import { TagService } from '../services/TagService';
 import { PermissionsService } from '../services/PermsService';
 import { HostService } from '../services/HostService';
 import { NoContextError, NoGuildError } from '../core/errors/internal/commands';
+import { CommandContext, CommandParams, ParseResult } from './types';
+
+// Constructor type for CommandInstance subclasses
+type CommandInstanceConstructor<TInstance extends CommandInstance> = new (
+    context: CommandContext,
+    parseResult: ParseResult,
+    params: CommandParams,
+) => TInstance;
 
 export abstract class CommandDef<TInstance extends CommandInstance> {
-    constructor(protected params: CommandParams) {}
+    constructor(
+        protected params: CommandParams,
+        private instanceConstructor: CommandInstanceConstructor<TInstance>,
+    ) {}
 
     parse(message: Message): ParseResult | null {
         const pattern = [
@@ -60,7 +71,12 @@ export abstract class CommandDef<TInstance extends CommandInstance> {
         return this.params;
     }
 
-    abstract createInstance(context: CommandContext, parseResult: ParseResult): TInstance;
+    /**
+     * Create a new instance to execute this command.
+     */
+    createInstance(context: CommandContext, parseResult: ParseResult): TInstance {
+        return new this.instanceConstructor(context, parseResult, this.params);
+    }
 }
 
 export abstract class CommandInstance {
@@ -135,28 +151,3 @@ export abstract class CommandInstance {
         this.context.message.reply(error.message);
     }
 }
-
-export type CommandContext = {
-    message: Message;
-    author: User;
-    guild: Guild;
-    channel: Channel;
-};
-
-export type ParseResult = {
-    command: string;
-    server?: string;
-    subcommand?: string;
-    args?: string[];
-};
-
-export type CommandParams = {
-    name: string;
-    aliases: string[];
-    permLevelRequired: PermLevel;
-    cooldown_s: number;
-    info?: {
-        usage: string;
-        examples?: string[];
-    };
-};

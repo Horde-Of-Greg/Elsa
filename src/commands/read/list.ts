@@ -1,19 +1,17 @@
 import { PermLevel } from '../../db/entities/UserHost';
-import { CommandContext, CommandDef, CommandInstance, ParseResult } from '../Command';
-import { CommandTagDef } from './tag';
+import { CommandDef, CommandInstance } from '../Command';
 
 export class CommandListDef extends CommandDef<CommandListInstance> {
     constructor() {
-        super({
-            name: 'list',
-            aliases: ['l', 'li'],
-            permLevelRequired: PermLevel.DEFAULT,
-            cooldown_s: -1,
-        });
-    }
-
-    createInstance(context: CommandContext, parseResult: ParseResult): CommandListInstance {
-        return new CommandListInstance(context, parseResult, this.params);
+        super(
+            {
+                name: 'list',
+                aliases: ['l', 'li'],
+                permLevelRequired: PermLevel.DEFAULT,
+                cooldown_s: -1,
+            },
+            CommandListInstance,
+        );
     }
 }
 

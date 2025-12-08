@@ -1,18 +1,17 @@
 import { PermLevel } from '../../db/entities/UserHost';
-import { CommandContext, CommandDef, CommandInstance, ParseResult } from '../Command';
+import { CommandDef, CommandInstance } from '../Command';
 
 export class CommandSetRankDef extends CommandDef<CommandSetRankInstance> {
     constructor() {
-        super({
-            name: 'setrank',
-            aliases: ['sr', 'srank'],
-            permLevelRequired: PermLevel.OWNER,
-            cooldown_s: -1,
-        });
-    }
-
-    createInstance(context: CommandContext, parseResult: ParseResult): CommandSetRankInstance {
-        return new CommandSetRankInstance(context, parseResult, this.params);
+        super(
+            {
+                name: 'setrank',
+                aliases: ['sr', 'srank'],
+                permLevelRequired: PermLevel.OWNER,
+                cooldown_s: -1,
+            },
+            CommandSetRankInstance,
+        );
     }
 }
 

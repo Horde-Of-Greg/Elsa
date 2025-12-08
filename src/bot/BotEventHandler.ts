@@ -1,7 +1,7 @@
 import type { Client, Message } from 'discord.js';
 import { app } from '../core/App';
 import { CommandRouter } from '../commands/CommandRouter';
-import { CommandContext } from '../commands/Command';
+import { CommandContext } from '../commands/types';
 
 export class BotEventHandler {
     router: CommandRouter;

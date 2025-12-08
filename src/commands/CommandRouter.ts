@@ -1,8 +1,9 @@
 import { Message } from 'discord.js';
-import { CommandContext, CommandDef, CommandInstance } from './Command';
+import { CommandDef, CommandInstance } from './Command';
 import { commands } from './Commands';
 import { config } from '../config/config';
 import { app } from '../core/App';
+import { CommandContext } from './types';
 
 export class CommandRouter {
     private commandList: CommandDef<CommandInstance>[];

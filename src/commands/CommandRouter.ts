@@ -1,12 +1,12 @@
 import { Message } from 'discord.js';
-import { CommandContext, CommandDef } from './Command';
+import { CommandContext, CommandDef, CommandInstance } from './Command';
 import { commands } from './Commands';
 import { config } from '../config/config';
 import { app } from '../core/App';
 
 export class CommandRouter {
-    private commandList: CommandDef[];
-    private hashMap: Map<string, CommandDef>;
+    private commandList: CommandDef<CommandInstance>[];
+    private hashMap: Map<string, CommandDef<CommandInstance>>;
 
     constructor() {
         this.commandList = commands.getAll();

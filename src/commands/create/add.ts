@@ -6,13 +6,13 @@ import { TagBodyExistsError, TagExistsError } from '../../core/errors/client/409
 import { SHA256Hash } from '../../utils/crypto/sha256Hash';
 import { app } from '../../core/App';
 
-export class CommandAddDef extends CommandDef {
-    createInstance(context: CommandContext, parseResult: ParseResult): CommandInstance {
+export class CommandAddDef extends CommandDef<CommandAddInstance> {
+    createInstance(context: CommandContext, parseResult: ParseResult): CommandAddInstance {
         return new CommandAddInstance(context, parseResult, this.params);
     }
 }
 
-export class CommandAddInstance extends CommandInstance {
+class CommandAddInstance extends CommandInstance {
     // Ex: !add <name:test> <content:...>
     private tagName!: string;
     private tagBody!: string;

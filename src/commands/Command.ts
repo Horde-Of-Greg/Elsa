@@ -8,32 +8,7 @@ import { PermissionsService } from '../services/PermsService';
 import { HostService } from '../services/HostService';
 import { NoContextError, NoGuildError } from '../core/errors/internal/commands';
 
-export type CommandContext = {
-    message: Message;
-    author: User;
-    guild: Guild;
-    channel: Channel;
-};
-
-export type ParseResult = {
-    command: string;
-    server?: string;
-    subcommand?: string;
-    args?: string[];
-};
-
-export type CommandParams = {
-    name: string;
-    aliases: string[];
-    permLevelRequired: PermLevel;
-    cooldown_s: number;
-    info?: {
-        usage: string;
-        examples?: string[];
-    };
-};
-
-export abstract class CommandDef {
+export abstract class CommandDef<TInstance extends CommandInstance> {
     constructor(protected params: CommandParams) {}
 
     parse(message: Message): ParseResult | null {
@@ -85,7 +60,7 @@ export abstract class CommandDef {
         return this.params;
     }
 
-    abstract createInstance(context: CommandContext, parseResult: ParseResult): CommandInstance;
+    abstract createInstance(context: CommandContext, parseResult: ParseResult): TInstance;
 }
 
 export abstract class CommandInstance {
@@ -160,3 +135,28 @@ export abstract class CommandInstance {
         this.context.message.reply(error.message);
     }
 }
+
+export type CommandContext = {
+    message: Message;
+    author: User;
+    guild: Guild;
+    channel: Channel;
+};
+
+export type ParseResult = {
+    command: string;
+    server?: string;
+    subcommand?: string;
+    args?: string[];
+};
+
+export type CommandParams = {
+    name: string;
+    aliases: string[];
+    permLevelRequired: PermLevel;
+    cooldown_s: number;
+    info?: {
+        usage: string;
+        examples?: string[];
+    };
+};

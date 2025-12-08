@@ -1,6 +1,6 @@
 import { config } from '../config/config';
 import { PermLevel } from '../db/entities/UserHost';
-import { CommandDef } from './Command';
+import { CommandDef, CommandInstance } from './Command';
 import { CommandAddDef } from './create/add';
 import { CommandListDef } from './read/list';
 import { CommandTagDef } from './read/tag';
@@ -55,7 +55,7 @@ class Commands {
         }));
     }
 
-    getAll(): CommandDef[] {
+    getAll(): CommandDef<CommandInstance>[] {
         return [this.add, this.list, this.tag, this.setRank];
     }
 }

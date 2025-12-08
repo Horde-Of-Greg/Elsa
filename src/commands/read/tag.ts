@@ -1,13 +1,12 @@
 import { CommandContext, CommandDef, CommandInstance, ParseResult } from '../Command';
-import { CommandAddInstance } from '../create/add';
 
-export class CommandTagDef extends CommandDef {
-    createInstance(context: CommandContext, parseResult: ParseResult): CommandInstance {
-        return new CommandAddInstance(context, parseResult, this.params);
+export class CommandTagDef extends CommandDef<CommandTagInstance> {
+    createInstance(context: CommandContext, parseResult: ParseResult): CommandTagInstance {
+        return new CommandTagInstance(context, parseResult, this.params);
     }
 }
 
-export class CommandTagInstance extends CommandInstance {
+class CommandTagInstance extends CommandInstance {
     protected async validateArguments(): Promise<void> {
         throw new Error('Method not implemented.');
     }

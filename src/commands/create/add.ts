@@ -5,8 +5,18 @@ import { config } from '../../config/config';
 import { TagBodyExistsError, TagExistsError } from '../../core/errors/client/409';
 import { SHA256Hash } from '../../utils/crypto/sha256Hash';
 import { app } from '../../core/App';
+import { PermLevel } from '../../db/entities/UserHost';
 
 export class CommandAddDef extends CommandDef<CommandAddInstance> {
+    constructor() {
+        super({
+            name: 'add',
+            aliases: ['a'],
+            permLevelRequired: PermLevel.TRUSTED,
+            cooldown_s: 5,
+        });
+    }
+
     createInstance(context: CommandContext, parseResult: ParseResult): CommandAddInstance {
         return new CommandAddInstance(context, parseResult, this.params);
     }

@@ -20,39 +20,19 @@ class Commands {
     private _setRank?: CommandSetRankDef;
 
     get add(): CommandAddDef {
-        return (this._add ??= new CommandAddDef({
-            name: 'add',
-            aliases: ['a'],
-            permLevelRequired: PermLevel.TRUSTED,
-            cooldown_s: 5,
-        }));
+        return (this._add ??= new CommandAddDef());
     }
 
     get list(): CommandListDef {
-        return (this._list ??= new CommandListDef({
-            name: 'list',
-            aliases: ['l', 'li'],
-            permLevelRequired: PermLevel.DEFAULT,
-            cooldown_s: -1,
-        }));
+        return (this._list ??= new CommandListDef());
     }
 
     get tag(): CommandTagDef {
-        return (this._tag ??= new CommandTagDef({
-            name: 'tag',
-            aliases: ['t'],
-            permLevelRequired: PermLevel.DEFAULT,
-            cooldown_s: -1,
-        }));
+        return (this._tag ??= new CommandTagDef());
     }
 
     get setRank(): CommandSetRankDef {
-        return (this._setRank ??= new CommandSetRankDef({
-            name: 'setrank',
-            aliases: ['sr', 'srank'],
-            permLevelRequired: PermLevel.OWNER,
-            cooldown_s: -1,
-        }));
+        return (this._setRank ??= new CommandSetRankDef());
     }
 
     getAll(): CommandDef<CommandInstance>[] {

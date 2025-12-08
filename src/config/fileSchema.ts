@@ -19,6 +19,7 @@ export const ConfigFileSchema = z.object({
         addTag: z.number().int().max(4),
         setRank: z.number().int().max(4),
     }),
+    verboseLogging: z.boolean(),
 });
 
 export const SeederConfigFileSchema = z.object({

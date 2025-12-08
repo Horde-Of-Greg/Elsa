@@ -14,4 +14,15 @@ export class HostRepository extends BaseRepository<HostTable> {
     async findByName(name: string): Promise<HostTable | null> {
         return this.findOne({ name });
     }
+
+    async findOrCreateByDiscordId(discordId: string, name: string): Promise<HostTable> {
+        let host = await this.findByDiscordId(discordId);
+
+        if (!host) {
+            host = this.create({ discordId, name });
+            await this.save(host);
+        }
+
+        return host;
+    }
 }

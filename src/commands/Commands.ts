@@ -1,60 +1,61 @@
+import { config } from '../config/config';
 import { PermLevel } from '../db/entities/UserHost';
-import { BaseCommand } from './BaseCommand';
-import { CommandAdd } from './create/add';
-import { CommandList } from './read/list';
-import { CommandTag } from './read/tag';
-import { CommandSetRank } from './update/setrank';
+import { CommandDef } from './Command';
+import { CommandAddDef } from './create/add';
+import { CommandListDef } from './read/list';
+import { CommandTagDef } from './read/tag';
+import { CommandSetRankDef } from './update/setrank';
 
 class Commands {
     // Create
-    private _add?: CommandAdd;
+    private _add?: CommandAddDef;
 
     // Delete
 
     // Read
-    private _list?: CommandList;
-    private _tag?: CommandTag;
+    private _list?: CommandListDef;
+    private _tag?: CommandTagDef;
 
     // Update
-    private _setRank?: CommandSetRank;
+    private _setRank?: CommandSetRankDef;
 
-    get add(): CommandAdd {
-        return (this._add ??= new CommandAdd({
+    get add(): CommandAddDef {
+        return (this._add ??= new CommandAddDef({
             name: 'add',
             aliases: ['a'],
             permLevelRequired: PermLevel.TRUSTED,
-            cooldown: 5,
+            cooldown_s: 5,
         }));
     }
 
-    get list(): CommandList {
-        return (this._list ??= new CommandList({
+    get list(): CommandListDef {
+        return (this._list ??= new CommandListDef({
             name: 'list',
             aliases: ['l', 'li'],
             permLevelRequired: PermLevel.DEFAULT,
-            cooldown: -1,
+            cooldown_s: -1,
         }));
     }
 
-    get tag(): CommandTag {
-        return (this._tag ??= new CommandTag({
+    get tag(): CommandTagDef {
+        return (this._tag ??= new CommandTagDef({
             name: 'tag',
             aliases: ['t'],
             permLevelRequired: PermLevel.DEFAULT,
-            cooldown: -1,
+            cooldown_s: -1,
         }));
     }
 
-    get setRank(): CommandSetRank {
-        return (this._setRank ??= new CommandSetRank({
+    get setRank(): CommandSetRankDef {
+        return (this._setRank ??= new CommandSetRankDef({
             name: 'setrank',
             aliases: ['sr', 'srank'],
             permLevelRequired: PermLevel.OWNER,
-            cooldown: -1,
+            cooldown_s: -1,
         }));
     }
 
-    getAll(): BaseCommand[] {
+    getAll(): CommandDef[] {
         return [this.add, this.list, this.tag, this.setRank];
     }
 }

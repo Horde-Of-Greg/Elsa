@@ -1,9 +1,8 @@
 import { app } from './App';
 import { env, seederConfig } from '../config/config';
 import { Seeder } from '../db/seeding/Seeder';
-import { ErrorProne } from './errors/ErrorProne';
 
-export class Events extends ErrorProne {
+export class Events {
     static initCore() {
         app.core.startTimer('main');
         app.core.logger.simpleLog('info', 'Core Ready');
@@ -20,7 +19,6 @@ export class Events extends ErrorProne {
             })
             .catch((error) => console.log(error));
 
-        app.database.dbHandler;
         app.core.logger.simpleLog('success', 'Database initialized');
     }
 

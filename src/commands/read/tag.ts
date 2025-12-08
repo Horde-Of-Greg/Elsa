@@ -1,5 +1,21 @@
-import { BaseCommand, CommandContext, ParseResult } from '../BaseCommand';
+import { CommandContext, CommandDef, CommandInstance, ParseResult } from '../Command';
+import { CommandAddInstance } from '../create/add';
 
-export class CommandTag extends BaseCommand {
-    async run(context: CommandContext, parseResult: ParseResult): Promise<void> {}
+export class CommandTagDef extends CommandDef {
+    createInstance(context: CommandContext, parseResult: ParseResult): CommandInstance {
+        return new CommandAddInstance(context, parseResult, this.params);
+    }
+}
+
+export class CommandTagInstance extends CommandInstance {
+    protected async validateArguments(): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+    protected execute(): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+    protected reply(): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+    protected logExecution(): void {}
 }

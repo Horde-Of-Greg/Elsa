@@ -1,10 +1,10 @@
 # Scope: DB
 
 1. Finish repository layer - DONE
-2. Make the DB services layer
+2. Make the DB services layer - DONE
 3. Add seeding
 4. Refactor configs
-5. Nuke DbHandler and PermHandler. Both should be handled by services.
+5. Nuke DbHandler and PermHandler. Both should be handled by services. - DONE
 6. Refactor commands to use the DB properly
 
 # Out of scope. For later.

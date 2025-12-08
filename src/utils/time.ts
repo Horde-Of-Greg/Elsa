@@ -1,9 +1,15 @@
+export type AppDate = Date;
+
 /**
  * Get the timestamp using the Date class.
  * @returns The timestamp as an ISO string.
  */
 export function getTimestampNow(): string {
     return new Date().toISOString();
+}
+
+export function getTimeNow(): AppDate {
+    return new Date();
 }
 
 /**

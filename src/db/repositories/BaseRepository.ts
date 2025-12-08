@@ -8,8 +8,6 @@ import {
     FindOptionsRelations,
 } from 'typeorm';
 import { ValidEntity } from '../types/entities';
-import { ErrorProne } from '../../core/errors/ErrorProne';
-import { StandardError } from '../../core/errors/StandardError';
 import { getConnectedTables } from '../utils/JoinTables';
 import { app } from '../../core/App';
 
@@ -19,11 +17,10 @@ import { app } from '../../core/App';
  *
  * @template T - The entity type this repository manages
  */
-export abstract class BaseRepository<T extends ValidEntity> extends ErrorProne {
+export abstract class BaseRepository<T extends ValidEntity> {
     protected repo: Repository<T>;
 
     constructor(entityClass: new () => T) {
-        super();
         this.repo = app.database.dataSource.getRepository(entityClass);
     }
 
@@ -138,12 +135,7 @@ export abstract class BaseRepository<T extends ValidEntity> extends ErrorProne {
         thatEntity: O,
         where?: Partial<FindOptionsWhere<J>>,
         relations?: FindOptionsRelations<J>,
-    ): Promise<J[] | StandardError> {
-        const connectedTables = getConnectedTables(joinTable);
-        if (this.isError(connectedTables)) {
-            return this.propagateError(connectedTables, 'Find all joins failed.');
-        }
-
+    ): Promise<J[]> {
         const thatTable = thatEntity.constructor as new () => O;
 
         const thatFieldName = this.getEntityIdField(thatTable.name);

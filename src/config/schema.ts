@@ -7,6 +7,7 @@ export const ConfigSchema = ConfigFileSchema.transform((f) => ({
     PREFIX: f.prefix,
     NAME: f.name,
     CMD_RANKS: { TAG: f.cmdRanks.tag, ADD_TAG: f.cmdRanks.addTag, SET_RANK: f.cmdRanks.setRank },
+    VERBOSE_LOGGING: f.verboseLogging,
 }));
 
 export const SeederConfigSchema = SeederConfigFileSchema.transform((f) => ({

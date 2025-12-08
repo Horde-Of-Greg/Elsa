@@ -1,26 +1,36 @@
 import type { Client, Message } from 'discord.js';
-import { ParsedMessage, parseMessage } from '../utils/parsing/parser';
-import { assert } from 'console';
 import { app } from '../core/App';
+import { CommandRouter } from '../commands/CommandRouter';
+import { CommandContext } from '../commands/Command';
 
 export class BotEventHandler {
-    constructor(private readonly client: Client) {}
+    router: CommandRouter;
+
+    constructor(private readonly client: Client) {
+        this.router = new CommandRouter();
+    }
 
     async onReady() {
         app.core.logger.simpleLog('info', `Bot ready as ${this.client.user?.tag}`);
     }
 
     async onMessageCreate(message: Message) {
-        try {
-            const parsedMessage: ParsedMessage = parseMessage(message.content);
-        } catch (e) {
-            // If the message couldn't be parsed, it's not a command - just ignore it
-            if (e instanceof Error && e.message === 'Could not parse message') {
-                return;
-            }
-            // For actual errors, reply and log
-            message.reply('Internal error.');
-            throw new Error(`Error during onMessageCreate process: ${e}`);
+        app.core.logger.simpleLog('debug', 'Received message.');
+
+        if (!message.guild) {
+            return;
         }
+
+        const context: CommandContext = {
+            message: message,
+            author: message.author,
+            guild: message.guild,
+            channel: message.channel,
+        };
+
+        if (!CommandRouter.isCommand(message.content)) {
+            return;
+        }
+        await this.router.route(context);
     }
 }

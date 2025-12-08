@@ -1,23 +1,27 @@
-import { StandardError } from '../../core/errors/StandardError';
 import { CategoryTable } from '../entities/Category';
 import { CategoryTagTable } from '../entities/CategoryTag';
 import { HostTable } from '../entities/Host';
 import { TagTable } from '../entities/Tag';
+import { TagAliasTable } from '../entities/TagAlias';
 import { TagHostTable } from '../entities/TagHost';
 import { UserTable } from '../entities/User';
 import { UserHostTable } from '../entities/UserHost';
 import { ValidEntity } from '../types/entities';
+import { HostAliasTable } from '../entities/HostAlias';
+import { JoinTableError } from '../../core/errors/internal/db';
 
 const joinMap = new Map<string, new () => ValidEntity>([
     [makeKey(UserTable, HostTable), UserHostTable],
     [makeKey(TagTable, HostTable), TagHostTable],
     [makeKey(CategoryTable, TagTable), CategoryTagTable],
+    [makeKey(TagAliasTable, HostTable), HostAliasTable],
 ]);
 
 const reverseMap = new Map<string, [new () => ValidEntity, new () => ValidEntity]>([
     ['UserHostTable', [UserTable, HostTable]],
     ['TagHostTable', [TagTable, HostTable]],
     ['CategoryTagTable', [CategoryTable, TagTable]],
+    ['HostAliasTable', [HostTable, TagAliasTable]],
 ]);
 
 /**
@@ -31,18 +35,14 @@ const reverseMap = new Map<string, [new () => ValidEntity, new () => ValidEntity
 export function getJoinTable(
     a: new () => ValidEntity,
     b: new () => ValidEntity,
-): (new () => ValidEntity) | StandardError {
+): (new () => ValidEntity) | JoinTableError {
     const key = makeKey(a, b);
     const result = joinMap.get(key);
+
     if (!result) {
-        return {
-            type: 'error',
-            code: 500,
-            message: 'Failed while trying to find a Join Table',
-            location: null,
-            time: new Date(),
-        };
+        throw new JoinTableError('Failed to get Join Table', [a, b]);
     }
+
     return result;
 }
 
@@ -54,17 +54,13 @@ export function getJoinTable(
  */
 export function getConnectedTables(
     joinTable: new () => ValidEntity,
-): [new () => ValidEntity, new () => ValidEntity] | StandardError {
+): Array<new () => ValidEntity> | JoinTableError {
     const result = reverseMap.get(joinTable.name);
+
     if (!result) {
-        return {
-            type: 'error',
-            code: 500,
-            message: 'Failed while trying to find connected tables for join table',
-            location: null,
-            time: new Date(),
-        };
+        throw new JoinTableError('Failed to get Join Table for connected', [joinTable]);
     }
+
     return result;
 }
 

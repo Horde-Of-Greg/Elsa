@@ -2,7 +2,7 @@ import { BaseRepository } from './BaseRepository';
 import { UserTable } from '../entities/User';
 import { HostTable } from '../entities/Host';
 import { PermLevel, UserHostTable } from '../entities/UserHost';
-import { StandardError } from '../../core/errors/StandardError';
+import { Snowflake } from 'discord.js';
 
 export class UserRepository extends BaseRepository<UserTable> {
     constructor() {
@@ -13,7 +13,7 @@ export class UserRepository extends BaseRepository<UserTable> {
         return this.findOne({ discordId });
     }
 
-    async findOrCreate(discordId: string): Promise<UserTable> {
+    async findOrCreateByDiscordId(discordId: Snowflake): Promise<UserTable> {
         let user = await this.findByDiscordId(discordId);
         if (!user) {
             user = this.create({ discordId });

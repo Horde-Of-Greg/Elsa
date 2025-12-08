@@ -1,28 +1,53 @@
-import { BaseCommand, CommandContext } from './BaseCommand';
+import { Message } from 'discord.js';
+import { CommandContext, CommandDef } from './Command';
 import { commands } from './Commands';
+import { config } from '../config/config';
+import { app } from '../core/App';
 
 export class CommandRouter {
-    private commandList: BaseCommand[];
+    private commandList: CommandDef[];
+    private hashMap: Map<string, CommandDef>;
 
     constructor() {
         this.commandList = commands.getAll();
+        this.hashMap = new Map();
+        this.buildHashMap();
     }
 
-    async main(context: CommandContext): Promise<void> {
+    async route(context: CommandContext): Promise<void> {
+        const commandId = this.getCommandId(context.message);
+        if (!commandId) return;
+
+        const commandDef = this.hashMap.get(commandId);
+        if (!commandDef) return;
+
+        const parseResult = commandDef.parse(context.message);
+        if (!parseResult) return;
+
+        const instance = commandDef.createInstance(context, parseResult);
+
+        await instance.run();
+    }
+
+    static isCommand(commandCandidate: string) {
+        const regex = new RegExp(`^${config.PREFIX}`);
+        return regex.test(commandCandidate.trim());
+    }
+
+    private buildHashMap() {
         for (const command of this.commandList) {
-            if (!command.match(context)) {
-                continue;
+            const aliases = command.getIdentifiers();
+            for (const alias of aliases) {
+                this.hashMap.set(alias, command);
             }
-
-            const parseResult = command.parse(context);
-
-            if (!parseResult) {
-                continue;
-            }
-
-            await command.run(context, parseResult);
-
-            return;
         }
+    }
+
+    private getCommandId(message: Message) {
+        const pattern = `^${config.PREFIX}([a-z0-9]+)`;
+        const regex = new RegExp(pattern, 'i');
+        const match = message.content.match(regex);
+        if (!match) return null;
+        return match[1];
     }
 }

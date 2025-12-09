@@ -20,6 +20,12 @@ export const ConfigSchema = z.object({
 
 export const SeederConfigSchema = z.object({
     DEPTH: z.number().int().min(1).max(100000),
+    DROP_DB: z.boolean(),
+    SUDOERS: z.object({
+        DO_SUDOERS: z.boolean(),
+        USERS: z.array(z.string()),
+        GUILDS: z.array(z.string()),
+    }),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

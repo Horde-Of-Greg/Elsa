@@ -8,6 +8,7 @@ async function main() {
     app.core.logger.simpleLog('info', `Environment: ${env.ENVIRONMENT}`);
     await Events.initDb();
     await Events.initBot();
+    await Events.seed();
     app.core.logger.sectionLog(`Init Done (${app.core.queryTimer('main').getTime().formatted})`);
 }
 

@@ -1,4 +1,4 @@
-import { Snowflake, User } from 'discord.js';
+import { Snowflake, User, Guild } from 'discord.js';
 import { app } from '../core/App';
 import { HostTable } from '../db/entities/Host';
 import { UserTable } from '../db/entities/User';
@@ -20,5 +20,11 @@ export class UserService {
 
     async findOrCreateUser(user_dc: User) {
         return this.userRepo.findOrCreateByDiscordId(user_dc.id, user_dc.username);
+    }
+
+    async createUserWithPerms(user_dc: User, server_dc: Guild, permLevel: PermLevel) {
+        const user = await this.findOrCreateUser(user_dc);
+        const host = await app.services.hostService.findOrCreateHost(server_dc.id, server_dc.name);
+        return this.userRepo.createPermLevel(user, host, permLevel);
     }
 }

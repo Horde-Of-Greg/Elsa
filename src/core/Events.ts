@@ -10,17 +10,18 @@ export class Events {
 
     static async initDb() {
         await app.database.dataSource.initialize();
-
-        if (env.ENVIRONMENT === 'development') {
-            const seeder = new Seeder(seederConfig);
-            await seeder.seed();
-        }
-
         app.core.logger.simpleLog('success', 'Database initialized');
     }
 
     static async initBot() {
         await app.discord.bot.login(env.DISCORD_TOKEN);
+
         app.core.logger.simpleLog('success', 'Bot initialized');
+    }
+
+    static async seed() {
+        if (env.ENVIRONMENT === 'production') return;
+        const seeder = new Seeder(seederConfig);
+        await seeder.seed();
     }
 }

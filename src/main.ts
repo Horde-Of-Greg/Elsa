@@ -1,9 +1,14 @@
+import { env } from './config/config';
+import { app } from './core/App';
 import { Events } from './core/Events';
 
 async function main() {
+    app.core.logger.sectionLog('Initializing');
     Events.initCore();
-    Events.initDb();
-    Events.initBot();
+    app.core.logger.simpleLog('info', `Environment: ${env.ENVIRONMENT}`);
+    await Events.initDb();
+    await Events.initBot();
+    app.core.logger.sectionLog(`Init Done (${app.core.queryTimer('main').getTime().formatted})`);
 }
 
 main().catch((e) => {

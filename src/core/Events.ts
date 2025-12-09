@@ -19,8 +19,8 @@ export class Events {
         app.core.logger.simpleLog('success', 'Database initialized');
     }
 
-    static initBot() {
-        app.discord.bot.login(env.DISCORD_TOKEN);
+    static async initBot() {
+        await app.discord.bot.login(env.DISCORD_TOKEN);
         app.core.logger.simpleLog('success', 'Bot initialized');
     }
 }

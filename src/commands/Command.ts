@@ -17,6 +17,7 @@ import { commands } from './Commands';
 import { MissingArgumentError } from '../core/errors/client/400';
 import { computeSHA256, SHA256Hash } from '../utils/crypto/sha256Hash';
 import { AppError } from '../core/errors/AppError';
+import { UnknownInternalError } from '../core/errors/internal/InternalError';
 
 // Constructor type for CommandInstance subclasses
 type CommandInstanceConstructor<TInstance extends CommandInstance> = new (
@@ -165,7 +166,7 @@ export abstract class CommandInstance {
         const value = this.parseResult[key];
         if (!value) {
             throw new MissingArgumentError(
-                `Missing arguments. See \`${config.PREFIX}help\` for details on command usages.`,
+                `See \`${config.PREFIX}help\` for details on command usages.`,
             );
         }
 
@@ -176,47 +177,14 @@ export abstract class CommandInstance {
         return this.parseResult[key];
     }
 
-    private async replyError(error: Error): Promise<void> {
-        /* TODO: Implement way better responses. Maybe give AppError a reply() abstract method which describes how to reply per Error.
-         * Also make sure errors are displayed to the client. This could be a different abstract in AppError.
-         */
-
-        if (error instanceof AppError && /4\d\d/.test(error.httpStatus.toString())) {
-            await this.context.message.reply(error.message);
-            return;
+    private async replyError(e: Error): Promise<void> {
+        let error: AppError;
+        if (!(e instanceof AppError)) {
+            error = new UnknownInternalError(e.message, e.stack);
+        } else {
+            error = e;
         }
 
-        app.core.logger.simpleLog('error', error.message);
-
-        const stack = error.stack ?? 'No stack trace available';
-        const stackLines = stack.match(/^\s+at\s+(.+?)\s+\(/gm);
-        const methodNames = stackLines
-            ? stackLines.map((line) => line.match(/at\s+(.+?)\s+\(/)?.[1] || line)
-            : [stack];
-        const truncatedStack = methodNames.join('\n').slice(0, 1000);
-
-        const embed = new EmbedBuilder()
-            .setTitle('Internal Error Occurred')
-            .setDescription('This is not your fault. It is ours. Oopsies.')
-            .setColor(0xff0000) // Red
-            .addFields(
-                {
-                    name: 'Code',
-                    value: error instanceof AppError ? error.code : 'UNKNOWN',
-                    inline: true,
-                },
-                {
-                    name: 'Message',
-                    value: error.message || 'No message provided',
-                    inline: false,
-                },
-                {
-                    name: 'Trace',
-                    value: `\`\`\`${truncatedStack}\`\`\``,
-                    inline: false,
-                },
-            );
-
-        await this.context.message.reply({ embeds: [embed] });
+        await this.context.message.reply(error.reply);
     }
 }

@@ -1,7 +1,7 @@
 import { AppError } from '../AppError';
+import { InternalError } from './InternalError';
 
-export class UserNotFoundError extends AppError {
-    readonly httpStatus = 500;
+export class UserNotFoundError extends InternalError {
     readonly code = 'SERVICES_USER_NOT_FOUND';
 
     constructor(userId: string) {

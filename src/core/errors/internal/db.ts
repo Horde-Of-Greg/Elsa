@@ -1,10 +1,10 @@
 import { ValidEntity } from '../../../db/types/entities';
 import { AppError } from '../AppError';
 import Message from 'discord.js';
+import { InternalError } from './InternalError';
 
-export abstract class DatabaseError extends AppError {
+export abstract class DatabaseError extends InternalError {
     abstract readonly code: string;
-    readonly httpStatus = 500;
 
     constructor(message: string, entities?: ValidEntity[], readonly extraMeta?: any) {
         super(message, { entities });

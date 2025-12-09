@@ -71,8 +71,9 @@ class CommandAddInstance extends CommandInstance {
      */
 
     private async ensureUniqueTagName() {
-        if (await this.tagService.tagExists(this.tagName)) {
-            throw new TagExistsError(this.tagName);
+        const candidate = await this.tagService.findTag(this.tagName);
+        if (candidate) {
+            throw new TagExistsError(candidate);
         }
     }
 
@@ -80,7 +81,7 @@ class CommandAddInstance extends CommandInstance {
         const hashContext = await this.tagService.tagBodyExists(this.tagBody);
 
         if (hashContext.exists) {
-            throw new TagBodyExistsError(this.tagBody, hashContext.tagWithBody);
+            throw new TagBodyExistsError(this.tagName, this.tagBody, hashContext.tagWithBody);
         }
         this.tagBodyHash = hashContext.hash;
     }

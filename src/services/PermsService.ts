@@ -34,13 +34,13 @@ export class PermissionsService {
         if (userPerm == null) {
             await this.userRepo.createPermLevel(user_db, host_db, PermLevel.DEFAULT);
             if (PermLevel.DEFAULT < permRequired) {
-                throw new PermissionDeniedError(permRequired, userPerm);
+                throw new PermissionDeniedError(permRequired, userPerm, user_db);
             }
             return;
         }
 
         if (userPerm < permRequired) {
-            throw new PermissionDeniedError(permRequired, userPerm);
+            throw new PermissionDeniedError(permRequired, userPerm, user_db);
         }
     }
 }

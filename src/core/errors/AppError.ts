@@ -1,20 +1,20 @@
+import { EmbedBuilder } from '@discordjs/builders';
 import { AppDate, getTimeNow } from '../../utils/time';
+import { MessagePayload, MessagePayloadOption, MessageReplyOptions } from 'discord.js';
 
 export abstract class AppError extends Error {
     abstract readonly code: string;
     abstract readonly httpStatus: number;
     readonly timestamp: AppDate;
-    readonly cause?: Error | AppError;
 
     constructor(
         message: string,
         public readonly data?: Record<string, unknown>,
-        cause?: Error | AppError,
+        public readonly stack?: string,
     ) {
         super(message);
         this.name = this.constructor.name;
         this.timestamp = getTimeNow();
-        this.cause = cause;
 
         Error.captureStackTrace(this, this.constructor);
     }
@@ -45,4 +45,8 @@ export abstract class AppError extends Error {
             timestamp: this.timestamp,
         };
     }
+
+    abstract get reply(): string | MessagePayload | MessageReplyOptions;
+
+    abstract log(): void;
 }

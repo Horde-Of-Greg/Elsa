@@ -20,8 +20,17 @@ export type CommandParams = {
     aliases: string[];
     permLevelRequired: PermLevel;
     cooldown_s: number;
-    info?: {
-        usage: string;
+    info: {
+        description: string;
+        arguments?: ArgumentDefinition[];
         examples?: string[];
     };
+};
+
+export type RequirableParseResult = Exclude<keyof ParseResult, 'command' | 'server'>;
+
+export type ArgumentDefinition = {
+    name: string;
+    required: boolean;
+    parseResultKey: RequirableParseResult;
 };

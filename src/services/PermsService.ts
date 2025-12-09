@@ -29,7 +29,7 @@ export class PermissionsService {
         const host_db = await this.hostRepo.findOrCreateByDiscordId(host.id, host.name);
 
         const userPerm = await this.userRepo.getPermLevel(user_db, host_db);
-        if (!userPerm) return false;
+        if (userPerm == null) return false;
         return userPerm >= permRequired;
     }
 }

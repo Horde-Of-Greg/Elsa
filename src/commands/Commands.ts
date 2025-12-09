@@ -2,7 +2,7 @@ import { config } from '../config/config';
 import { PermLevel } from '../db/entities/UserHost';
 import { CommandDef, CommandInstance } from './Command';
 import { CommandAddDef } from './create/add';
-import { CommandListDef } from './read/list';
+import { CommandHelpDef } from './read/help';
 import { CommandTagDef } from './read/tag';
 import { CommandSetRankDef } from './update/setrank';
 
@@ -13,7 +13,7 @@ class Commands {
     // Delete
 
     // Read
-    private _list?: CommandListDef;
+    private _list?: CommandHelpDef;
     private _tag?: CommandTagDef;
 
     // Update
@@ -23,8 +23,8 @@ class Commands {
         return (this._add ??= new CommandAddDef());
     }
 
-    get list(): CommandListDef {
-        return (this._list ??= new CommandListDef());
+    get help(): CommandHelpDef {
+        return (this._list ??= new CommandHelpDef());
     }
 
     get tag(): CommandTagDef {
@@ -36,7 +36,7 @@ class Commands {
     }
 
     getAll(): CommandDef<CommandInstance>[] {
-        return [this.add, this.list, this.tag, this.setRank];
+        return [this.add, this.help, this.tag, this.setRank];
     }
 }
 

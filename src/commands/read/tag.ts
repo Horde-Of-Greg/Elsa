@@ -1,5 +1,11 @@
+import { Embed, EmbedBuilder } from 'discord.js';
+import { env } from '../../config/config';
+import { TagNotFoundError } from '../../core/errors/client/404';
 import { PermLevel } from '../../db/entities/UserHost';
 import { CommandDef, CommandInstance } from '../Command';
+import { app } from '../../core/App';
+import { TagTable } from '../../db/entities/Tag';
+import { fa } from 'zod/v4/locales';
 
 export class CommandTagDef extends CommandDef<CommandTagInstance> {
     constructor() {
@@ -9,6 +15,13 @@ export class CommandTagDef extends CommandDef<CommandTagInstance> {
                 aliases: ['t'],
                 permLevelRequired: PermLevel.DEFAULT,
                 cooldown_s: -1,
+                info: {
+                    description: 'Return the body of a tag stored in the database.',
+                    arguments: [
+                        { name: 'tag-name', required: true, parseResultKey: 'subcommand' },
+                        { name: 'tag-args', required: false, parseResultKey: 'args' },
+                    ],
+                },
             },
             CommandTagInstance,
         );
@@ -16,14 +29,51 @@ export class CommandTagDef extends CommandDef<CommandTagInstance> {
 }
 
 class CommandTagInstance extends CommandInstance {
+    private tag!: TagTable;
+    private tagName!: string;
+    private tagArgs?: string[];
+
     protected async validateArguments(): Promise<void> {
-        throw new Error('Method not implemented.');
+        this.tagName = this.arg<string>('tag-name');
+        this.tagArgs = this.arg<string[]>('tag-args');
     }
-    protected execute(): Promise<void> {
-        throw new Error('Method not implemented.');
+    protected async execute(): Promise<void> {
+        const tag = await this.tagService.findTag(this.tagName);
+        if (!tag) {
+            throw new TagNotFoundError(this.tagName);
+        }
+        this.tag = tag;
     }
-    protected reply(): Promise<void> {
-        throw new Error('Method not implemented.');
+    protected async reply(): Promise<void> {
+        if (env.ENVIRONMENT === 'production') {
+            await this.context.message.reply(this.tag.body);
+        } else {
+            await this.context.message.reply({ embeds: [this.debugEmbed] });
+        }
     }
-    protected logExecution(): void {}
+    protected logExecution(): void {
+        app.core.logger.simpleLog('debug', `Sent tag ${this.tag.name}`);
+    }
+
+    private get debugEmbed(): EmbedBuilder {
+        return new EmbedBuilder()
+            .setTitle('Tag Run Info')
+            .addFields(
+                {
+                    name: 'Name',
+                    value: this.tag.name,
+                },
+                {
+                    name: 'Content',
+                    value: this.tag.body,
+                },
+                { name: 'User Info', value: `id: ${this.tag.author?.id ?? 'Not in DB'}` },
+                { name: 'Server Info', value: `id: ${this.context.guild.id}` },
+            )
+            .setFooter({
+                text: `took: ${
+                    app.core.queryTimer(this.timerKey).getTime().formatted
+                } | debug: true`,
+            });
+    }
 }

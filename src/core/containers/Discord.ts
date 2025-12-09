@@ -1,28 +1,14 @@
 import { Client } from 'discord.js';
-import { BotEventHandler } from '../../bot/BotEventHandler';
-import { BotClient } from '../../client/BotClient';
+import { DiscordBot } from '../../bot/DiscordBot';
 
 export class DiscordContainer {
-    private _botClient?: BotClient;
-    private _eventHandler?: BotEventHandler;
+    private _bot?: DiscordBot;
 
-    get botClient(): BotClient {
-        return (this._botClient ??= new BotClient());
-    }
-
-    get dcClient(): Client {
-        return this.botClient.dcClient;
-    }
-
-    get eventHandler(): BotEventHandler {
-        if (!this.botClient) {
-            throw new Error('Bot Event Handler initialized before Bot Client');
-        }
-        return (this._eventHandler ??= new BotEventHandler(this.dcClient));
+    get bot(): DiscordBot {
+        return (this._bot ??= new DiscordBot());
     }
 
     reset(): void {
-        this._botClient = undefined;
-        this._eventHandler = undefined;
+        this._bot = undefined;
     }
 }

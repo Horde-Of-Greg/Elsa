@@ -50,4 +50,8 @@ export class TagService {
         if (!tagWithBody) return { exists: false, hash };
         return { exists: true, tagWithBody };
     }
+
+    async findTag(name: string) {
+        return this.tagRepo.findByName(name);
+    }
 }

@@ -15,6 +15,13 @@ export class CommandAddDef extends CommandDef<CommandAddInstance> {
                 aliases: ['a'],
                 permLevelRequired: PermLevel.TRUSTED,
                 cooldown_s: 5,
+                info: {
+                    description: 'Adds a new command to the database',
+                    arguments: [
+                        { name: 'tag-name', required: true, parseResultKey: 'subcommand' },
+                        { name: 'tag-body', required: true, parseResultKey: 'args' },
+                    ],
+                },
             },
             CommandAddInstance,
         );
@@ -22,34 +29,18 @@ export class CommandAddDef extends CommandDef<CommandAddInstance> {
 }
 
 class CommandAddInstance extends CommandInstance {
-    // Ex: !add <name:test> <content:...>
     private tagName!: string;
     private tagBody!: string;
     private tagBodyHash!: SHA256Hash;
 
     protected async validateArguments(): Promise<void> {
-        if (!this.parseResult) {
-            throw new NoParsingError(this.context.message);
-        }
+        this.tagName = this.arg<string>('tag-name');
+        this.tagBody = this.arg<string[]>('tag-body').join(' ');
 
-        if (!this.parseResult.subcommand || !this.parseResult.args) {
-            throw new MissingArgumentError(
-                `Could not add tag. Missing arguments. See \`${config.PREFIX}help\` for usage`,
-            );
-        }
+        //TODO: More validation on name being valid, body not being empty, etc.
 
-        this.tagName = this.parseResult.subcommand;
-        this.tagBody = this.parseResult.args.join('');
-
-        if (await this.tagService.tagExists(this.tagName)) {
-            throw new TagExistsError(this.tagName);
-        }
-        const hashContext = await this.tagService.tagBodyExists(this.tagBody);
-
-        if (hashContext.exists) {
-            throw new TagBodyExistsError(this.tagBody, hashContext.tagWithBody);
-        }
-        this.tagBodyHash = hashContext.hash;
+        await this.ensureUniqueTagName();
+        await this.ensureUniqueBody();
     }
 
     protected async execute(): Promise<void> {
@@ -73,5 +64,24 @@ class CommandAddInstance extends CommandInstance {
             'info',
             `User ${this.context.author.tag} created tag: ${this.tagName}`,
         );
+    }
+
+    /*
+     * Helpers
+     */
+
+    private async ensureUniqueTagName() {
+        if (await this.tagService.tagExists(this.tagName)) {
+            throw new TagExistsError(this.tagName);
+        }
+    }
+
+    private async ensureUniqueBody() {
+        const hashContext = await this.tagService.tagBodyExists(this.tagBody);
+
+        if (hashContext.exists) {
+            throw new TagBodyExistsError(this.tagBody, hashContext.tagWithBody);
+        }
+        this.tagBodyHash = hashContext.hash;
     }
 }

@@ -27,3 +27,25 @@ export class NoParsingError extends AppError {
         super('Command was not parsed at all.', { message });
     }
 }
+
+export class ArgNotDefinedError extends AppError {
+    readonly code = 'ARG_NOT_DEFINED';
+    readonly httpStatus: 500;
+
+    constructor(argName: string, className: string) {
+        super(
+            `Tried to access the arg ${argName} on class ${className}, but ${className} does not define this arg.`,
+        );
+    }
+}
+
+export class NoArgsDefinedError extends AppError {
+    readonly code = 'NO_ARGS_DEFINED';
+    readonly httpStatus: 500;
+
+    constructor(argName: string, className: string) {
+        super(
+            `Tried to access the arg ${argName} on class ${className}, but ${className} does not define any args.`,
+        );
+    }
+}

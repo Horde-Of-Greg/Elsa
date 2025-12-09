@@ -23,15 +23,7 @@ export class Events {
     }
 
     static initBot() {
-        const botClient = app.discord.botClient;
-        const dcClient = app.discord.dcClient;
-        const eventHandler = app.discord.eventHandler;
-
-        dcClient.once('clientReady', () => eventHandler.onReady());
-        dcClient.on('messageCreate', (m) => void eventHandler.onMessageCreate(m));
-
-        dcClient.login(env.DISCORD_TOKEN);
-
+        app.discord.bot.login(env.DISCORD_TOKEN);
         app.core.logger.simpleLog('success', 'Bot initialized');
     }
 }

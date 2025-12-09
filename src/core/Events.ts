@@ -9,15 +9,12 @@ export class Events {
     }
 
     static async initDb() {
-        await app.database.dataSource
-            .initialize()
-            .then(async () => {
-                if (env.ENVIRONMENT === 'development') {
-                    const seeder = new Seeder(seederConfig);
-                    seeder.seed();
-                }
-            })
-            .catch((error) => console.log(error));
+        await app.database.dataSource.initialize();
+
+        if (env.ENVIRONMENT === 'development') {
+            const seeder = new Seeder(seederConfig);
+            await seeder.seed();
+        }
 
         app.core.logger.simpleLog('success', 'Database initialized');
     }

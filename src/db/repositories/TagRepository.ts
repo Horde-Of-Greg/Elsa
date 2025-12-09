@@ -161,7 +161,6 @@ export class TagRepository extends BaseRepository<TagTable> {
     async findAllByCategoryName(categoryName: string): Promise<TagTable[] | null> {
         const category = await this.findOneOnOtherTable(CategoryTable, { name: categoryName });
         if (!category) return null;
-        this.findAllByCategory(category);
 
         return this.findAllByCategory(category);
     }

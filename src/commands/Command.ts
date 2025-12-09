@@ -31,41 +31,6 @@ export abstract class CommandDef<TInstance extends CommandInstance> {
         private instanceConstructor: CommandInstanceConstructor<TInstance>,
     ) {}
 
-    parse(message: Message): ParseResult | null {
-        const pattern = [
-            '^',
-            config.PREFIX,
-            '([a-z0-9]+)',
-            '(?:-([a-z0-9]*))?',
-            '(?:\\s(\\w+))?',
-            '(?:\\s([\\w\\s]+))?',
-            '$',
-        ].join('');
-
-        const matcher = new RegExp(pattern, 'i');
-        const parsed = message.content.match(matcher);
-
-        if (!parsed) return null;
-
-        /*
-         * Example parsing: !tag-nomi oc 1
-         *
-         * match        name        optional?       Match in example
-         * --------------------------------------------------------------------------
-         * null         prefix      Necessary       Matches "!"" (if ! is set as the prefix)
-         * 1            command     Necessary       Matches "tag"
-         * 2            server      Optional        Matches "nomi"
-         * 3            subcommand  Optional        Matches "oc"
-         * 4            args        Optional        Matches "30 10 15 5"
-         */
-        return {
-            command: parsed[1],
-            server: parsed[2],
-            subcommand: parsed[3],
-            args: parsed[4]?.split(/\s+/),
-        };
-    }
-
     /**
      * Get all command identifiers (name + aliases).
      */
@@ -106,7 +71,7 @@ export abstract class CommandInstance {
         try {
             app.core.startTimer(this.timerKey);
             await this.checkCooldown();
-            await this.validateArguments();
+            await this.validateData();
             await this.validatePermissions();
             await this.execute();
             await this.reply();
@@ -114,6 +79,8 @@ export abstract class CommandInstance {
             this.logExecution?.();
         } catch (error: any) {
             await this.replyError(error);
+        } finally {
+            app.core.stopTimer(this.timerKey);
         }
     }
 
@@ -126,7 +93,7 @@ export abstract class CommandInstance {
      * Describe which of the optional elements in CommandContext should be used, and update a local context.
      * Should fail on invalid arguments.
      */
-    protected abstract validateArguments(): Promise<void>;
+    protected abstract validateData(): Promise<void>;
 
     /**
      * Describe what the command should do.
@@ -139,9 +106,9 @@ export abstract class CommandInstance {
     protected abstract reply(): Promise<void>;
 
     /**
-     * (optional) Describe what the command should log in the server logs.
+     * Describe what the command should log in the server logs. Can be left empty.
      */
-    protected abstract logExecution?(): void;
+    protected abstract logExecution(): void;
 
     /*
      * Inherited Helpers
@@ -177,14 +144,7 @@ export abstract class CommandInstance {
      */
 
     private makeTimerKey() {
-        const elements: string[] = [
-            this.context.author.id,
-            this.context.message.content,
-            this.context.message.createdTimestamp.toString(),
-            this.context.message.editedTimestamp?.toString() ?? '',
-            this.context.guild.id,
-        ];
-        return computeSHA256(elements.join('')).toString();
+        return `cmd:${this.context.message.id}`;
     }
 
     private async validatePermissions(): Promise<void> {
@@ -192,7 +152,7 @@ export abstract class CommandInstance {
             throw new NoContextError();
         }
 
-        this.permsService.requirePermLevel(
+        await this.permsService.requirePermLevel(
             this.context.author,
             this.context.guild,
             this.params.permLevelRequired,
@@ -221,7 +181,7 @@ export abstract class CommandInstance {
          * Also make sure errors are displayed to the client. This could be a different abstract in AppError.
          */
 
-        if (error instanceof AppError && /4\d\d/.test((error.httpStatus ?? 500).toString())) {
+        if (error instanceof AppError && /4\d\d/.test(error.httpStatus.toString())) {
             await this.context.message.reply(error.message);
             return;
         }

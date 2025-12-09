@@ -3,7 +3,11 @@ import { CommandDef, CommandInstance } from './Command';
 import { commands } from './Commands';
 import { config } from '../config/config';
 import { app } from '../core/App';
-import { CommandContext } from './types';
+import { CommandContext, CommandParams, ParseResult } from './types';
+import { HostService } from '../services/HostService';
+import { PermissionsService } from '../services/PermsService';
+import { TagService } from '../services/TagService';
+import { UserService } from '../services/UserService';
 
 export class CommandRouter {
     private commandList: CommandDef<CommandInstance>[];
@@ -16,14 +20,11 @@ export class CommandRouter {
     }
 
     async route(context: CommandContext): Promise<void> {
-        const commandId = this.getCommandId(context.message);
-        if (!commandId) return;
-
-        const commandDef = this.hashMap.get(commandId);
-        if (!commandDef) return;
-
-        const parseResult = commandDef.parse(context.message);
+        const parseResult = this.parse(context.message);
         if (!parseResult) return;
+
+        const commandDef = this.hashMap.get(parseResult.command);
+        if (!commandDef) return;
 
         const instance = commandDef.createInstance(context, parseResult);
 
@@ -44,11 +45,38 @@ export class CommandRouter {
         }
     }
 
-    private getCommandId(message: Message) {
-        const pattern = `^${config.PREFIX}([a-z0-9]+)`;
-        const regex = new RegExp(pattern, 'i');
-        const match = message.content.match(regex);
-        if (!match) return null;
-        return match[1];
+    private parse(message: Message): ParseResult | null {
+        const pattern = [
+            '^',
+            config.PREFIX,
+            '([a-z0-9]+)',
+            '(?:-([a-z0-9]*))?',
+            '(?:\\s(\\w+))?',
+            '(?:\\s([\\w\\s]+))?',
+            '$',
+        ].join('');
+
+        const matcher = new RegExp(pattern, 'i');
+        const parsed = message.content.match(matcher);
+
+        if (!parsed) return null;
+
+        /*
+         * Example parsing: !tag-nomi oc 1
+         *
+         * match        name        optional?       Match in example
+         * --------------------------------------------------------------------------
+         * null         prefix      Necessary       Matches "!"" (if ! is set as the prefix)
+         * 1            command     Necessary       Matches "tag"
+         * 2            server      Optional        Matches "nomi"
+         * 3            subcommand  Optional        Matches "oc"
+         * 4            args        Optional        Matches "30 10 15 5"
+         */
+        return {
+            command: parsed[1],
+            server: parsed[2],
+            subcommand: parsed[3],
+            args: parsed[4]?.split(/\s+/),
+        };
     }
 }

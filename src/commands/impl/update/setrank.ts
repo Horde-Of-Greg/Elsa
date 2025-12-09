@@ -1,5 +1,5 @@
-import { PermLevel } from '../../db/entities/UserHost';
-import { CommandDef, CommandInstance } from '../Command';
+import { PermLevel } from '../../../db/entities/UserHost';
+import { CommandDef, CommandInstance } from '../../Command';
 
 export class CommandSetRankDef extends CommandDef<CommandSetRankInstance> {
     constructor() {
@@ -20,7 +20,7 @@ export class CommandSetRankDef extends CommandDef<CommandSetRankInstance> {
 }
 
 class CommandSetRankInstance extends CommandInstance {
-    protected async validateArguments(): Promise<void> {
+    protected async validateData(): Promise<void> {
         throw new Error('Method not implemented.');
     }
     protected execute(): Promise<void> {

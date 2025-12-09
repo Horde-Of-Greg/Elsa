@@ -1,10 +1,10 @@
 import { Embed, EmbedBuilder } from 'discord.js';
-import { env } from '../../config/config';
-import { TagNotFoundError } from '../../core/errors/client/404';
-import { PermLevel } from '../../db/entities/UserHost';
-import { CommandDef, CommandInstance } from '../Command';
-import { app } from '../../core/App';
-import { TagTable } from '../../db/entities/Tag';
+import { env } from '../../../config/config';
+import { TagNotFoundError } from '../../../core/errors/client/404';
+import { PermLevel } from '../../../db/entities/UserHost';
+import { CommandDef, CommandInstance } from '../../Command';
+import { app } from '../../../core/App';
+import { TagTable } from '../../../db/entities/Tag';
 import { fa } from 'zod/v4/locales';
 
 export class CommandTagDef extends CommandDef<CommandTagInstance> {
@@ -33,7 +33,7 @@ class CommandTagInstance extends CommandInstance {
     private tagName!: string;
     private tagArgs?: string[];
 
-    protected async validateArguments(): Promise<void> {
+    protected async validateData(): Promise<void> {
         this.tagName = this.arg<string>('tag-name');
         this.tagArgs = this.arg<string[]>('tag-args');
     }

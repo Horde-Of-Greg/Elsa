@@ -1,9 +1,9 @@
 import { APIEmbedField, EmbedBuilder } from 'discord.js';
-import { app } from '../../core/App';
-import { PermLevel } from '../../db/entities/UserHost';
-import { CommandDef, CommandInstance } from '../Command';
-import { commands } from '../Commands';
-import { config } from '../../config/config';
+import { app } from '../../../core/App';
+import { PermLevel } from '../../../db/entities/UserHost';
+import { CommandDef, CommandInstance } from '../../Command';
+import { commands } from '../../Commands';
+import { config } from '../../../config/config';
 
 export class CommandHelpDef extends CommandDef<CommandHelpInstance> {
     constructor() {
@@ -26,7 +26,7 @@ class CommandHelpInstance extends CommandInstance {
     private commandDefs = commands.getAll();
     private message: APIEmbedField[] = [];
 
-    protected async validateArguments(): Promise<void> {}
+    protected async validateData(): Promise<void> {}
 
     protected async execute(): Promise<void> {
         for (const commandDef of this.commandDefs) {

@@ -2,7 +2,7 @@ import { AppDate, getTimeNow } from '../../utils/time';
 
 export abstract class AppError extends Error {
     abstract readonly code: string;
-    abstract readonly httpStatus?: number;
+    abstract readonly httpStatus: number;
     readonly timestamp: AppDate;
     readonly cause?: Error | AppError;
 

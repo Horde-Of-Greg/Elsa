@@ -7,6 +7,7 @@ import { HostRepository } from '../db/repositories/HostRepository';
 import { TagRepository } from '../db/repositories/TagRepository';
 import { UserRepository } from '../db/repositories/UserRepository';
 import { UserNotFoundError } from '../core/errors/internal/services';
+import { PermissionDeniedError } from '../core/errors/client/403';
 
 export class PermissionsService {
     private tagRepo: TagRepository;
@@ -19,7 +20,7 @@ export class PermissionsService {
         this.hostRepo = app.database.hostRepo;
     }
 
-    async requirePermLevel(user: User, host: Guild, permRequired: PermLevel): Promise<boolean> {
+    async requirePermLevel(user: User, host: Guild, permRequired: PermLevel): Promise<void> {
         const user_db = await this.userRepo.findByDiscordId(user.id);
 
         if (!user_db) {
@@ -29,7 +30,14 @@ export class PermissionsService {
         const host_db = await this.hostRepo.findOrCreateByDiscordId(host.id, host.name);
 
         const userPerm = await this.userRepo.getPermLevel(user_db, host_db);
-        if (userPerm == null) return false;
-        return userPerm >= permRequired;
+
+        if (userPerm == null) {
+            throw new PermissionDeniedError(permRequired, null);
+            //Separate these if statements in case we want to handle errors differently.
+        }
+
+        if (userPerm < permRequired) {
+            throw new PermissionDeniedError(permRequired, userPerm);
+        }
     }
 }

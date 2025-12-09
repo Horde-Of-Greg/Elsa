@@ -1,10 +1,10 @@
 import { config } from '../config/config';
 import { PermLevel } from '../db/entities/UserHost';
 import { CommandDef, CommandInstance } from './Command';
-import { CommandAddDef } from './create/add';
-import { CommandHelpDef } from './read/help';
-import { CommandTagDef } from './read/tag';
-import { CommandSetRankDef } from './update/setrank';
+import { CommandAddDef } from './impl/create/add';
+import { CommandHelpDef } from './impl/read/help';
+import { CommandTagDef } from './impl/read/tag';
+import { CommandSetRankDef } from './impl/update/setrank';
 
 class Commands {
     // Create

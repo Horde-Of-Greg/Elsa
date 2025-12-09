@@ -11,6 +11,8 @@ import { ValidEntity } from '../types/entities';
 import { getConnectedTables } from '../utils/JoinTables';
 import { app } from '../../core/App';
 
+//TODO: Add Transaction support.
+
 /**
  * Base repository providing common CRUD operations for all entities.
  * Extend this class to create entity-specific repositories.
@@ -104,8 +106,8 @@ export abstract class BaseRepository<T extends ValidEntity> {
         const thisTable = thisEntity.constructor as new () => T;
         const otherTable = otherEntity.constructor as new () => O;
 
-        const thisFieldName = this.getEntityIdField(thisTable.name);
-        const otherFieldName = this.getEntityIdField(otherTable.name);
+        const thisFieldName = this.getEntityIdField(thisTable);
+        const otherFieldName = this.getEntityIdField(otherTable);
 
         const where = {
             [thisFieldName]: thisEntity.id,
@@ -138,7 +140,7 @@ export abstract class BaseRepository<T extends ValidEntity> {
     ): Promise<J[]> {
         const thatTable = thatEntity.constructor as new () => O;
 
-        const thatFieldName = this.getEntityIdField(thatTable.name);
+        const thatFieldName = this.getEntityIdField(thatTable);
 
         const fullWhere = {
             [thatFieldName]: thatEntity.id,
@@ -154,9 +156,9 @@ export abstract class BaseRepository<T extends ValidEntity> {
      * Converts entity class name to foreign key field name.
      * UserTable -> userId, HostTable -> hostId
      */
-    private getEntityIdField(className: string): string {
-        const baseName = className.replace(/Table$/, '');
-        return baseName.charAt(0).toLowerCase() + baseName.slice(1) + 'Id';
+    private getEntityIdField(entityClass: new () => ValidEntity): string {
+        const metadata = app.database.dataSource.getMetadata(entityClass);
+        return metadata.primaryColumns[0].propertyName + 'Id';
     }
 
     /**

@@ -28,5 +28,7 @@ export class ServicesContainer {
     reset(): void {
         this._permsService = undefined;
         this._tagService = undefined;
+        this._hostService = undefined;
+        this._userService = undefined;
     }
 }

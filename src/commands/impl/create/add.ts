@@ -1,11 +1,11 @@
-import { NoParsingError } from '../../core/errors/internal/commands';
-import { MissingArgumentError } from '../../core/errors/client/400';
-import { config } from '../../config/config';
-import { TagBodyExistsError, TagExistsError } from '../../core/errors/client/409';
-import { SHA256Hash } from '../../utils/crypto/sha256Hash';
-import { app } from '../../core/App';
-import { PermLevel } from '../../db/entities/UserHost';
-import { CommandDef, CommandInstance } from '../Command';
+import { NoParsingError } from '../../../core/errors/internal/commands';
+import { MissingArgumentError } from '../../../core/errors/client/400';
+import { config } from '../../../config/config';
+import { TagBodyExistsError, TagExistsError } from '../../../core/errors/client/409';
+import { SHA256Hash } from '../../../utils/crypto/sha256Hash';
+import { app } from '../../../core/App';
+import { PermLevel } from '../../../db/entities/UserHost';
+import { CommandDef, CommandInstance } from '../../Command';
 
 export class CommandAddDef extends CommandDef<CommandAddInstance> {
     constructor() {
@@ -33,7 +33,7 @@ class CommandAddInstance extends CommandInstance {
     private tagBody!: string;
     private tagBodyHash!: SHA256Hash;
 
-    protected async validateArguments(): Promise<void> {
+    protected async validateData(): Promise<void> {
         this.tagName = this.arg<string>('tag-name');
         this.tagBody = this.arg<string[]>('tag-body').join(' ');
 

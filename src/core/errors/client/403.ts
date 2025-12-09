@@ -5,9 +5,13 @@ export class PermissionDeniedError extends AppError {
     readonly code = 'PERMISSION_DENIED';
     readonly httpStatus = 403;
 
-    constructor(public readonly requiredLevel: PermLevel) {
-        super(`Insufficient permissions (required: ${PermLevel[requiredLevel]})`, {
-            requiredLevel,
-        });
+    constructor(readonly requiredLevel: PermLevel, readonly userLevel: PermLevel | null) {
+        super(
+            `Insufficient permission. [required: ${PermLevel[requiredLevel]} | yours: ${userLevel}]`,
+            {
+                requiredLevel,
+                userLevel,
+            },
+        );
     }
 }

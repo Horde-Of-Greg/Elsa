@@ -106,12 +106,24 @@ export abstract class BaseRepository<T extends ValidEntity> {
         const thisTable = thisEntity.constructor as new () => T;
         const otherTable = otherEntity.constructor as new () => O;
 
-        const thisFieldName = this.getEntityIdField(thisTable);
-        const otherFieldName = this.getEntityIdField(otherTable);
+        const joinMetadata = app.database.dataSource.getMetadata(joinTable);
+        const thisMetadata = app.database.dataSource.getMetadata(thisTable);
+        const otherMetadata = app.database.dataSource.getMetadata(otherTable);
+
+        const thisRelation = joinMetadata.relations.find((rel) => rel.type === thisMetadata.target);
+        const otherRelation = joinMetadata.relations.find(
+            (rel) => rel.type === otherMetadata.target,
+        );
+
+        if (!thisRelation || !otherRelation) {
+            throw new Error(
+                `Could not find relations in ${joinTable.name} for ${thisTable.name} and ${otherTable.name}`,
+            );
+        }
 
         const where = {
-            [thisFieldName]: thisEntity.id,
-            [otherFieldName]: otherEntity.id,
+            [thisRelation.propertyName]: thisEntity.id,
+            [otherRelation.propertyName]: otherEntity.id,
         } as FindOptionsWhere<J>;
 
         return app.database.dataSource.getRepository(joinTable).findOne({ where });
@@ -140,25 +152,23 @@ export abstract class BaseRepository<T extends ValidEntity> {
     ): Promise<J[]> {
         const thatTable = thatEntity.constructor as new () => O;
 
-        const thatFieldName = this.getEntityIdField(thatTable);
+        const joinMetadata = app.database.dataSource.getMetadata(joinTable);
+        const thatMetadata = app.database.dataSource.getMetadata(thatTable);
+
+        const thatRelation = joinMetadata.relations.find((rel) => rel.type === thatMetadata.target);
+
+        if (!thatRelation) {
+            throw new Error(`Could not find relation in ${joinTable.name} for ${thatTable.name}`);
+        }
 
         const fullWhere = {
-            [thatFieldName]: thatEntity.id,
+            [thatRelation.propertyName]: thatEntity.id,
             ...where,
         } as FindOptionsWhere<J>;
 
         return app.database.dataSource
             .getRepository(joinTable)
             .find({ where: fullWhere, relations });
-    }
-
-    /**
-     * Converts entity class name to foreign key field name.
-     * UserTable -> userId, HostTable -> hostId
-     */
-    private getEntityIdField(entityClass: new () => ValidEntity): string {
-        const metadata = app.database.dataSource.getMetadata(entityClass);
-        return metadata.primaryColumns[0].propertyName + 'Id';
     }
 
     /**
@@ -250,11 +260,28 @@ export abstract class BaseRepository<T extends ValidEntity> {
      * @param data Partial entity data. All fields are optional and nested objects are recursively optional.
      *   DeepPartial allows you to provide only the fields you need (e.g., just discordId for a User),
      *   while auto-generated fields (like id) and relations can be omitted.
-     * @returns A new entity instance ready to be saved
+     * @returns A promise resolving to the new entity that was saved
      */
     protected async createAndSave(data: DeepPartial<T>): Promise<T> {
         const entity = this.create(data);
         return this.save(entity);
+    }
+
+    /**
+     * Create and save entity in one operation.
+     *
+     * @param table The table on which to save the data on.
+     * @param data Partial entity data. All fields are optional and nested objects are recursively optional.
+     *   DeepPartial allows you to provide only the fields you need (e.g., just discordId for a User),
+     *   while auto-generated fields (like id) and relations can be omitted.
+     * @returns A promise resolving to the new entity that was saved
+     */
+    protected async createAndSaveOnOtherTable<J extends ValidEntity>(
+        table: new () => J,
+        data: DeepPartial<J>,
+    ): Promise<J> {
+        const entity = this.createOnOtherTable(table, data);
+        return this.saveOnOtherTable(entity);
     }
 
     /**

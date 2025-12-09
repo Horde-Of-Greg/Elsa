@@ -57,16 +57,16 @@ export class TagRepository extends BaseRepository<TagTable> {
     }
 
     async saveTag(tag: TagTable, elements: TagHostElements): Promise<TagTable> {
-        await this.save(tag);
+        const savedTag = await this.save(tag);
 
         const tagHost = this.createOnOtherTable(TagHostTable, {
-            tagId: tag.id,
+            tagId: savedTag.id,
             hostId: elements.host.id,
             status: elements.status ?? TagHostStatus.PENDING,
         });
         await this.saveOnOtherTable(tagHost);
 
-        return tag;
+        return savedTag;
     }
 
     async saveManyTags(elements: Map<TagTable, TagHostElements>): Promise<TagTable[]> {
@@ -166,7 +166,7 @@ export class TagRepository extends BaseRepository<TagTable> {
     }
 
     async findByName(name: string): Promise<TagTable | null> {
-        return this.findOne({ name });
+        return this.findOne({ name }, { author: true });
     }
 
     async findByAlias(aliasName: string): Promise<TagTable | null> {
@@ -174,7 +174,9 @@ export class TagRepository extends BaseRepository<TagTable> {
             TagAliasTable,
             { name: aliasName },
             {
-                tag: true,
+                tag: {
+                    author: true,
+                },
             },
         );
 

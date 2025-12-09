@@ -67,8 +67,12 @@ class CommandTagInstance extends CommandInstance {
                     name: 'Content',
                     value: this.tag.body,
                 },
-                { name: 'User Info', value: `id: ${this.tag.author?.id ?? 'Not in DB'}` },
-                { name: 'Server Info', value: `id: ${this.context.guild.id}` },
+                {
+                    name: 'Owner Info',
+                    value: `id_db: ${this.tag.author.id}
+                discordId: ${this.tag.author.discordId}
+                name: ${this.tag.author.name}`,
+                },
             )
             .setFooter({
                 text: `took: ${

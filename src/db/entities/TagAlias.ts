@@ -14,6 +14,6 @@ export class TagAliasTable {
     @Column()
     tagId: number;
     @ManyToOne(() => TagTable, (t) => t.aliases, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'tag_id' })
+    @JoinColumn({ name: 'tagId' })
     tag: TagTable;
 }

@@ -13,7 +13,7 @@ export class CommandAddDef extends CommandDef<CommandAddInstance> {
             {
                 name: 'add',
                 aliases: ['a'],
-                permLevelRequired: PermLevel.TRUSTED,
+                permLevelRequired: PermLevel.DEFAULT,
                 cooldown_s: 5,
                 info: {
                     description: 'Adds a new command to the database',

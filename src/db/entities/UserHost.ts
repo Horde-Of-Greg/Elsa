@@ -34,12 +34,12 @@ export class UserHostTable {
     @Column()
     userId: number;
     @ManyToOne(() => UserTable, (u) => u.userHosts, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'user_id' })
+    @JoinColumn({ name: 'userId' })
     user: UserTable;
 
     @Column()
     hostId: number;
     @ManyToOne(() => HostTable, (h) => h.userHosts, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'host_id' })
+    @JoinColumn({ name: 'hostId' })
     host: HostTable;
 }

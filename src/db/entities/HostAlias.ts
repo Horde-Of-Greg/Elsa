@@ -24,6 +24,6 @@ export class HostAliasTable {
     @Column()
     hostId: number;
     @ManyToOne(() => HostTable, (h) => h.hostAliases, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'host_id' })
+    @JoinColumn({ name: 'hostId' })
     host: HostTable;
 }

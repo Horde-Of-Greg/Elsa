@@ -1,4 +1,4 @@
-import { Snowflake } from 'discord.js';
+import { Snowflake, User } from 'discord.js';
 import { app } from '../core/App';
 import { HostTable } from '../db/entities/Host';
 import { UserTable } from '../db/entities/User';
@@ -18,7 +18,7 @@ export class UserService {
         this.hostRepo = app.database.hostRepo;
     }
 
-    async findOrCreateUser(discordId: Snowflake) {
-        return this.userRepo.findOrCreateByDiscordId(discordId);
+    async findOrCreateUser(user_dc: User) {
+        return this.userRepo.findOrCreateByDiscordId(user_dc.id, user_dc.username);
     }
 }

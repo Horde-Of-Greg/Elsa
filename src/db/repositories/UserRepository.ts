@@ -1,4 +1,4 @@
-import { BaseRepository } from './BaseRepository';
+import { BaseRepository } from '../repositories/BaseRepository';
 import { UserTable } from '../entities/User';
 import { HostTable } from '../entities/Host';
 import { PermLevel, UserHostTable } from '../entities/UserHost';
@@ -13,10 +13,13 @@ export class UserRepository extends BaseRepository<UserTable> {
         return this.findOne({ discordId });
     }
 
-    async findOrCreateByDiscordId(discordId: Snowflake): Promise<UserTable> {
+    async findOrCreateByDiscordId(discordId: Snowflake, name?: string): Promise<UserTable> {
         let user = await this.findByDiscordId(discordId);
         if (!user) {
-            user = this.create({ discordId });
+            user = this.create({
+                discordId,
+                name,
+            });
             await this.save(user);
         }
         return user;
@@ -25,5 +28,13 @@ export class UserRepository extends BaseRepository<UserTable> {
     async getPermLevel(user: UserTable, host: HostTable): Promise<PermLevel | null> {
         const userHost = await this.findOneByJoin(UserHostTable, user, host);
         return userHost?.permLevel ?? null;
+    }
+
+    async createPermLevel(user: UserTable, host: HostTable, permLevel: PermLevel) {
+        await this.createAndSaveOnOtherTable(UserHostTable, {
+            userId: user.id,
+            hostId: host.id,
+            permLevel,
+        });
     }
 }

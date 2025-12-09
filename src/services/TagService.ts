@@ -24,14 +24,20 @@ export class TagService {
         author: User;
         guild: Guild;
     }) {
+        const authorUser = await app.services.userService.findOrCreateUser(context.author);
+        const hostRecord = await app.services.hostService.findOrCreateHost(
+            context.guild.id,
+            context.guild.name,
+        );
+
         const elements: TagElements = {
             name: context.tagName,
             body: context.tagBody,
             bodyHash: context.tagBodyHash,
-            author: await this.userRepo.findOrCreateByDiscordId(context.author.id),
+            author: authorUser,
         };
         const hostStatus: TagHostElements = {
-            host: await this.hostRepo.findOrCreateByDiscordId(context.guild.id, context.guild.name),
+            host: hostRecord,
         };
 
         return this.tagRepo.createAndSaveTag(elements, hostStatus);
@@ -52,6 +58,6 @@ export class TagService {
     }
 
     async findTag(name: string) {
-        return this.tagRepo.findByName(name);
+        return this.tagRepo.findByNameOrAlias(name);
     }
 }

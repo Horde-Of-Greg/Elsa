@@ -36,7 +36,7 @@ export class TagTable {
     @Column()
     authorId: number;
     @ManyToOne(() => UserTable, (u) => u.tags, { onDelete: 'SET NULL' })
-    @JoinColumn({ name: 'author_id' })
+    @JoinColumn({ name: 'authorId' })
     author: UserTable;
 
     @OneToMany(() => TagHostTable, (th) => th.tag)

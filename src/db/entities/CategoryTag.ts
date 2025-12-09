@@ -20,12 +20,12 @@ export class CategoryTagTable {
     @Column()
     categoryId: number;
     @ManyToOne(() => CategoryTable, (c) => c.links, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'category_id' })
+    @JoinColumn({ name: 'categoryId' })
     category: CategoryTable;
 
     @Column()
     tagId: number;
     @ManyToOne(() => TagTable, (t) => t.categoryLinks, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'tag_id' })
+    @JoinColumn({ name: 'tagId' })
     tag: TagTable;
 }

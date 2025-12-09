@@ -21,7 +21,7 @@ export class PermissionsService {
     }
 
     async requirePermLevel(user: User, host: Guild, permRequired: PermLevel): Promise<void> {
-        const user_db = await this.userRepo.findByDiscordId(user.id);
+        const user_db = await this.userRepo.findOrCreateByDiscordId(user.id);
 
         if (!user_db) {
             throw new UserNotFoundError(user.id);
@@ -32,8 +32,11 @@ export class PermissionsService {
         const userPerm = await this.userRepo.getPermLevel(user_db, host_db);
 
         if (userPerm == null) {
-            throw new PermissionDeniedError(permRequired, null);
-            //Separate these if statements in case we want to handle errors differently.
+            await this.userRepo.createPermLevel(user_db, host_db, PermLevel.DEFAULT);
+            if (PermLevel.DEFAULT < permRequired) {
+                throw new PermissionDeniedError(permRequired, userPerm);
+            }
+            return;
         }
 
         if (userPerm < permRequired) {

@@ -26,13 +26,13 @@ export class TagHostTable {
     @Column()
     tagId: number;
     @ManyToOne(() => TagTable, (t) => t.tagHosts, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'tag_id' })
+    @JoinColumn({ name: 'tagId' })
     tag: TagTable;
 
     @Column()
     hostId: number;
     @ManyToOne(() => HostTable, (h) => h.tagHosts, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'host_id' })
+    @JoinColumn({ name: 'hostId' })
     host: HostTable;
 
     @Column({

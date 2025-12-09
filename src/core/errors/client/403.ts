@@ -10,7 +10,7 @@ export class PermissionDeniedError extends AppError {
 
     constructor(
         readonly requiredLevel: PermLevel,
-        readonly userLevel: PermLevel | null,
+        readonly userLevel: PermLevel,
         readonly user: UserTable,
     ) {
         super(
@@ -27,8 +27,8 @@ export class PermissionDeniedError extends AppError {
             embeds: [
                 new EmbedBuilder().setTitle('Insufficient permissions').setColor(0xff0000)
                     .setDescription(`You do not have the permissions required to execute this action.
-                    Required: \`${this.requiredLevel}\`
-                    Yours: \`${this.userLevel}\``),
+                    Required: \`${PermLevel[this.requiredLevel]}\`
+                    Yours: \`${PermLevel[this.userLevel]}\``),
             ],
         };
     }
@@ -36,7 +36,7 @@ export class PermissionDeniedError extends AppError {
     log(): void {
         app.core.logger.simpleLog(
             'warn',
-            `User ${this.user.name} tried to run a ${this.requiredLevel} action with ${this.userLevel} perms.`,
+            `User ${this.user.name} tried to run a ${PermLevel[this.requiredLevel]} action with ${PermLevel[this.userLevel]} perms.`,
         );
     }
 }

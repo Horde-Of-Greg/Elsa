@@ -184,7 +184,7 @@ export abstract class CommandInstance {
         } else {
             error = e;
         }
-
+        error.log();
         await this.context.message.reply(error.reply);
     }
 }

@@ -1,5 +1,5 @@
 import { Config, ConfigSchema, Env, EnvSchema, SeederConfig, SeederConfigSchema } from './schema';
-
+//TODO: This is awful
 export function validateEnvs(): Env {
     const parsed = EnvSchema.safeParse(process.env);
     if (!parsed.success) {

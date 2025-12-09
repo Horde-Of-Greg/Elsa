@@ -1,18 +1,26 @@
 import z from 'zod';
-import { ConfigFileSchema, EnvFileSchema, SeederConfigFileSchema } from './fileSchema';
+import { isDiscordToken } from './tests';
 
-export const EnvSchema = EnvFileSchema;
+export const EnvSchema = z.object({
+    ENVIRONMENT: z.enum(['development', 'test', 'production']).default('development'),
+    DISCORD_TOKEN: z.string().refine(isDiscordToken, 'Invalid DISCORD_TOKEN'),
+    POSTGRES_HOST: z.string(),
+    POSTGRES_PORT: z.coerce.number().int().positive().default(5432),
+    POSTGRES_DB: z.string(),
+    POSTGRES_USER: z.string(),
+    POSTGRES_PASSWORD: z.string(),
+});
 
-export const ConfigSchema = ConfigFileSchema.transform((f) => ({
-    PREFIX: f.prefix,
-    NAME: f.name,
-    CMD_RANKS: { TAG: f.cmdRanks.tag, ADD_TAG: f.cmdRanks.addTag, SET_RANK: f.cmdRanks.setRank },
-    VERBOSE_LOGGING: f.verboseLogging,
-}));
+export const ConfigSchema = z.object({
+    PREFIX: z.string().min(1).max(3).default('!'),
+    NAME: z.string().min(1),
+    // TODO: make use of the Configs to actually define Commands
+    VERBOSE_LOGGING: z.boolean(),
+});
 
-export const SeederConfigSchema = SeederConfigFileSchema.transform((f) => ({
-    DEPTH: f.depth,
-}));
+export const SeederConfigSchema = z.object({
+    DEPTH: z.number().int().min(1).max(100000),
+});
 
 export type Env = z.infer<typeof EnvSchema>;
 export type Config = z.infer<typeof ConfigSchema>;

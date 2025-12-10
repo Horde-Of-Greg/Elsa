@@ -3,6 +3,8 @@
         "source.fixAll.eslint": "explicit"
     },
     "eslint.validate": ["javascript", "typescript"],
+    "eslint.format.enable": false,
     "eslint.useFlatConfig": true,
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

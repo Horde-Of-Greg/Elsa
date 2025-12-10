@@ -1,17 +1,12 @@
-#!/usr/bin/env node
-require('dotenv').config();
-const { execSync } = require('child_process');
-const readline = require('readline');
+import { execSync } from 'child_process';
+import readline from 'readline';
+import 'dotenv/config';
+import { app } from '../../core/App';
 
 const user = process.env.POSTGRES_USER;
 const host = process.env.POSTGRES_HOST;
 const db = process.env.POSTGRES_DB;
 const environment = process.env.ENVIRONMENT;
-
-if (!user || !host || !db || !environment) {
-    console.error('Error: Missing database configuration in .env file');
-    process.exit(1);
-}
 
 if (environment !== 'development') {
     process.exit(1);
@@ -22,31 +17,31 @@ const rl = readline.createInterface({
     output: process.stdout,
 });
 
-console.log(`WARNING: This will DELETE ALL DATA in database: ${db}`);
+app.core.logger.simpleLog('warn', `WARNING: This will DELETE ALL DATA in database: ${db}`);
 rl.question('Are you sure you want to continue? (y/n): ', (answer) => {
     rl.close();
 
     if (!/^y(?:es)?$/i.test(answer.toLowerCase())) {
-        console.log('Operation cancelled');
+        app.core.logger.simpleLog('info', 'Operation cancelled');
         process.exit(0);
     }
 
-    console.log(`Resetting database: ${db}`);
+    app.core.logger.simpleLog('info', `Resetting database: ${db}`);
 
     try {
-        console.log('Dropping existing database...');
+        app.core.logger.simpleLog('info', 'Dropping existing database...');
         execSync(`psql -U ${user} -h ${host} -d postgres -c "DROP DATABASE IF EXISTS ${db}"`, {
             stdio: 'inherit',
         });
 
-        console.log('Creating new database...');
+        app.core.logger.simpleLog('info', 'Creating new database...');
         execSync(`psql -U ${user} -h ${host} -d postgres -c "CREATE DATABASE ${db}"`, {
             stdio: 'inherit',
         });
 
-        console.log('✓ Database reset successfully');
+        app.core.logger.simpleLog('success', '✓ Database reset successfully');
     } catch (error) {
-        console.error('✗ Failed to reset database');
+        app.core.logger.simpleLog('error', '✗ Failed to reset database');
         process.exit(1);
     }
 });

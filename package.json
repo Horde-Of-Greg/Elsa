@@ -6,10 +6,16 @@
         "build": "tsc",
         "start": "node dist/main.js",
         "dev": "ts-node src/main.ts",
-        "db:drop": "node scripts/db-drop.js",
-        "db:create": "node scripts/db-create.js",
-        "db:reset": "node scripts/db-reset.js",
-        "db:psql": "node scripts/db-psql.js"
+        "tscheck": "tsc --noEmit",
+        "db:drop": "ts-node src/tools/db/drop.ts",
+        "db:create": "ts-node src/tools/db/create.ts",
+        "db:reset": "ts-node src/tools/db/reset.ts",
+        "db:psql": "ts-node src/tools/db/psql.ts",
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "lint": "eslint \"src/**/*.ts\"",
+        "lint:report": "eslint \"src/**/*.ts\" --format json --output-file eslint_report.json",
+        "bump": "ts-node src/tools/versioning/bump.ts"
     },
     "dependencies": {
         "discord.js": "^14.14.1",

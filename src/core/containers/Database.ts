@@ -1,4 +1,4 @@
-import { DataSource } from 'typeorm';
+import type { DataSource } from 'typeorm';
 import { dataSourceConfig } from '../../db/dataSource';
 import { HostRepository } from '../../db/repositories/HostRepository';
 import { TagOverridesRepository } from '../../db/repositories/TagOverridesRepository';

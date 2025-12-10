@@ -1,5 +1,5 @@
-import { Message, User, Guild, Channel } from 'discord.js';
-import { PermLevel } from '../db/entities/UserHost';
+import type { Message, User, Guild, Channel } from 'discord.js';
+import type { PermLevel } from '../db/entities/UserHost';
 
 export type CommandContext = {
     message: Message;

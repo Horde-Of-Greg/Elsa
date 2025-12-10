@@ -1,10 +1,10 @@
-import {
+import type {
     Repository,
     FindOptionsWhere,
     DeepPartial,
     FindOptionsRelations,
 } from 'typeorm';
-import { ValidEntity } from '../types/entities';
+import type { ValidEntity } from '../types/entities';
 import { app } from '../../core/App';
 
 //TODO: Add Transaction support.

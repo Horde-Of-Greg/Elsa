@@ -1,9 +1,9 @@
-import { User, Guild } from 'discord.js';
+import type { User, Guild } from 'discord.js';
 import { app } from '../core/App';
-import { PermLevel } from '../db/entities/UserHost';
-import { HostRepository } from '../db/repositories/HostRepository';
-import { TagRepository } from '../db/repositories/TagRepository';
-import { UserRepository } from '../db/repositories/UserRepository';
+import type { PermLevel } from '../db/entities/UserHost';
+import type { HostRepository } from '../db/repositories/HostRepository';
+import type { TagRepository } from '../db/repositories/TagRepository';
+import type { UserRepository } from '../db/repositories/UserRepository';
 
 export class UserService {
     private tagRepo: TagRepository;

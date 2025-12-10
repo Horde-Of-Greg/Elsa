@@ -1,10 +1,10 @@
 import { app } from '../core/App';
-import { HostRepository } from '../db/repositories/HostRepository';
-import { TagRepository, TagElements, TagHostElements } from '../db/repositories/TagRepository';
-import { UserRepository } from '../db/repositories/UserRepository';
-import { computeSHA256, SHA256Hash } from '../utils/crypto/sha256Hash';
-import { TagTable } from '../db/entities/Tag';
-import { Guild, User } from 'discord.js';
+import type { HostRepository } from '../db/repositories/HostRepository';
+import type { TagRepository, TagElements, TagHostElements } from '../db/repositories/TagRepository';
+import type { UserRepository } from '../db/repositories/UserRepository';
+import { computeSHA256, type SHA256Hash } from '../utils/crypto/sha256Hash';
+import type { TagTable } from '../db/entities/Tag';
+import type { Guild, User } from 'discord.js';
 
 export class TagService {
     private tagRepo: TagRepository;

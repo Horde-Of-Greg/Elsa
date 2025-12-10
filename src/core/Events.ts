@@ -2,6 +2,8 @@ import { app } from './App';
 import { env, seederConfig } from '../config/config';
 import { Seeder } from '../db/seeding/Seeder';
 
+// Reason: The point of the class here really is just for namespace. It just feels cleaner to use.
+ 
 export class Events {
     static initCore() {
         app.core.startTimer('main');

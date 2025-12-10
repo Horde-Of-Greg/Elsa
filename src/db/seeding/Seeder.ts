@@ -1,4 +1,4 @@
-import { SeederConfig } from '../../config/schema';
+import type { SeederConfig } from '../../config/schema';
 import { app } from '../../core/App';
 import { getGuildById } from '../../utils/discord/guilds';
 import { getUserById } from '../../utils/discord/users';
@@ -21,11 +21,11 @@ export class Seeder {
 
         app.core.logger.simpleLog(
             'warn',
-            `Clearing all data from database in ${3}s. Ctrl + C to stop.`,
+            `Clearing all data from database in ${wait_s.toString()}s. Ctrl + C to stop.`,
         );
 
         for (let i = 0; i < wait_s; i++) {
-            app.core.logger.simpleLog('warn', `${wait_s - i}`);
+            app.core.logger.simpleLog('warn', (wait_s - i).toString());
             await sleep(1000);
         }
 

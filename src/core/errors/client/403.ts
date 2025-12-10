@@ -1,8 +1,8 @@
-import { MessageReplyOptions, EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, type MessageReplyOptions } from 'discord.js';
 import { PermLevel } from '../../../db/entities/UserHost';
 import { AppError } from '../AppError';
 import { app } from '../../App';
-import { UserTable } from '../../../db/entities/User';
+import type { UserTable } from '../../../db/entities/User';
 
 export class PermissionDeniedError extends AppError {
     readonly code = 'PERMISSION_DENIED';
@@ -14,7 +14,7 @@ export class PermissionDeniedError extends AppError {
         readonly user: UserTable,
     ) {
         super(
-            `Insufficient permission. [required: ${PermLevel[requiredLevel]} | yours: ${userLevel}]`,
+            `Insufficient permission. [required: ${PermLevel[requiredLevel]} | yours: ${PermLevel[userLevel]}]`,
             {
                 requiredLevel,
                 userLevel,
@@ -36,7 +36,9 @@ export class PermissionDeniedError extends AppError {
     log(): void {
         app.core.logger.simpleLog(
             'warn',
-            `User ${this.user.name} tried to run a ${PermLevel[this.requiredLevel]} action with ${PermLevel[this.userLevel]} perms.`,
+            `User ${this.user.name !== null ? this.user.name : 'Unknown'} tried to run a ${
+                PermLevel[this.requiredLevel]
+            } action with ${PermLevel[this.userLevel]} perms.`,
         );
     }
 }

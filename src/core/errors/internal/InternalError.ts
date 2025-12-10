@@ -1,6 +1,6 @@
 import { EmbedBuilder } from '@discordjs/builders';
 import { AppError } from '../AppError';
-import { MessageReplyOptions } from 'discord.js';
+import type { MessageReplyOptions } from 'discord.js';
 import { app } from '../../App';
 
 export abstract class InternalError extends AppError {
@@ -39,7 +39,7 @@ export abstract class InternalError extends AppError {
         const stack = this.stack ?? 'No stack trace available';
         const stackLines = stack.match(/^\s+at\s+(.+?)\s+\(/gm);
         const methodNames = stackLines
-            ? stackLines.map((line) => line.match(/at\s+(.+?)\s+\(/)?.[1] || line)
+            ? stackLines.map((line) => line.match(/at\s+(.+?)\s+\(/)?.[1] ?? line)
             : [stack];
         return methodNames.join('\n').slice(0, 1000);
     }

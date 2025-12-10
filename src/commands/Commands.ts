@@ -1,4 +1,4 @@
-import { CommandDef, CommandInstance } from './Command';
+import type { CommandDef, CommandInstance } from './Command';
 import { CommandAddDef } from './impl/create/add';
 import { CommandHelpDef } from './impl/read/help';
 import { CommandTagDef } from './impl/read/tag';

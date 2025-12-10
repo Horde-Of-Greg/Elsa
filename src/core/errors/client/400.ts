@@ -1,13 +1,9 @@
 import { AppError } from '../AppError';
-import { EmbedBuilder, MessageReplyOptions } from 'discord.js';
+import { EmbedBuilder, type MessageReplyOptions } from 'discord.js';
 
 export class MissingArgumentError extends AppError {
     readonly code = 'MISSING_ARGUMENT';
     readonly httpStatus = 400;
-
-    constructor(message: string) {
-        super(message);
-    }
 
     get reply(): MessageReplyOptions {
         return {

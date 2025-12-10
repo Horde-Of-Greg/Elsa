@@ -1,4 +1,4 @@
-import { Snowflake, Guild } from 'discord.js';
+import type { Snowflake, Guild } from 'discord.js';
 import { app } from '../../core/App';
 
 /**

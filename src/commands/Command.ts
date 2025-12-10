@@ -1,15 +1,11 @@
 import { config } from '../config/config';
 import { app } from '../core/App';
-import { UserService } from '../services/UserService';
-import { TagService } from '../services/TagService';
-import { PermissionsService } from '../services/PermsService';
-import { HostService } from '../services/HostService';
-import {
-    ArgNotDefinedError,
-    NoArgsDefinedError,
-    NoContextError,
-} from '../core/errors/internal/commands';
-import { CommandContext, CommandParams, ParseResult, RequirableParseResult } from './types';
+import type { UserService } from '../services/UserService';
+import type { TagService } from '../services/TagService';
+import type { PermissionsService } from '../services/PermsService';
+import type { HostService } from '../services/HostService';
+import { ArgNotDefinedError, NoArgsDefinedError } from '../core/errors/internal/commands';
+import type { CommandContext, CommandParams, ParseResult, RequirableParseResult } from './types';
 import { MissingArgumentError } from '../core/errors/client/400';
 import { AppError } from '../core/errors/AppError';
 import { UnknownInternalError } from '../core/errors/internal/InternalError';
@@ -72,7 +68,7 @@ export abstract class CommandInstance {
             await this.execute();
             await this.reply();
             this.updateCooldown();
-            this.logExecution?.();
+            this.logExecution();
         } catch (error: unknown) {
             await this.replyError(error instanceof Error ? error : new Error(String(error)));
         } finally {
@@ -114,6 +110,7 @@ export abstract class CommandInstance {
      * Get argument value by name from metadata.
      * Automatically uses required/optional based on ArgumentDefinition.
      */
+     
     protected arg<T = unknown>(name: string): T {
         if (!this.params.info.arguments) {
             throw new NoArgsDefinedError(name, this.constructor.name);
@@ -144,10 +141,6 @@ export abstract class CommandInstance {
     }
 
     private async validatePermissions(): Promise<void> {
-        if (!this.context) {
-            throw new NoContextError();
-        }
-
         await this.permsService.requirePermLevel(
             this.context.author,
             this.context.guild,
@@ -159,7 +152,7 @@ export abstract class CommandInstance {
         key: K,
     ): NonNullable<ParseResult[K]> {
         const value = this.parseResult[key];
-        if (!value) {
+        if (value === undefined) {
             throw new MissingArgumentError(
                 `See \`${config.PREFIX}help\` for details on command usages.`,
             );

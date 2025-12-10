@@ -6,7 +6,7 @@ import { TagAliasTable } from '../entities/TagAlias';
 import { HostTable } from '../entities/Host';
 import { CategoryTable } from '../entities/Category';
 import { CategoryTagTable } from '../entities/CategoryTag';
-import { SHA256Hash } from '../../utils/crypto/sha256Hash';
+import type { SHA256Hash } from '../../utils/crypto/sha256Hash';
 
 export type TagElements = {
     name: string;
@@ -69,12 +69,12 @@ export class TagRepository extends BaseRepository<TagTable> {
     }
 
     async saveManyTags(elements: Map<TagTable, TagHostElements>): Promise<TagTable[]> {
-        const tags = Array.from(elements.keys());
+        const entries = Array.from(elements.entries());
+        const tags = entries.map(([tag]) => tag);
 
         await this.saveMany(tags);
 
-        const tagHosts = tags.map((tag) => {
-            const hostElements = elements.get(tag)!;
+        const tagHosts = entries.map(([tag, hostElements]) => {
             return this.createOnOtherTable(TagHostTable, {
                 tagId: tag.id,
                 hostId: hostElements.host.id,
@@ -208,19 +208,6 @@ export class TagRepository extends BaseRepository<TagTable> {
      * Update
      */
 
-    async safeUpdateOne(tag: TagTable): Promise<boolean> {
-        if (await this.exists({ id: tag.id })) {
-            return false;
-        }
-        await this.save(tag);
-        return true;
-    }
-
-    async safeUpdateMany(tags: TagTable[]): Promise<void> {
-        tags.filter((tag) => !this.exists({ id: tag.id }));
-        await this.saveMany(tags);
-    }
-
     async forceUpdateOne(tag: TagTable): Promise<void> {
         await this.save(tag);
     }
@@ -234,7 +221,7 @@ export class TagRepository extends BaseRepository<TagTable> {
         if (!tagHost) return null;
         if (tagHost.status === TagHostStatus.BANNED) return null;
         tagHost.status = TagHostStatus.BANNED;
-        this.saveOnOtherTable(tagHost);
+        await this.saveOnOtherTable(tagHost);
         return tag;
     }
 
@@ -246,7 +233,7 @@ export class TagRepository extends BaseRepository<TagTable> {
             tagHost.status = TagHostStatus.BANNED;
             tagHosts.push(tagHost);
         }
-        this.saveManyOnOtherTable(tagHosts);
+        await this.saveManyOnOtherTable(tagHosts);
         return tags;
     }
 

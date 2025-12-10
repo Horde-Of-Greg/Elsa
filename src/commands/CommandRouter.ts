@@ -1,8 +1,8 @@
-import { Message } from 'discord.js';
-import { CommandDef, CommandInstance } from './Command';
+import type { Message } from 'discord.js';
+import type { CommandDef, CommandInstance } from './Command';
 import { commands } from './Commands';
 import { config } from '../config/config';
-import { CommandContext, ParseResult } from './types';
+import type { CommandContext, ParseResult } from './types';
 
 export class CommandRouter {
     private commandList: CommandDef<CommandInstance>[];
@@ -71,7 +71,7 @@ export class CommandRouter {
             command: parsed[1],
             server: parsed[2],
             subcommand: parsed[3],
-            args: parsed[4]?.split(/\s+/),
+            args: parsed[4] ? parsed[4].split(/\s+/) : undefined,
         };
     }
 }

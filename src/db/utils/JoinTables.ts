@@ -6,7 +6,7 @@ import { TagAliasTable } from '../entities/TagAlias';
 import { TagHostTable } from '../entities/TagHost';
 import { UserTable } from '../entities/User';
 import { UserHostTable } from '../entities/UserHost';
-import { ValidEntity } from '../types/entities';
+import type { ValidEntity } from '../types/entities';
 import { HostAliasTable } from '../entities/HostAlias';
 import { JoinTableError } from '../../core/errors/internal/db';
 

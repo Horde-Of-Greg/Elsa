@@ -1,7 +1,7 @@
 import { app } from '../core/App';
-import { HostRepository } from '../db/repositories/HostRepository';
-import { TagRepository } from '../db/repositories/TagRepository';
-import { UserRepository } from '../db/repositories/UserRepository';
+import type { HostRepository } from '../db/repositories/HostRepository';
+import type { TagRepository } from '../db/repositories/TagRepository';
+import type { UserRepository } from '../db/repositories/UserRepository';
 
 export class HostService {
     private tagRepo: TagRepository;

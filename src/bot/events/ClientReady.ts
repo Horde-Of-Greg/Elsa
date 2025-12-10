@@ -1,4 +1,4 @@
-import { Client } from 'discord.js';
+import type { Client } from 'discord.js';
 import { DiscordEventHandler } from '../DiscordEventHandler';
 import { app } from '../../core/App';
 

@@ -1,4 +1,4 @@
-import { APIEmbedField, EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, type APIEmbedField } from 'discord.js';
 import { app } from '../../../core/App';
 import { PermLevel } from '../../../db/entities/UserHost';
 import { CommandDef, CommandInstance } from '../../Command';
@@ -50,7 +50,7 @@ class CommandHelpInstance extends CommandInstance {
             .setTitle('Commands Usage')
             .setColor(0x00dbe2)
             .setFields(this.message);
-        this.context.message.reply({ embeds: [embed] });
+        await this.context.message.reply({ embeds: [embed] });
     }
     protected logExecution(): void {
         app.core.logger.simpleLog('debug', 'Sent command list');

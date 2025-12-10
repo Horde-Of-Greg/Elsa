@@ -1,7 +1,7 @@
 import { BaseRepository } from './BaseRepository';
 import { TagOverridesTable } from '../entities/TagOverrides';
-import { TagTable } from '../entities/Tag';
-import { HostTable } from '../entities/Host';
+import type { TagTable } from '../entities/Tag';
+import type { HostTable } from '../entities/Host';
 
 export class TagOverridesRepository extends BaseRepository<TagOverridesTable> {
     constructor() {

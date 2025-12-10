@@ -1,6 +1,6 @@
-import { Client, ClientEvents, GatewayIntentBits } from 'discord.js';
+import { Client, GatewayIntentBits, type ClientEvents } from 'discord.js';
 import { CommandRouter } from '../commands/CommandRouter';
-import { DiscordEventHandler } from './DiscordEventHandler';
+import type { DiscordEventHandler } from './DiscordEventHandler';
 import { ReadyHandler } from './events/ClientReady';
 import { MessageCreateHandler } from './events/MessageCreate';
 import { MessageEditHandler } from './events/MessageEdit';

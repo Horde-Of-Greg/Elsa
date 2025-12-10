@@ -1,5 +1,5 @@
 import { TagBodyExistsError, TagExistsError } from '../../../core/errors/client/409';
-import { SHA256Hash } from '../../../utils/crypto/sha256Hash';
+import type { SHA256Hash } from '../../../utils/crypto/sha256Hash';
 import { app } from '../../../core/App';
 import { PermLevel } from '../../../db/entities/UserHost';
 import { CommandDef, CommandInstance } from '../../Command';

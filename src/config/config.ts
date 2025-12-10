@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { validateConfigs, validateEnvs, validateSeederConfigs } from './validate';
-import { Config, Env, SeederConfig } from './schema';
+import type { Config, Env, SeederConfig } from './schema';
 
 const CONFIGS_PATH: string = 'config';
 

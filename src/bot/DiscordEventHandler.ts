@@ -1,5 +1,5 @@
-import { Client, ClientEvents } from 'discord.js';
-import { CommandRouter } from '../commands/CommandRouter';
+import type { Client, ClientEvents } from 'discord.js';
+import type { CommandRouter } from '../commands/CommandRouter';
 
 export abstract class DiscordEventHandler<K extends keyof ClientEvents> {
     abstract readonly eventName: K;
@@ -14,9 +14,9 @@ export abstract class DiscordEventHandler<K extends keyof ClientEvents> {
         this.client = client;
         this.router = router;
         if (this.once) {
-            this.client.once(this.eventName, (...args) => this.handle(...args));
+            this.client.once(this.eventName, (...args) => void this.handle(...args));
         } else {
-            this.client.on(this.eventName, (...args) => this.handle(...args));
+            this.client.on(this.eventName, (...args) => void this.handle(...args));
         }
     }
 }

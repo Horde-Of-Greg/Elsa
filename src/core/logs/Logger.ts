@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 //TODO: Use the Console class for this instead
 import { config } from '../../config/config';
-import { LogType } from './StandardLog';
+import type { LogType } from './StandardLog';
 import { getTimestampNow } from '../../utils/time';
 
 enum AnsiColor {
@@ -15,10 +15,10 @@ enum AnsiColor {
     RESET = '\x1b[0m',
 }
 
-enum FormattingConstant {
-    FORMATTING_DASH = '-',
-    FORMATTING_TARGET_WIDTH = 50,
-}
+const FormattingConfig = {
+    DASH: '-',
+    TARGET_WIDTH: 50,
+};
 
 export class Logger {
     private name: string;
@@ -85,10 +85,10 @@ export class Logger {
     }
 
     private formatTitle(title: string): string {
-        const dashCount = (FormattingConstant.FORMATTING_TARGET_WIDTH - title.length) / 2;
-        const dashes = (FormattingConstant.FORMATTING_DASH as string).repeat(dashCount);
+        const dashCount = (FormattingConfig.TARGET_WIDTH - title.length) / 2;
+        const dashes = FormattingConfig.DASH.repeat(dashCount);
         const hasOddLength = dashCount % 1 !== 0;
-        const extraDash = hasOddLength ? FormattingConstant.FORMATTING_DASH : '';
+        const extraDash = hasOddLength ? FormattingConfig.DASH : '';
 
         return `|${dashes} ${title} ${dashes}${extraDash}|`;
     }

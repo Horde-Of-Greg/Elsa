@@ -1,5 +1,5 @@
-import { AppDate, getTimeNow } from '../../utils/time';
-import { MessagePayload, MessageReplyOptions } from 'discord.js';
+import { getTimeNow, type AppDate } from '../../utils/time';
+import type { MessagePayload, MessageReplyOptions } from 'discord.js';
 
 export abstract class AppError extends Error {
     abstract readonly code: string;

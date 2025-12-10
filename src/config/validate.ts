@@ -1,4 +1,11 @@
-import { Config, ConfigSchema, Env, EnvSchema, SeederConfig, SeederConfigSchema } from './schema';
+import {
+    ConfigSchema,
+    EnvSchema,
+    SeederConfigSchema,
+    type Config,
+    type Env,
+    type SeederConfig,
+} from './schema';
 //TODO: This is awful
 export function validateEnvs(): Env {
     const parsed = EnvSchema.safeParse(process.env);

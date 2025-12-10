@@ -4,7 +4,7 @@ import { TagNotFoundError } from '../../../core/errors/client/404';
 import { PermLevel } from '../../../db/entities/UserHost';
 import { CommandDef, CommandInstance } from '../../Command';
 import { app } from '../../../core/App';
-import { TagTable } from '../../../db/entities/Tag';
+import type { TagTable } from '../../../db/entities/Tag';
 
 export class CommandTagDef extends CommandDef<CommandTagInstance> {
     constructor() {

@@ -14,7 +14,7 @@
         "format": "prettier --write .",
         "format:check": "prettier --check .",
         "lint": "eslint \"src/**/*.ts\"",
-        "lint:report": "eslint \"src/**/*.ts\" --format json --output-file eslint_report.json",
+        "lint:report": "eslint \"src/**/*.ts\" --format json --output-file temp/lint/eslint_report.json",
         "bump": "ts-node src/tools/versioning/bump.ts"
     },
     "dependencies": {

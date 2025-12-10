@@ -64,16 +64,7 @@ export function getConnectedTables(
     return result;
 }
 
-function isValidJoin(
-    joinTable: new () => ValidEntity,
-    thisTable: new () => ValidEntity,
-    thatTable: new () => ValidEntity,
-): boolean {
-    const key = makeKey(thisTable, thatTable);
-    const lookup = joinMap.get(key);
-    if (!lookup) return false;
-    return lookup === joinTable;
-}
+
 
 export function makeKey(a: new () => ValidEntity, b: new () => ValidEntity): string {
     return [a.name, b.name].sort().join('-');

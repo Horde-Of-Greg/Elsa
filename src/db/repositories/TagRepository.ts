@@ -3,7 +3,6 @@ import { TagTable } from '../entities/Tag';
 import { UserTable } from '../entities/User';
 import { TagHostStatus, TagHostTable } from '../entities/TagHost';
 import { TagAliasTable } from '../entities/TagAlias';
-import { FindOptionsRelations } from 'typeorm';
 import { HostTable } from '../entities/Host';
 import { CategoryTable } from '../entities/Category';
 import { CategoryTagTable } from '../entities/CategoryTag';

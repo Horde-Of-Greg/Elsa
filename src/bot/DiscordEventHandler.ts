@@ -10,8 +10,13 @@ export abstract class DiscordEventHandler<K extends keyof ClientEvents> {
     protected client!: Client;
     protected router!: CommandRouter;
 
-    setDependencies(client: Client, router: CommandRouter): void {
+    register(client: Client, router: CommandRouter): void {
         this.client = client;
         this.router = router;
+        if (this.once) {
+            this.client.once(this.eventName, (...args) => this.handle(...args));
+        } else {
+            this.client.on(this.eventName, (...args) => this.handle(...args));
+        }
     }
 }

@@ -11,7 +11,7 @@ export function validateEnvs(): Env {
     return parsed.data;
 }
 
-export function validateConfigs(json: Object): Config {
+export function validateConfigs(json: object): Config {
     const parsed = ConfigSchema.safeParse(json);
     if (!parsed.success) {
         const errors = parsed.error.issues
@@ -22,7 +22,7 @@ export function validateConfigs(json: Object): Config {
     return parsed.data;
 }
 
-export function validateSeederConfigs(json: Object): SeederConfig {
+export function validateSeederConfigs(json: object): SeederConfig {
     const parsed = SeederConfigSchema.safeParse(json);
     if (!parsed.success) {
         const errors = parsed.error.issues

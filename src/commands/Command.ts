@@ -1,5 +1,3 @@
-import { Channel, EmbedBuilder, Guild, Message, User } from 'discord.js';
-import { PermLevel } from '../db/entities/UserHost';
 import { config } from '../config/config';
 import { app } from '../core/App';
 import { UserService } from '../services/UserService';
@@ -10,12 +8,9 @@ import {
     ArgNotDefinedError,
     NoArgsDefinedError,
     NoContextError,
-    NoGuildError,
 } from '../core/errors/internal/commands';
 import { CommandContext, CommandParams, ParseResult, RequirableParseResult } from './types';
-import { commands } from './Commands';
 import { MissingArgumentError } from '../core/errors/client/400';
-import { computeSHA256, SHA256Hash } from '../utils/crypto/sha256Hash';
 import { AppError } from '../core/errors/AppError';
 import { UnknownInternalError } from '../core/errors/internal/InternalError';
 
@@ -78,8 +73,8 @@ export abstract class CommandInstance {
             await this.reply();
             this.updateCooldown();
             this.logExecution?.();
-        } catch (error: any) {
-            await this.replyError(error);
+        } catch (error: unknown) {
+            await this.replyError(error instanceof Error ? error : new Error(String(error)));
         } finally {
             app.core.stopTimer(this.timerKey);
         }
@@ -119,7 +114,7 @@ export abstract class CommandInstance {
      * Get argument value by name from metadata.
      * Automatically uses required/optional based on ArgumentDefinition.
      */
-    protected arg<T = any>(name: string): T {
+    protected arg<T = unknown>(name: string): T {
         if (!this.params.info.arguments) {
             throw new NoArgsDefinedError(name, this.constructor.name);
         }
@@ -130,14 +125,14 @@ export abstract class CommandInstance {
             throw new ArgNotDefinedError(name, this.constructor.name);
         }
 
-        let value: any;
+        let value: unknown;
         if (argDef.required) {
             value = this.requireParseResult(argDef.parseResultKey);
         } else {
             value = this.optionalParseResult(argDef.parseResultKey);
         }
 
-        return value;
+        return value as T;
     }
 
     /*
@@ -179,11 +174,13 @@ export abstract class CommandInstance {
 
     private async replyError(e: Error): Promise<void> {
         let error: AppError;
+
         if (!(e instanceof AppError)) {
             error = new UnknownInternalError(e.message, e.stack);
         } else {
             error = e;
         }
+
         error.log();
         await this.context.message.reply(error.reply);
     }

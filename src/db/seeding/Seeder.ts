@@ -1,4 +1,3 @@
-import { seederConfig } from '../../config/config';
 import { SeederConfig } from '../../config/schema';
 import { app } from '../../core/App';
 import { getGuildById } from '../../utils/discord/guilds';
@@ -16,7 +15,7 @@ export class Seeder {
     }
 
     private async drop() {
-        if (!seederConfig.DROP_DB) return;
+        if (!this.config.DROP_DB) return;
 
         const wait_s = 3;
 
@@ -36,9 +35,9 @@ export class Seeder {
     }
 
     private async createSudoers() {
-        const sudoers = seederConfig.SUDOERS.USERS;
+        const sudoers = this.config.SUDOERS.USERS;
 
-        const guild_ids = seederConfig.SUDOERS.GUILDS;
+        const guild_ids = this.config.SUDOERS.GUILDS;
         for (const guild_id of guild_ids) {
             const guild = await getGuildById(guild_id);
             if (!guild) {

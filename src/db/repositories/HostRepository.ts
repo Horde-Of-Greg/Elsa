@@ -1,6 +1,5 @@
 import { BaseRepository } from './BaseRepository';
 import { HostTable } from '../entities/Host';
-import { TagHostStatus, TagHostTable } from '../entities/TagHost';
 
 export class HostRepository extends BaseRepository<HostTable> {
     constructor() {

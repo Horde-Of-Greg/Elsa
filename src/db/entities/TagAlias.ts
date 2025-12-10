@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { TagTable } from './Tag';
-import { HostTable } from './Host';
 
 @Entity({ name: 'tag_aliases' })
 @Index(['name'], { unique: true })

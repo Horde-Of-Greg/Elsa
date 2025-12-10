@@ -1,4 +1,3 @@
-// src/db/entities/HostAlias.ts
 import {
     Entity,
     PrimaryGeneratedColumn,
@@ -6,7 +5,6 @@ import {
     ManyToOne,
     JoinColumn,
     Index,
-    BaseEntity,
 } from 'typeorm';
 import { HostTable } from './Host';
 

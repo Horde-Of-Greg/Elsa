@@ -1,4 +1,3 @@
-import { Client } from 'discord.js';
 import { DiscordBot } from '../../bot/DiscordBot';
 
 export class DiscordContainer {

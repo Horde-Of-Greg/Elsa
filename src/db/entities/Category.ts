@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, OneToMany, BaseEntity, Column, Index } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, OneToMany, Column, Index } from 'typeorm';
 import { CategoryTagTable } from './CategoryTag';
 
 @Entity({ name: 'categories' })

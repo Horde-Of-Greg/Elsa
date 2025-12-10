@@ -1,11 +1,10 @@
-import { Embed, EmbedBuilder } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 import { env } from '../../../config/config';
 import { TagNotFoundError } from '../../../core/errors/client/404';
 import { PermLevel } from '../../../db/entities/UserHost';
 import { CommandDef, CommandInstance } from '../../Command';
 import { app } from '../../../core/App';
 import { TagTable } from '../../../db/entities/Tag';
-import { fa } from 'zod/v4/locales';
 
 export class CommandTagDef extends CommandDef<CommandTagInstance> {
     constructor() {

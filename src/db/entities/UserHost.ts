@@ -5,7 +5,6 @@ import {
     ManyToOne,
     JoinColumn,
     Index,
-    BaseEntity,
 } from 'typeorm';
 import { UserTable } from './User';
 import { HostTable } from './Host';

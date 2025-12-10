@@ -2,7 +2,6 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Index } from 'typeor
 import { UserHostTable } from './UserHost';
 import { TagHostTable } from './TagHost';
 import { HostAliasTable } from './HostAlias';
-import { TagAliasTable } from './TagAlias';
 
 @Entity({ name: 'hosts' })
 export class HostTable {

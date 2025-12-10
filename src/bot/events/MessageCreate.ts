@@ -1,4 +1,4 @@
-import { Client, Message } from 'discord.js';
+import { Message } from 'discord.js';
 import { CommandRouter } from '../../commands/CommandRouter';
 import { CommandContext } from '../../commands/types';
 import { DiscordEventHandler } from '../DiscordEventHandler';

@@ -1,8 +1,5 @@
-import { Client, ClientEvents, GatewayIntentBits, Message } from 'discord.js';
-import { config } from '../config/config';
+import { Client, ClientEvents, GatewayIntentBits } from 'discord.js';
 import { CommandRouter } from '../commands/CommandRouter';
-import { CommandContext } from '../commands/types';
-import { app } from '../core/App';
 import { DiscordEventHandler } from './DiscordEventHandler';
 import { ReadyHandler } from './events/ClientReady';
 import { MessageCreateHandler } from './events/MessageCreate';
@@ -15,11 +12,15 @@ const gatewayIntents = [
     GatewayIntentBits.GuildMembers,
 ];
 
+type AnyDiscordEventHandler = {
+    [K in keyof ClientEvents]: DiscordEventHandler<K>;
+}[keyof ClientEvents];
+
 export class DiscordBot {
     name: string;
     client: Client;
     private router: CommandRouter;
-    private handlers: Array<DiscordEventHandler<any>>;
+    private handlers: AnyDiscordEventHandler[];
     private readyResolver?: () => void;
     private readyPromise: Promise<void>;
 
@@ -27,7 +28,6 @@ export class DiscordBot {
         this.client = new Client({ intents: gatewayIntents });
         this.router = new CommandRouter();
 
-        // Create ready promise that will be resolved by ReadyHandler
         this.readyPromise = new Promise<void>((resolve) => {
             this.readyResolver = resolve;
         });
@@ -39,12 +39,7 @@ export class DiscordBot {
 
     private registerEventHandlers(): void {
         for (const handler of this.handlers) {
-            handler.setDependencies(this.client, this.router);
-            if (handler.once) {
-                this.client.once(handler.eventName, (...args) => handler.handle(...args));
-            } else {
-                this.client.on(handler.eventName, (...args) => handler.handle(...args));
-            }
+            handler.register(this.client, this.router);
         }
     }
 

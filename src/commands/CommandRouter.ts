@@ -2,12 +2,7 @@ import { Message } from 'discord.js';
 import { CommandDef, CommandInstance } from './Command';
 import { commands } from './Commands';
 import { config } from '../config/config';
-import { app } from '../core/App';
-import { CommandContext, CommandParams, ParseResult } from './types';
-import { HostService } from '../services/HostService';
-import { PermissionsService } from '../services/PermsService';
-import { TagService } from '../services/TagService';
-import { UserService } from '../services/UserService';
+import { CommandContext, ParseResult } from './types';
 
 export class CommandRouter {
     private commandList: CommandDef<CommandInstance>[];

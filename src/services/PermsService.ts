@@ -1,7 +1,5 @@
 import { Guild, User } from 'discord.js';
 import { app } from '../core/App';
-import { HostTable } from '../db/entities/Host';
-import { UserTable } from '../db/entities/User';
 import { PermLevel } from '../db/entities/UserHost';
 import { HostRepository } from '../db/repositories/HostRepository';
 import { TagRepository } from '../db/repositories/TagRepository';
@@ -31,7 +29,7 @@ export class PermissionsService {
 
         const userPerm = await this.userRepo.getPermLevel(user_db, host_db);
 
-        if (userPerm == null) {
+        if (!userPerm) {
             await this.userRepo.createPermLevel(user_db, host_db, PermLevel.DEFAULT);
             if (PermLevel.DEFAULT < permRequired) {
                 throw new PermissionDeniedError(permRequired, PermLevel.DEFAULT, user_db);

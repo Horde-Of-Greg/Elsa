@@ -1,4 +1,4 @@
-import { MessageReplyOptions, MessagePayload, EmbedBuilder } from 'discord.js';
+import { MessageReplyOptions, EmbedBuilder } from 'discord.js';
 import { AppError } from '../AppError';
 
 export class TagNotFoundError extends AppError {

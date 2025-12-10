@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+//TODO: Use the Console class for this instead
 import { config } from '../../config/config';
 import { LogType } from './StandardLog';
 import { getTimestampNow } from '../../utils/time';

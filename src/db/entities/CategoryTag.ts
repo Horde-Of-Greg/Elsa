@@ -1,4 +1,3 @@
-// src/db/entities/CategoryTag.ts
 import {
     Entity,
     PrimaryGeneratedColumn,
@@ -6,7 +5,6 @@ import {
     ManyToOne,
     JoinColumn,
     Index,
-    BaseEntity,
 } from 'typeorm';
 import { CategoryTable } from './Category';
 import { TagTable } from './Tag';

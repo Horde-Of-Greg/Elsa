@@ -1,5 +1,3 @@
-import { config } from '../config/config';
-import { PermLevel } from '../db/entities/UserHost';
 import { CommandDef, CommandInstance } from './Command';
 import { CommandAddDef } from './impl/create/add';
 import { CommandHelpDef } from './impl/read/help';

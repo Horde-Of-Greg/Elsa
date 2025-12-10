@@ -1,5 +1,5 @@
 import { AppError } from '../AppError';
-import Message, { EmbedBuilder, MessageReplyOptions } from 'discord.js';
+import { EmbedBuilder, MessageReplyOptions } from 'discord.js';
 
 export class MissingArgumentError extends AppError {
     readonly code = 'MISSING_ARGUMENT';

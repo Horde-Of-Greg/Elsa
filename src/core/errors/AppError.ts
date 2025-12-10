@@ -1,6 +1,5 @@
-import { EmbedBuilder } from '@discordjs/builders';
 import { AppDate, getTimeNow } from '../../utils/time';
-import { MessagePayload, MessagePayloadOption, MessageReplyOptions } from 'discord.js';
+import { MessagePayload, MessageReplyOptions } from 'discord.js';
 
 export abstract class AppError extends Error {
     abstract readonly code: string;

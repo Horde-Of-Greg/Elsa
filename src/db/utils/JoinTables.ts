@@ -75,6 +75,6 @@ function isValidJoin(
     return lookup === joinTable;
 }
 
-export function makeKey(a: Function, b: Function): string {
+export function makeKey(a: new () => ValidEntity, b: new () => ValidEntity): string {
     return [a.name, b.name].sort().join('-');
 }

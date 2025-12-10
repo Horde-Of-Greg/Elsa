@@ -1,4 +1,3 @@
-import { AppError } from '../AppError';
 import { InternalError } from './InternalError';
 
 export class UserNotFoundError extends InternalError {

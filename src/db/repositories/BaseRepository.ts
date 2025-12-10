@@ -2,13 +2,9 @@ import {
     Repository,
     FindOptionsWhere,
     DeepPartial,
-    ObjectLiteral,
-    JoinTable,
-    FindOptionsSelect,
     FindOptionsRelations,
 } from 'typeorm';
 import { ValidEntity } from '../types/entities';
-import { getConnectedTables } from '../utils/JoinTables';
 import { app } from '../../core/App';
 
 //TODO: Add Transaction support.

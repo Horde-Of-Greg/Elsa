@@ -7,6 +7,7 @@ import type { CommandContext, ParseResult } from './types';
 export class CommandRouter {
     private commandList: CommandDef<CommandInstance>[];
     private hashMap: Map<string, CommandDef<CommandInstance>>;
+    private matcher!: RegExp;
 
     constructor() {
         this.commandList = commands.getAll();
@@ -51,8 +52,8 @@ export class CommandRouter {
             '$',
         ].join('');
 
-        const matcher = new RegExp(pattern, 'i');
-        const parsed = message.content.match(matcher);
+        this.matcher = new RegExp(pattern, 'i');
+        const parsed = message.content.match(this.matcher);
 
         if (!parsed) return null;
 

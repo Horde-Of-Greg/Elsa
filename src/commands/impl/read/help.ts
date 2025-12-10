@@ -53,6 +53,6 @@ class CommandHelpInstance extends CommandInstance {
         await this.context.message.reply({ embeds: [embed] });
     }
     protected logExecution(): void {
-        app.core.logger.simpleLog('debug', 'Sent command list');
+        app.core.logger.simpleLog('debug', `Sent command ${this.params.name}`);
     }
 }

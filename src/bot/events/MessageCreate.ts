@@ -1,7 +1,7 @@
 import type { Message } from 'discord.js';
-import { CommandRouter } from '../../commands/CommandRouter';
 import type { CommandContext } from '../../commands/types';
 import { DiscordEventHandler } from '../DiscordEventHandler';
+import { app } from '../../core/App';
 
 export class MessageCreateHandler extends DiscordEventHandler<'messageCreate'> {
     readonly eventName = 'messageCreate';
@@ -9,6 +9,7 @@ export class MessageCreateHandler extends DiscordEventHandler<'messageCreate'> {
 
     async handle(message: Message): Promise<void> {
         if (!message.guild) return;
+        app.core.logger.simpleLog('debug', 'Received New Message');
 
         const context: CommandContext = {
             message,
@@ -17,7 +18,6 @@ export class MessageCreateHandler extends DiscordEventHandler<'messageCreate'> {
             channel: message.channel,
         };
 
-        if (!CommandRouter.isCommand(message.content)) return;
         await this.router.route(context);
     }
 }

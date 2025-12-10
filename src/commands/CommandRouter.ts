@@ -27,11 +27,6 @@ export class CommandRouter {
         await instance.run();
     }
 
-    static isCommand(commandCandidate: string) {
-        const regex = new RegExp(`^${config.PREFIX}`);
-        return regex.test(commandCandidate.trim());
-    }
-
     private buildHashMap() {
         for (const command of this.commandList) {
             const aliases = command.getIdentifiers();

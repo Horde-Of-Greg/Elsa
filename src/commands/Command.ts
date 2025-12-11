@@ -11,6 +11,7 @@ import type {
     CooldownKeys,
     ParseResult,
     RequirableParseResult,
+    validCooldown,
 } from './types';
 import { MissingArgumentError } from '../core/errors/client/400';
 import { AppError } from '../core/errors/AppError';
@@ -201,8 +202,8 @@ export abstract class CommandInstance {
         };
     }
 
-    private checkCooldown(cd_s: number, lastRan: AppDate | undefined): void {
-        if (cd_s < 0) return;
+    private checkCooldown(cd_s: validCooldown, lastRan: AppDate | undefined): void {
+        if (cd_s === 'disabled') return;
         if (!lastRan) return;
 
         const timeSinceLastCommand_ms = getTimeNow().getTime() - lastRan.getTime();

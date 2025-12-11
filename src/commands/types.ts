@@ -1,5 +1,6 @@
 import type { Message, User, Guild, Channel } from 'discord.js';
 import type { PermLevel } from '../db/entities/UserHost';
+import type { PositiveNumber } from '../utils/numbers/positive';
 
 export type CommandContext = {
     message: Message;
@@ -19,13 +20,15 @@ export type CommandParams = {
     name: string;
     aliases: string[];
     permLevelRequired: PermLevel;
-    cooldowns: { channel: number; guild: number };
+    cooldowns: { channel: validCooldown; guild: validCooldown };
     info: {
         description: string;
         arguments?: ArgumentDefinition[];
         examples?: string[];
     };
 };
+
+export type validCooldown = PositiveNumber | 'disabled';
 
 export type RequirableParseResult = Exclude<keyof ParseResult, 'command' | 'server'>;
 

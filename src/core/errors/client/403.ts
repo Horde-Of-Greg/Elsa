@@ -3,6 +3,7 @@ import { PermLevel } from '../../../db/entities/UserHost';
 import { AppError } from '../AppError';
 import { app } from '../../App';
 import type { UserTable } from '../../../db/entities/User';
+import { EmbedColors } from '../../../assets/colors';
 
 export class PermissionDeniedError extends AppError {
     readonly code = 'PERMISSION_DENIED';
@@ -14,7 +15,7 @@ export class PermissionDeniedError extends AppError {
         readonly user: UserTable,
     ) {
         super(
-            `Insufficient permission. [required: ${PermLevel[requiredLevel]} | yours: ${PermLevel[userLevel]}]`,
+            `Insufficient permission. [required: ${PermLevel[requiredLevel]} | user's: ${PermLevel[userLevel]}]`,
             {
                 requiredLevel,
                 userLevel,
@@ -25,10 +26,16 @@ export class PermissionDeniedError extends AppError {
     get reply(): MessageReplyOptions {
         return {
             embeds: [
-                new EmbedBuilder().setTitle('Insufficient permissions').setColor(0xff0000)
-                    .setDescription(`You do not have the permissions required to execute this action.
-                    Required: \`${PermLevel[this.requiredLevel]}\`
-                    Yours: \`${PermLevel[this.userLevel]}\``),
+                new EmbedBuilder()
+                    .setTitle('Insufficient permissions')
+                    .setColor(EmbedColors.RED)
+                    .setDescription(
+                        'You do not have the permissions required to execute this action.',
+                    )
+                    .setFooter({
+                        //prettier-ignore
+                        text: `Required: \`${PermLevel[this.requiredLevel]}\` | Yours: \`${PermLevel[this.userLevel]}\``,
+                    }),
             ],
         };
     }

@@ -1,5 +1,6 @@
 import { EmbedBuilder, type MessageReplyOptions } from 'discord.js';
 import { AppError } from '../AppError';
+import { EmbedColors } from '../../../assets/colors';
 
 export class TagNotFoundError extends AppError {
     readonly code = 'TAG_NOT_FOUND';
@@ -14,7 +15,7 @@ export class TagNotFoundError extends AppError {
             embeds: [
                 new EmbedBuilder()
                     .setTitle('Could not Find Tag')
-                    .setColor(0xdd1ab3)
+                    .setColor(EmbedColors.MAGENTA)
                     .setDescription(`Could not find tag \`${this.tagName}\` by name or alias.`),
             ],
         };

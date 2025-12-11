@@ -3,6 +3,8 @@ import type { SHA256Hash } from '../../../utils/crypto/sha256Hash';
 import { app } from '../../../core/App';
 import { PermLevel } from '../../../db/entities/UserHost';
 import { CommandDef, CommandInstance } from '../../Command';
+import { ensurePositive } from '../../../utils/numbers/positive';
+import { Emojis } from '../../../assets/emojis';
 
 export class CommandAddDef extends CommandDef<CommandAddInstance> {
     constructor() {
@@ -12,8 +14,8 @@ export class CommandAddDef extends CommandDef<CommandAddInstance> {
                 aliases: ['a'],
                 permLevelRequired: PermLevel.DEFAULT,
                 cooldowns: {
-                    channel: 5,
-                    guild: 5,
+                    channel: ensurePositive(5),
+                    guild: ensurePositive(5),
                 },
                 info: {
                     description: 'Adds a new command to the database',
@@ -55,7 +57,7 @@ class CommandAddInstance extends CommandInstance {
 
     protected async reply(): Promise<void> {
         await this.context.message.reply(
-            `:white_check_mark: Tag \`${this.tagName}\` created successfully!`,
+            `${Emojis.CHECKMARK} Tag \`${this.tagName}\` created successfully!`,
         );
     }
 

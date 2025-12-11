@@ -2,6 +2,7 @@ import { type MessageReplyOptions, EmbedBuilder, type User } from 'discord.js';
 import { AppError } from '../AppError';
 import { type CommandParams } from '../../../commands/types';
 import { app } from '../../App';
+import { EmbedColors } from '../../../assets/colors';
 
 export class CooldownError extends AppError {
     readonly code = 'TAG_EXISTS';
@@ -33,7 +34,7 @@ export class CooldownError extends AppError {
             embeds: [
                 new EmbedBuilder()
                     .setTitle('Too Many Commands')
-                    .setColor(0x7618ba)
+                    .setColor(EmbedColors.MAGENTA)
                     .setDescription(
                         `You hit the cooldown for ${
                             this.commandParams.name

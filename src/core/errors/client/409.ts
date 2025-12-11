@@ -2,6 +2,7 @@ import { EmbedBuilder } from '@discordjs/builders';
 import type { TagTable } from '../../../db/entities/Tag';
 import { AppError } from '../AppError';
 import type { MessageReplyOptions } from 'discord.js';
+import { EmbedColors } from '../../../assets/colors';
 
 export class TagExistsError extends AppError {
     readonly code = 'TAG_EXISTS';
@@ -16,7 +17,7 @@ export class TagExistsError extends AppError {
             embeds: [
                 new EmbedBuilder()
                     .setTitle('Tag already exists')
-                    .setColor(0x7618ba)
+                    .setColor(EmbedColors.YELLOW)
                     .setDescription(
                         `Cannot add tag ${this.tag.name} as it already exists, and is owned by <@${this.tag.author.discordId}>`,
                     ),
@@ -47,7 +48,7 @@ export class TagBodyExistsError extends AppError {
             embeds: [
                 new EmbedBuilder()
                     .setTitle('Tag body duplicate')
-                    .setColor(0x7618ba)
+                    .setColor(EmbedColors.YELLOW)
                     .setDescription(
                         `Cannot add tag ${this.tagName} as it contains the same body as tag: ${this.existingTag.name}. Please use !alias instead.`,
                     ),

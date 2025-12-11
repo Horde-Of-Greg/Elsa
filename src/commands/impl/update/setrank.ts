@@ -8,7 +8,10 @@ export class CommandSetRankDef extends CommandDef<CommandSetRankInstance> {
                 name: 'setrank',
                 aliases: ['sr', 'srank'],
                 permLevelRequired: PermLevel.OWNER,
-                cooldown_s: -1,
+                cooldowns: {
+                    channel: -1,
+                    guild: -1,
+                },
                 info: {
                     description: 'Edits the rank of someone',
                     //TODO: Impl

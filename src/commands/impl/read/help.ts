@@ -12,7 +12,10 @@ export class CommandHelpDef extends CommandDef<CommandHelpInstance> {
                 name: 'help',
                 aliases: ['h', 'help', 'info'],
                 permLevelRequired: PermLevel.DEFAULT,
-                cooldown_s: -1,
+                cooldowns: {
+                    channel: -1,
+                    guild: -1,
+                },
                 info: {
                     description: 'Sends this command.',
                 },

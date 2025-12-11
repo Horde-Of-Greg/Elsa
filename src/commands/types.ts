@@ -19,7 +19,7 @@ export type CommandParams = {
     name: string;
     aliases: string[];
     permLevelRequired: PermLevel;
-    cooldown_s: number;
+    cooldowns: { channel: number; guild: number };
     info: {
         description: string;
         arguments?: ArgumentDefinition[];
@@ -33,4 +33,9 @@ export type ArgumentDefinition = {
     name: string;
     required: boolean;
     parseResultKey: RequirableParseResult;
+};
+
+export type CooldownKeys = {
+    channel: string;
+    guild: string;
 };

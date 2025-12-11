@@ -13,7 +13,10 @@ export class CommandTagDef extends CommandDef<CommandTagInstance> {
                 name: 'tag',
                 aliases: ['t'],
                 permLevelRequired: PermLevel.DEFAULT,
-                cooldown_s: -1,
+                cooldowns: {
+                    channel: -1,
+                    guild: -1,
+                },
                 info: {
                     description: 'Return the body of a tag stored in the database.',
                     arguments: [

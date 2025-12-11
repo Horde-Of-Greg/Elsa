@@ -5,12 +5,22 @@ import type { TagService } from '../services/TagService';
 import type { PermissionsService } from '../services/PermsService';
 import type { HostService } from '../services/HostService';
 import { ArgNotDefinedError, NoArgsDefinedError } from '../core/errors/internal/commands';
-import type { CommandContext, CommandParams, ParseResult, RequirableParseResult } from './types';
+import type {
+    CommandContext,
+    CommandParams,
+    CooldownKeys,
+    ParseResult,
+    RequirableParseResult,
+} from './types';
 import { MissingArgumentError } from '../core/errors/client/400';
 import { AppError } from '../core/errors/AppError';
 import { UnknownInternalError } from '../core/errors/internal/InternalError';
+import { getTimeNow, type AppDate } from '../utils/time';
+import { CooldownError } from '../core/errors/client/429';
 
-// Constructor type for CommandInstance subclasses
+const channelCooldowns = new Map<string, AppDate>();
+const guildCooldowns = new Map<string, AppDate>();
+
 type CommandInstanceConstructor<TInstance extends CommandInstance> = new (
     context: CommandContext,
     parseResult: ParseResult,
@@ -52,6 +62,7 @@ export abstract class CommandInstance {
     protected userService: UserService = app.services.userService;
 
     protected timerKey: string = this.makeTimerKey();
+    protected cooldownKeys: CooldownKeys = this.makeCooldownKey();
 
     constructor(
         protected context: CommandContext,
@@ -62,9 +73,9 @@ export abstract class CommandInstance {
     async run(): Promise<void> {
         try {
             app.core.startTimer(this.timerKey);
-            await this.checkCooldown();
             await this.validateData();
             await this.validatePermissions();
+            this.checkCooldowns();
             await this.execute();
             await this.reply();
             this.updateCooldown();
@@ -76,10 +87,15 @@ export abstract class CommandInstance {
         }
     }
 
-    private async checkCooldown(): Promise<void> {
-        //TODO: Impl cooldowns
+    private checkCooldowns(): void {
+        this.checkChannelCooldown();
+        this.checkGuildCooldown();
     }
-    protected updateCooldown(): void {}
+
+    protected updateCooldown(): void {
+        channelCooldowns.set(this.cooldownKeys.channel, getTimeNow());
+        guildCooldowns.set(this.cooldownKeys.guild, getTimeNow());
+    }
 
     /**
      * Describe which of the optional elements in CommandContext should be used, and update a local context.
@@ -110,7 +126,7 @@ export abstract class CommandInstance {
      * Get argument value by name from metadata.
      * Automatically uses required/optional based on ArgumentDefinition.
      */
-     
+
     protected arg<T = unknown>(name: string): T {
         if (!this.params.info.arguments) {
             throw new NoArgsDefinedError(name, this.constructor.name);
@@ -176,5 +192,38 @@ export abstract class CommandInstance {
 
         error.log();
         await this.context.message.reply(error.reply);
+    }
+
+    private makeCooldownKey(): CooldownKeys {
+        return {
+            channel: `${this.params.name}:${this.context.author.id}:${this.context.channel.id}`,
+            guild: `${this.params.name}:${this.context.author.id}:${this.context.guild.id}`,
+        };
+    }
+
+    private checkCooldown(cd_s: number, lastRan: AppDate | undefined): void {
+        if (cd_s < 0) return;
+        if (!lastRan) return;
+
+        const timeSinceLastCommand_ms = getTimeNow().getTime() - lastRan.getTime();
+        const timeSinceLastCommand_s = timeSinceLastCommand_ms / 1000;
+        const diff = cd_s - timeSinceLastCommand_s;
+        if (diff > 0) {
+            throw new CooldownError(diff, this.context.author, this.params);
+        }
+    }
+
+    private checkChannelCooldown(): void {
+        this.checkCooldown(
+            this.params.cooldowns.channel,
+            channelCooldowns.get(this.cooldownKeys.channel),
+        );
+    }
+
+    private checkGuildCooldown(): void {
+        this.checkCooldown(
+            this.params.cooldowns.guild,
+            guildCooldowns.get(this.cooldownKeys.guild),
+        );
     }
 }

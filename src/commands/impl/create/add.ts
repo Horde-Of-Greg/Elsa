@@ -12,7 +12,7 @@ export class CommandAddDef extends CommandDef<CommandAddInstance> {
                 aliases: ['a'],
                 permLevelRequired: PermLevel.DEFAULT,
                 cooldowns: {
-                    channel: 7200,
+                    channel: 5,
                     guild: 5,
                 },
                 info: {

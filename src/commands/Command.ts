@@ -19,6 +19,7 @@ import { UnknownInternalError } from '../core/errors/internal/InternalError';
 import { getTimeNow, type AppDate } from '../utils/time';
 import { CooldownError } from '../core/errors/client/429';
 
+//TODO: Use Redis for this.
 const channelCooldowns = new Map<string, AppDate>();
 const guildCooldowns = new Map<string, AppDate>();
 

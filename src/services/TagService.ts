@@ -1,20 +1,14 @@
 import { app } from '../core/App';
-import type { HostRepository } from '../db/repositories/HostRepository';
 import type { TagRepository, TagElements, TagHostElements } from '../db/repositories/TagRepository';
-import type { UserRepository } from '../db/repositories/UserRepository';
 import { computeSHA256, type SHA256Hash } from '../utils/crypto/sha256Hash';
 import type { TagTable } from '../db/entities/Tag';
 import type { Guild, User } from 'discord.js';
 
 export class TagService {
     private tagRepo: TagRepository;
-    private userRepo: UserRepository;
-    private hostRepo: HostRepository;
 
     constructor() {
         this.tagRepo = app.database.tagRepo;
-        this.userRepo = app.database.userRepo;
-        this.hostRepo = app.database.hostRepo;
     }
 
     async createTag(context: {

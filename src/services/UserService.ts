@@ -1,19 +1,13 @@
 import type { User, Guild } from 'discord.js';
 import { app } from '../core/App';
 import type { PermLevel } from '../db/entities/UserHost';
-import type { HostRepository } from '../db/repositories/HostRepository';
-import type { TagRepository } from '../db/repositories/TagRepository';
 import type { UserRepository } from '../db/repositories/UserRepository';
 
 export class UserService {
-    private tagRepo: TagRepository;
     private userRepo: UserRepository;
-    private hostRepo: HostRepository;
 
     constructor() {
-        this.tagRepo = app.database.tagRepo;
         this.userRepo = app.database.userRepo;
-        this.hostRepo = app.database.hostRepo;
     }
 
     async findOrCreateUser(user_dc: User) {

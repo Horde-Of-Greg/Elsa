@@ -1,16 +1,10 @@
 import { app } from '../core/App';
 import type { HostRepository } from '../db/repositories/HostRepository';
-import type { TagRepository } from '../db/repositories/TagRepository';
-import type { UserRepository } from '../db/repositories/UserRepository';
 
 export class HostService {
-    private tagRepo: TagRepository;
-    private userRepo: UserRepository;
     private hostRepo: HostRepository;
 
     constructor() {
-        this.tagRepo = app.database.tagRepo;
-        this.userRepo = app.database.userRepo;
         this.hostRepo = app.database.hostRepo;
     }
 

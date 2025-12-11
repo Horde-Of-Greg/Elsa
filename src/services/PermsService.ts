@@ -2,17 +2,14 @@ import type { Guild, User } from 'discord.js';
 import { app } from '../core/App';
 import { PermLevel } from '../db/entities/UserHost';
 import type { HostRepository } from '../db/repositories/HostRepository';
-import type { TagRepository } from '../db/repositories/TagRepository';
 import type { UserRepository } from '../db/repositories/UserRepository';
 import { PermissionDeniedError } from '../core/errors/client/403';
 
 export class PermissionsService {
-    private tagRepo: TagRepository;
     private userRepo: UserRepository;
     private hostRepo: HostRepository;
 
     constructor() {
-        this.tagRepo = app.database.tagRepo;
         this.userRepo = app.database.userRepo;
         this.hostRepo = app.database.hostRepo;
     }

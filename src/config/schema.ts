@@ -17,7 +17,7 @@ export const ConfigSchema = z.object({
     // TODO: make use of the Configs to actually define Commands
     LOGS: z.object({
         VERBOSE_LOGGING: z.boolean(),
-        OUTPUT_PATH: z.string().regex(/^\/?(?:[a-z0-9]{,256}\/)+$/i),
+        OUTPUT_PATH: z.string().regex(/^\/?(?:[a-z0-9]{0,256}\/)+$/i),
         // This check is just to allow absolute paths, but have the user understand it IS an absolute path.
         ALLOW_ABSOLUTE_PATH: z.boolean(),
     }),

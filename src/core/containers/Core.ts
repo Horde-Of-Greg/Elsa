@@ -1,4 +1,5 @@
 import { Logger } from '../logs/Logger';
+import { TerminalStream } from '../logs/streams/TerminalStream';
 import { Timer } from '../Timer';
 
 export class CoreContainer {
@@ -6,7 +7,11 @@ export class CoreContainer {
     private _timers = new Map<string, Timer>();
 
     get logger(): Logger {
-        return (this._logger ??= new Logger());
+        return (this._logger ??= new Logger({
+            name: 'global',
+            stdout: new TerminalStream({ name: 'info', target: 'stdout' }),
+            stderr: new TerminalStream({ name: 'error', target: 'stderr' }),
+        }));
     }
 
     startTimer(id: string): void {

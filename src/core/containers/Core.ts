@@ -7,11 +7,7 @@ export class CoreContainer {
     private _timers = new Map<string, Timer>();
 
     get logger(): Logger {
-        return (this._logger ??= new Logger({
-            name: "global",
-            stdout: new TerminalStream({ name: "info", target: "stdout" }),
-            stderr: new TerminalStream({ name: "error", target: "stderr" }),
-        }));
+        return (this._logger ??= new Logger());
     }
 
     startTimer(id: string): void {

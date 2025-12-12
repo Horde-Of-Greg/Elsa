@@ -3,7 +3,7 @@ import { PermLevel } from '../../../db/entities/UserHost';
 import { AppError } from '../AppError';
 import { app } from '../../App';
 import type { UserTable } from '../../../db/entities/User';
-import { EmbedColors } from '../../../assets/colors';
+import { EmbedColors } from '../../../assets/colors/colors';
 
 export class PermissionDeniedError extends AppError {
     readonly code = 'PERMISSION_DENIED';

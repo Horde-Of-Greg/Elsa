@@ -48,7 +48,7 @@ export class Logger {
         const prefix = this.logPrefix(type);
         const coloredMessage = this.colorize(type, message);
 
-        if (type === 'debug' && !config.VERBOSE_LOGGING) {
+        if (type === 'debug' && !config.LOGS.VERBOSE_LOGGING) {
             return;
         }
 

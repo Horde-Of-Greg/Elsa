@@ -1,4 +1,4 @@
-import { EmbedColors } from '../../../assets/colors';
+import { EmbedColors } from '../../../assets/colors/colors';
 import { AppError } from '../AppError';
 import { EmbedBuilder, type MessageReplyOptions } from 'discord.js';
 

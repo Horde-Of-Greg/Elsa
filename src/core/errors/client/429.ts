@@ -2,7 +2,7 @@ import { type MessageReplyOptions, EmbedBuilder, type User } from 'discord.js';
 import { AppError } from '../AppError';
 import { type CommandParams } from '../../../commands/types';
 import { app } from '../../App';
-import { EmbedColors } from '../../../assets/colors';
+import { EmbedColors } from '../../../assets/colors/colors';
 
 export class CooldownError extends AppError {
     readonly code = 'TAG_EXISTS';

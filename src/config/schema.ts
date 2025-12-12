@@ -15,7 +15,12 @@ export const ConfigSchema = z.object({
     PREFIX: z.string().min(1).max(3).default('!'),
     NAME: z.string().min(1),
     // TODO: make use of the Configs to actually define Commands
-    VERBOSE_LOGGING: z.boolean(),
+    LOGS: z.object({
+        VERBOSE_LOGGING: z.boolean(),
+        OUTPUT_PATH: z.string().regex(/^\/?(?:[a-z0-9]{,256}\/)+$/i),
+        // This check is just to allow absolute paths, but have the user understand it IS an absolute path.
+        ALLOW_ABSOLUTE_PATH: z.boolean(),
+    }),
 });
 
 export const SeederConfigSchema = z.object({

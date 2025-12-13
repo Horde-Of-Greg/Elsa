@@ -1,7 +1,7 @@
-import type { User, Guild } from 'discord.js';
-import { app } from '../core/App';
-import type { PermLevel } from '../db/entities/UserHost';
-import type { UserRepository } from '../db/repositories/UserRepository';
+import type { User, Guild } from "discord.js";
+import { app } from "../core/App";
+import type { PermLevel } from "../db/entities/UserHost";
+import type { UserRepository } from "../db/repositories/UserRepository";
 
 export class UserService {
     private userRepo: UserRepository;

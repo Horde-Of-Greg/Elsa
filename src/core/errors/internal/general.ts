@@ -1,9 +1,9 @@
-import { InternalError } from './InternalError';
+import { InternalError } from "./InternalError";
 
 export class NegativeNumberError extends InternalError {
-    readonly code = 'NEGATIVE_NUMBER';
+    readonly code = "NEGATIVE_NUMBER";
 
     constructor() {
-        super('Tried to assign a negative number where a positively branded number was required.');
+        super("Tried to assign a negative number where a positively branded number was required.");
     }
 }

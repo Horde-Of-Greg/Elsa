@@ -1,8 +1,8 @@
-import type { CommandDef, CommandInstance } from './Command';
-import { CommandAddDef } from './impl/create/add';
-import { CommandHelpDef } from './impl/read/help';
-import { CommandTagDef } from './impl/read/tag';
-import { CommandSetRankDef } from './impl/update/setrank';
+import type { CommandDef, CommandInstance } from "./Command";
+import { CommandAddDef } from "./impl/create/add";
+import { CommandHelpDef } from "./impl/read/help";
+import { CommandTagDef } from "./impl/read/tag";
+import { CommandSetRankDef } from "./impl/update/setrank";
 
 class Commands {
     // Create

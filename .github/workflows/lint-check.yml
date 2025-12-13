@@ -3,24 +3,24 @@ name: Lint Check
 on:
     pull_request:
         paths-ignore:
-            - '.gitignore'
-            - '.github/**'
-            - 'README.md'
-            - 'LICENSE'
-            - '.prettierrc'
-            - '.prettierignore'
-            - '.vscode/**'
+            - ".gitignore"
+            - ".github/**"
+            - "README.md"
+            - "LICENSE"
+            - ".prettierrc"
+            - ".prettierignore"
+            - ".vscode/**"
     push:
         branches:
-            - 'main'
+            - "main"
         paths-ignore:
-            - '.gitignore'
-            - '.github/**'
-            - 'README.md'
-            - 'LICENSE'
-            - '.prettierrc'
-            - '.prettierignore'
-            - '.vscode/**'
+            - ".gitignore"
+            - ".github/**"
+            - "README.md"
+            - "LICENSE"
+            - ".prettierrc"
+            - ".prettierignore"
+            - ".vscode/**"
 
 jobs:
     lint:

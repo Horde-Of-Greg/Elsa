@@ -1,5 +1,5 @@
-import type { Snowflake, Guild } from 'discord.js';
-import { app } from '../../core/App';
+import type { Snowflake, Guild } from "discord.js";
+import { app } from "../../core/App";
 
 /**
  * Fetch a Discord Guild object by its ID.

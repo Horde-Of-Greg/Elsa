@@ -1,22 +1,22 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Index } from 'typeorm';
-import { UserHostTable } from './UserHost';
-import { TagHostTable } from './TagHost';
-import { HostAliasTable } from './HostAlias';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Index } from "typeorm";
+import { UserHostTable } from "./UserHost";
+import { TagHostTable } from "./TagHost";
+import { HostAliasTable } from "./HostAlias";
 
-@Entity({ name: 'hosts' })
+@Entity({ name: "hosts" })
 export class HostTable {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Index({ unique: true })
     @Column({
-        type: 'varchar',
+        type: "varchar",
         length: 32,
     })
     discordId: string;
 
     @Column({
-        type: 'varchar',
+        type: "varchar",
         length: 255,
     })
     name: string;

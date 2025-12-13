@@ -1,5 +1,5 @@
-import type { User, Snowflake } from 'discord.js';
-import { app } from '../../core/App';
+import type { User, Snowflake } from "discord.js";
+import { app } from "../../core/App";
 
 /**
  * Fetch a Discord User object by their ID.

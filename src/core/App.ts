@@ -1,7 +1,7 @@
-import { CoreContainer } from './containers/Core';
-import { DatabaseContainer } from './containers/Database';
-import { DiscordContainer } from './containers/Discord';
-import { ServicesContainer } from './containers/Services';
+import { CoreContainer } from "./containers/Core";
+import { DatabaseContainer } from "./containers/Database";
+import { DiscordContainer } from "./containers/Discord";
+import { ServicesContainer } from "./containers/Services";
 
 export class AppContainer {
     readonly core = new CoreContainer();

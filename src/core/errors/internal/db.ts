@@ -1,5 +1,5 @@
-import type { ValidEntity } from '../../../db/types/entities';
-import { InternalError } from './InternalError';
+import type { ValidEntity } from "../../../db/types/entities";
+import { InternalError } from "./InternalError";
 
 export abstract class DatabaseError extends InternalError {
     abstract readonly code: string;
@@ -14,7 +14,7 @@ export abstract class DatabaseError extends InternalError {
 }
 
 export class JoinTableError extends DatabaseError {
-    readonly code = 'DATABASE_JOIN';
+    readonly code = "DATABASE_JOIN";
 
     constructor(message: string, tables: Array<new () => ValidEntity>) {
         super(message, undefined, { tables });

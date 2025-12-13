@@ -1,8 +1,8 @@
-import type { Message } from 'discord.js';
-import type { CommandDef, CommandInstance } from './Command';
-import { commands } from './Commands';
-import { config } from '../config/config';
-import type { CommandContext, ParseResult } from './types';
+import type { Message } from "discord.js";
+import type { CommandDef, CommandInstance } from "./Command";
+import { commands } from "./Commands";
+import { config } from "../config/config";
+import type { CommandContext, ParseResult } from "./types";
 
 export class CommandRouter {
     private commandList: CommandDef<CommandInstance>[];
@@ -38,16 +38,16 @@ export class CommandRouter {
 
     private parse(message: Message): ParseResult | null {
         const pattern = [
-            '^',
+            "^",
             config.PREFIX,
-            '([a-z0-9]+)',
-            '(?:-([a-z0-9]*))?',
-            '(?:\\s(\\w+))?',
-            '(?:\\s([\\w\\s]+))?',
-            '$',
-        ].join('');
+            "([a-z0-9]+)",
+            "(?:-([a-z0-9]*))?",
+            "(?:\\s(\\w+))?",
+            "(?:\\s([\\w\\s]+))?",
+            "$",
+        ].join("");
 
-        this.matcher = new RegExp(pattern, 'i');
+        this.matcher = new RegExp(pattern, "i");
         const parsed = message.content.match(this.matcher);
 
         if (!parsed) return null;

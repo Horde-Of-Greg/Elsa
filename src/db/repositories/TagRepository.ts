@@ -1,12 +1,12 @@
-import { BaseRepository } from './BaseRepository';
-import { TagTable } from '../entities/Tag';
-import { UserTable } from '../entities/User';
-import { TagHostStatus, TagHostTable } from '../entities/TagHost';
-import { TagAliasTable } from '../entities/TagAlias';
-import { HostTable } from '../entities/Host';
-import { CategoryTable } from '../entities/Category';
-import { CategoryTagTable } from '../entities/CategoryTag';
-import type { SHA256Hash } from '../../utils/crypto/sha256Hash';
+import { BaseRepository } from "./BaseRepository";
+import { TagTable } from "../entities/Tag";
+import { UserTable } from "../entities/User";
+import { TagHostStatus, TagHostTable } from "../entities/TagHost";
+import { TagAliasTable } from "../entities/TagAlias";
+import { HostTable } from "../entities/Host";
+import { CategoryTable } from "../entities/Category";
+import { CategoryTagTable } from "../entities/CategoryTag";
+import type { SHA256Hash } from "../../utils/crypto/sha256Hash";
 
 export type TagElements = {
     name: string;
@@ -87,10 +87,7 @@ export class TagRepository extends BaseRepository<TagTable> {
         return tags;
     }
 
-    async createAndSaveTag(
-        elements: TagElements,
-        statusOnHost: TagHostElements,
-    ): Promise<TagTable> {
+    async createAndSaveTag(elements: TagElements, statusOnHost: TagHostElements): Promise<TagTable> {
         return this.saveTag(this.createTag(elements), statusOnHost);
     }
 

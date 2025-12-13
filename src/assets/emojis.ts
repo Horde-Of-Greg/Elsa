@@ -1,3 +1,3 @@
 export enum Emojis {
-    CHECKMARK = ':white_check_mark:',
+    CHECKMARK = ":white_check_mark:",
 }

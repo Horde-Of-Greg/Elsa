@@ -1,6 +1,6 @@
-import { Console } from 'console';
-import type { BaseWritableStream } from './streams/BaseWritableStream';
-import { deprecate } from 'util';
+import { Console } from "console";
+import type { BaseWritableStream } from "./streams/BaseWritableStream";
+import { deprecate } from "util";
 
 export interface LoggerConfig {
     name: string;
@@ -26,22 +26,22 @@ export class Logger {
 
     simpleLog = deprecate((oldType: string, message: string) => {
         this.info(message);
-    }, 'Please use logger.info, logger.warn, logger.error or logger.debug instead');
+    }, "Please use logger.info, logger.warn, logger.error or logger.debug instead");
 
     info(message: string, ...args: unknown[]): void {
-        this.console.log(this.format('INFO', message), ...args);
+        this.console.log(this.format("INFO", message), ...args);
     }
 
     warn(message: string, ...args: unknown[]): void {
-        this.console.warn(this.format('WARN', message), ...args);
+        this.console.warn(this.format("WARN", message), ...args);
     }
 
     error(message: string, ...args: unknown[]): void {
-        this.console.error(this.format('ERROR', message), ...args);
+        this.console.error(this.format("ERROR", message), ...args);
     }
 
     debug(message: string, ...args: unknown[]): void {
-        this.console.debug(this.format('DEBUG', message), ...args);
+        this.console.debug(this.format("DEBUG", message), ...args);
     }
 
     private format(level: string, message: string): string {

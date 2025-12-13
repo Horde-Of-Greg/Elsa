@@ -1,9 +1,9 @@
-import { createHash } from 'crypto';
+import { createHash } from "crypto";
 
 /**
  * Custom SHA256 type to make sure the buffer you give is SHA256
  */
-export type SHA256Hash = Buffer & { readonly type: 'SHA256Hash' };
+export type SHA256Hash = Buffer & { readonly type: "SHA256Hash" };
 
 /**
  * Compute SHA-256 hash from a string.
@@ -12,7 +12,7 @@ export type SHA256Hash = Buffer & { readonly type: 'SHA256Hash' };
  * @returns A type-safe SHA-256 hash buffer
  */
 export function computeSHA256(input: string): SHA256Hash {
-    const hash = createHash('sha256').update(input).digest();
+    const hash = createHash("sha256").update(input).digest();
     return hash as SHA256Hash;
 }
 
@@ -43,7 +43,7 @@ export function fromHex(hex: string): SHA256Hash {
     if (!/^[0-9a-fA-F]{64}$/.test(hex)) {
         throw new Error(`Invalid SHA-256 hex string: expected 64 hex characters, got "${hex}"`);
     }
-    return Buffer.from(hex, 'hex') as SHA256Hash;
+    return Buffer.from(hex, "hex") as SHA256Hash;
 }
 
 /**
@@ -53,7 +53,7 @@ export function fromHex(hex: string): SHA256Hash {
  * @returns Hex string representation
  */
 export function toHex(hash: SHA256Hash): string {
-    return hash.toString('hex');
+    return hash.toString("hex");
 }
 
 /**

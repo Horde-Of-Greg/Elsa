@@ -1,5 +1,5 @@
-import type { Client, ClientEvents } from 'discord.js';
-import type { CommandRouter } from '../commands/CommandRouter';
+import type { Client, ClientEvents } from "discord.js";
+import type { CommandRouter } from "../commands/CommandRouter";
 
 export abstract class DiscordEventHandler<K extends keyof ClientEvents> {
     abstract readonly eventName: K;

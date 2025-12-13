@@ -3,20 +3,20 @@ name: TypeScript Compilation Check
 on:
     pull_request:
         paths-ignore:
-            - '.gitignore'
-            - '.github/**'
-            - 'README.md'
-            - 'LICENSE'
-            - '.vscode/**'
+            - ".gitignore"
+            - ".github/**"
+            - "README.md"
+            - "LICENSE"
+            - ".vscode/**"
     push:
         branches:
-            - 'main'
+            - "main"
         paths-ignore:
-            - '.gitignore'
-            - '.github/**'
-            - 'README.md'
-            - 'LICENSE'
-            - '.vscode/**'
+            - ".gitignore"
+            - ".github/**"
+            - "README.md"
+            - "LICENSE"
+            - ".vscode/**"
 
 jobs:
     ts-check:

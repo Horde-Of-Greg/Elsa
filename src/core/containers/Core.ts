@@ -1,6 +1,6 @@
-import { Logger } from '../logs/Logger';
-import { TerminalStream } from '../logs/streams/TerminalStream';
-import { Timer } from '../Timer';
+import { Logger } from "../logs/Logger";
+import { TerminalStream } from "../logs/streams/TerminalStream";
+import { Timer } from "../Timer";
 
 export class CoreContainer {
     private _logger?: Logger;
@@ -8,9 +8,9 @@ export class CoreContainer {
 
     get logger(): Logger {
         return (this._logger ??= new Logger({
-            name: 'global',
-            stdout: new TerminalStream({ name: 'info', target: 'stdout' }),
-            stderr: new TerminalStream({ name: 'error', target: 'stderr' }),
+            name: "global",
+            stdout: new TerminalStream({ name: "info", target: "stdout" }),
+            stderr: new TerminalStream({ name: "error", target: "stderr" }),
         }));
     }
 

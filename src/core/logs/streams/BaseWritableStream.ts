@@ -1,4 +1,4 @@
-import { type WritableOptions, Writable } from 'stream';
+import { type WritableOptions, Writable } from "stream";
 
 export interface StreamConfig {
     name: string;
@@ -11,7 +11,7 @@ export abstract class BaseWritableStream extends Writable {
     constructor(config: StreamConfig, options?: WritableOptions) {
         super({
             decodeStrings: false,
-            defaultEncoding: config.encoding ?? 'utf8',
+            defaultEncoding: config.encoding ?? "utf8",
             ...options,
         });
         this.name = config.name;
@@ -29,7 +29,7 @@ export abstract class BaseWritableStream extends Writable {
         callback: (error?: Error | null) => void,
     ): void {
         try {
-            const data = typeof chunk === 'string' ? chunk : chunk.toString(encoding);
+            const data = typeof chunk === "string" ? chunk : chunk.toString(encoding);
 
             const result = this.processChunk(data);
 

@@ -1,42 +1,34 @@
-import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    ManyToOne,
-    OneToMany,
-    JoinColumn,
-    Index,
-} from 'typeorm';
-import { UserTable } from './User';
-import { TagHostTable } from './TagHost';
-import { TagOverridesTable } from './TagOverrides';
-import { CategoryTagTable } from './CategoryTag';
-import { TagAliasTable } from './TagAlias';
-import { SHA256Hash } from '../../utils/crypto/sha256Hash';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn, Index } from "typeorm";
+import { UserTable } from "./User";
+import { TagHostTable } from "./TagHost";
+import { TagOverridesTable } from "./TagOverrides";
+import { CategoryTagTable } from "./CategoryTag";
+import { TagAliasTable } from "./TagAlias";
+import { SHA256Hash } from "../../utils/crypto/sha256Hash";
 
-@Entity({ name: 'tags' })
+@Entity({ name: "tags" })
 export class TagTable {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Index({ unique: true })
-    @Column({ type: 'varchar', length: 128 })
+    @Column({ type: "varchar", length: 128 })
     name: string;
 
-    @Column({ type: 'text' })
+    @Column({ type: "text" })
     body: string;
 
     @Index({ unique: true })
-    @Column({ type: 'bytea' })
+    @Column({ type: "bytea" })
     bodyHash: SHA256Hash;
 
-    @Column({ type: 'boolean', default: false })
+    @Column({ type: "boolean", default: false })
     isScript: boolean;
 
     @Column()
     authorId: number;
-    @ManyToOne(() => UserTable, (u) => u.tags, { onDelete: 'SET NULL' })
-    @JoinColumn({ name: 'authorId' })
+    @ManyToOne(() => UserTable, (u) => u.tags, { onDelete: "SET NULL" })
+    @JoinColumn({ name: "authorId" })
     author: UserTable;
 
     @OneToMany(() => TagHostTable, (th) => th.tag)

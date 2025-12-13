@@ -1,27 +1,27 @@
-import { TagBodyExistsError, TagExistsError } from '../../../core/errors/client/409';
-import type { SHA256Hash } from '../../../utils/crypto/sha256Hash';
-import { app } from '../../../core/App';
-import { PermLevel } from '../../../db/entities/UserHost';
-import { CommandDef, CommandInstance } from '../../Command';
-import { ensurePositive } from '../../../utils/numbers/positive';
-import { Emojis } from '../../../assets/emojis';
+import { TagBodyExistsError, TagExistsError } from "../../../core/errors/client/409";
+import type { SHA256Hash } from "../../../utils/crypto/sha256Hash";
+import { app } from "../../../core/App";
+import { PermLevel } from "../../../db/entities/UserHost";
+import { CommandDef, CommandInstance } from "../../Command";
+import { ensurePositive } from "../../../utils/numbers/positive";
+import { Emojis } from "../../../assets/emojis";
 
 export class CommandAddDef extends CommandDef<CommandAddInstance> {
     constructor() {
         super(
             {
-                name: 'add',
-                aliases: ['a'],
+                name: "add",
+                aliases: ["a"],
                 permLevelRequired: PermLevel.DEFAULT,
                 cooldowns: {
                     channel: ensurePositive(5),
                     guild: ensurePositive(5),
                 },
                 info: {
-                    description: 'Adds a new command to the database',
+                    description: "Adds a new command to the database",
                     arguments: [
-                        { name: 'tag-name', required: true, parseResultKey: 'subcommand' },
-                        { name: 'tag-body', required: true, parseResultKey: 'args' },
+                        { name: "tag-name", required: true, parseResultKey: "subcommand" },
+                        { name: "tag-body", required: true, parseResultKey: "args" },
                     ],
                 },
             },
@@ -36,8 +36,8 @@ class CommandAddInstance extends CommandInstance {
     private tagBodyHash!: SHA256Hash;
 
     protected async validateData(): Promise<void> {
-        this.tagName = this.arg<string>('tag-name');
-        this.tagBody = this.arg<string[]>('tag-body').join(' ');
+        this.tagName = this.arg<string>("tag-name");
+        this.tagBody = this.arg<string[]>("tag-body").join(" ");
 
         //TODO: More validation on name being valid, body not being empty, etc.
 
@@ -56,16 +56,11 @@ class CommandAddInstance extends CommandInstance {
     }
 
     protected async reply(): Promise<void> {
-        await this.context.message.reply(
-            `${Emojis.CHECKMARK} Tag \`${this.tagName}\` created successfully!`,
-        );
+        await this.context.message.reply(`${Emojis.CHECKMARK} Tag \`${this.tagName}\` created successfully!`);
     }
 
     protected logExecution(): void {
-        app.core.logger.simpleLog(
-            'info',
-            `User ${this.context.author.tag} created tag: ${this.tagName}`,
-        );
+        app.core.logger.simpleLog("info", `User ${this.context.author.tag} created tag: ${this.tagName}`);
     }
 
     /*

@@ -1,9 +1,9 @@
-import { EmbedBuilder, type MessageReplyOptions } from 'discord.js';
-import { AppError } from '../AppError';
-import { EmbedColors } from '../../../assets/colors/colors';
+import { EmbedBuilder, type MessageReplyOptions } from "discord.js";
+import { AppError } from "../AppError";
+import { EmbedColors } from "../../../assets/colors/colors";
 
 export class TagNotFoundError extends AppError {
-    readonly code = 'TAG_NOT_FOUND';
+    readonly code = "TAG_NOT_FOUND";
     readonly httpStatus = 404;
 
     constructor(public readonly tagName: string) {
@@ -14,7 +14,7 @@ export class TagNotFoundError extends AppError {
         return {
             embeds: [
                 new EmbedBuilder()
-                    .setTitle('Could not Find Tag')
+                    .setTitle("Could not Find Tag")
                     .setColor(EmbedColors.MAGENTA)
                     .setDescription(`Could not find tag \`${this.tagName}\` by name or alias.`),
             ],

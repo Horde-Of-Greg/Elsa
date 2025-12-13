@@ -1,7 +1,7 @@
-import { BaseWritableStream, type StreamConfig } from './BaseWritableStream';
+import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream";
 
 export interface TerminalStreamConfig extends StreamConfig {
-    target: 'stdout' | 'stderr';
+    target: "stdout" | "stderr";
 }
 
 export class TerminalStream extends BaseWritableStream {
@@ -9,7 +9,7 @@ export class TerminalStream extends BaseWritableStream {
 
     constructor(config: TerminalStreamConfig) {
         super(config);
-        this.target = config.target === 'stdout' ? process.stdout : process.stderr;
+        this.target = config.target === "stdout" ? process.stdout : process.stderr;
     }
 
     protected processChunk(data: string): void {
@@ -17,11 +17,11 @@ export class TerminalStream extends BaseWritableStream {
     }
 
     protected flush(): Promise<void> {
-        throw new Error('Method not implemented.');
+        throw new Error("Method not implemented.");
     }
 
     protected cleanup(): Promise<void> {
-        throw new Error('Method not implemented.');
+        throw new Error("Method not implemented.");
     }
 
     /**

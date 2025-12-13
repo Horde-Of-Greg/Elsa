@@ -1,11 +1,6 @@
-import type {
-    Repository,
-    FindOptionsWhere,
-    DeepPartial,
-    FindOptionsRelations,
-} from 'typeorm';
-import type { ValidEntity } from '../types/entities';
-import { app } from '../../core/App';
+import type { Repository, FindOptionsWhere, DeepPartial, FindOptionsRelations } from "typeorm";
+import type { ValidEntity } from "../types/entities";
+import { app } from "../../core/App";
 
 //TODO: Add Transaction support.
 
@@ -43,10 +38,7 @@ export abstract class BaseRepository<T extends ValidEntity> {
      * @param relations (optional) Relations to load.
      * @returns An array of Entities that match the criteria.
      */
-    protected async findAll(
-        where?: FindOptionsWhere<T>,
-        relations?: FindOptionsRelations<T>,
-    ): Promise<T[]> {
+    protected async findAll(where?: FindOptionsWhere<T>, relations?: FindOptionsRelations<T>): Promise<T[]> {
         return where ? this.repo.find({ where, relations }) : this.repo.find();
     }
 
@@ -107,9 +99,7 @@ export abstract class BaseRepository<T extends ValidEntity> {
         const otherMetadata = app.database.dataSource.getMetadata(otherTable);
 
         const thisRelation = joinMetadata.relations.find((rel) => rel.type === thisMetadata.target);
-        const otherRelation = joinMetadata.relations.find(
-            (rel) => rel.type === otherMetadata.target,
-        );
+        const otherRelation = joinMetadata.relations.find((rel) => rel.type === otherMetadata.target);
 
         if (!thisRelation || !otherRelation) {
             throw new Error(
@@ -162,9 +152,7 @@ export abstract class BaseRepository<T extends ValidEntity> {
             ...where,
         } as FindOptionsWhere<J>;
 
-        return app.database.dataSource
-            .getRepository(joinTable)
-            .find({ where: fullWhere, relations });
+        return app.database.dataSource.getRepository(joinTable).find({ where: fullWhere, relations });
     }
 
     /**
@@ -199,10 +187,7 @@ export abstract class BaseRepository<T extends ValidEntity> {
      *   while auto-generated fields (like id) and relations can be omitted.
      * @returns A new entity instance ready to be saved on the table given.
      */
-    protected createOnOtherTable<J extends ValidEntity>(
-        table: new () => J,
-        data: DeepPartial<J>,
-    ): J {
+    protected createOnOtherTable<J extends ValidEntity>(table: new () => J, data: DeepPartial<J>): J {
         return app.database.dataSource.getRepository(table).create(data);
     }
 

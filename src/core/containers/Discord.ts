@@ -1,4 +1,4 @@
-import { DiscordBot } from '../../bot/DiscordBot';
+import { DiscordBot } from "../../bot/DiscordBot";
 
 export class DiscordContainer {
     private _bot?: DiscordBot;

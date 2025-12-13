@@ -1,7 +1,7 @@
-import { HostService } from '../../services/HostService';
-import { PermissionsService } from '../../services/PermsService';
-import { TagService } from '../../services/TagService';
-import { UserService } from '../../services/UserService';
+import { HostService } from "../../services/HostService";
+import { PermissionsService } from "../../services/PermsService";
+import { TagService } from "../../services/TagService";
+import { UserService } from "../../services/UserService";
 
 export class ServicesContainer {
     private _hostService?: HostService;

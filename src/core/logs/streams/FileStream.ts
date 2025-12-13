@@ -1,10 +1,10 @@
-import fs from 'fs';
-import path from 'path';
-import { BaseWritableStream, type StreamConfig } from './BaseWritableStream';
+import fs from "fs";
+import path from "path";
+import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream";
 
 export interface FileStreamConfig extends StreamConfig {
     filePath: string;
-    flags?: 'a' | 'w';
+    flags?: "a" | "w";
 }
 
 export class FileStream extends BaseWritableStream {
@@ -15,7 +15,7 @@ export class FileStream extends BaseWritableStream {
         super(config);
         this.filePath = path.resolve(config.filePath);
         this.ensureDirectory();
-        this.openFile(config.flags ?? 'a');
+        this.openFile(config.flags ?? "a");
     }
 
     private ensureDirectory(): void {
@@ -23,10 +23,10 @@ export class FileStream extends BaseWritableStream {
         fs.mkdirSync(dir, { recursive: true });
     }
 
-    private openFile(flags: 'a' | 'w'): void {
+    private openFile(flags: "a" | "w"): void {
         this.fileHandle = fs.createWriteStream(this.filePath, {
             flags,
-            encoding: 'utf8',
+            encoding: "utf8",
         });
     }
 
@@ -34,15 +34,15 @@ export class FileStream extends BaseWritableStream {
         if (!this.fileHandle) {
             throw new Error(`FileStream "${this.name}" is not open`);
         }
-        const clean = data.replace(/\\x1b\[[0-9;]*m/g, '');
+        const clean = data.replace(/\\x1b\[[0-9;]*m/g, "");
         this.fileHandle.write(clean);
     }
 
     protected override async flush(): Promise<void> {
         return new Promise((resolve, reject) => {
             if (!this.fileHandle) return resolve();
-            this.fileHandle.once('drain', resolve);
-            this.fileHandle.once('error', reject);
+            this.fileHandle.once("drain", resolve);
+            this.fileHandle.once("error", reject);
         });
     }
 
@@ -53,7 +53,7 @@ export class FileStream extends BaseWritableStream {
                 this.fileHandle = null;
                 resolve();
             });
-            this.fileHandle.once('error', reject);
+            this.fileHandle.once("error", reject);
         });
     }
 }

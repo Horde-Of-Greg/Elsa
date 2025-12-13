@@ -1,9 +1,9 @@
-import type { DataSource } from 'typeorm';
-import { dataSourceConfig } from '../../db/dataSource';
-import { HostRepository } from '../../db/repositories/HostRepository';
-import { TagOverridesRepository } from '../../db/repositories/TagOverridesRepository';
-import { TagRepository } from '../../db/repositories/TagRepository';
-import { UserRepository } from '../../db/repositories/UserRepository';
+import type { DataSource } from "typeorm";
+import { dataSourceConfig } from "../../db/dataSource";
+import { HostRepository } from "../../db/repositories/HostRepository";
+import { TagOverridesRepository } from "../../db/repositories/TagOverridesRepository";
+import { TagRepository } from "../../db/repositories/TagRepository";
+import { UserRepository } from "../../db/repositories/UserRepository";
 
 export class DatabaseContainer {
     private _tagRepo?: TagRepository;

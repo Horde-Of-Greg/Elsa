@@ -1,12 +1,12 @@
-import { EmbedBuilder, type MessageReplyOptions } from 'discord.js';
-import { PermLevel } from '../../../db/entities/UserHost';
-import { AppError } from '../AppError';
-import { app } from '../../App';
-import type { UserTable } from '../../../db/entities/User';
-import { EmbedColors } from '../../../assets/colors/colors';
+import { EmbedBuilder, type MessageReplyOptions } from "discord.js";
+import { PermLevel } from "../../../db/entities/UserHost";
+import { AppError } from "../AppError";
+import { app } from "../../App";
+import type { UserTable } from "../../../db/entities/User";
+import { EmbedColors } from "../../../assets/colors/colors";
 
 export class PermissionDeniedError extends AppError {
-    readonly code = 'PERMISSION_DENIED';
+    readonly code = "PERMISSION_DENIED";
     readonly httpStatus = 403;
 
     constructor(
@@ -27,11 +27,9 @@ export class PermissionDeniedError extends AppError {
         return {
             embeds: [
                 new EmbedBuilder()
-                    .setTitle('Insufficient permissions')
+                    .setTitle("Insufficient permissions")
                     .setColor(EmbedColors.RED)
-                    .setDescription(
-                        'You do not have the permissions required to execute this action.',
-                    )
+                    .setDescription("You do not have the permissions required to execute this action.")
                     .setFooter({
                         //prettier-ignore
                         text: `Required: \`${PermLevel[this.requiredLevel]}\` | Yours: \`${PermLevel[this.userLevel]}\``,
@@ -42,8 +40,8 @@ export class PermissionDeniedError extends AppError {
 
     log(): void {
         app.core.logger.simpleLog(
-            'warn',
-            `User ${this.user.name !== null ? this.user.name : 'Unknown'} tried to run a ${
+            "warn",
+            `User ${this.user.name !== null ? this.user.name : "Unknown"} tried to run a ${
                 PermLevel[this.requiredLevel]
             } action with ${PermLevel[this.userLevel]} perms.`,
         );

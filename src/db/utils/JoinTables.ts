@@ -1,14 +1,14 @@
-import { CategoryTable } from '../entities/Category';
-import { CategoryTagTable } from '../entities/CategoryTag';
-import { HostTable } from '../entities/Host';
-import { TagTable } from '../entities/Tag';
-import { TagAliasTable } from '../entities/TagAlias';
-import { TagHostTable } from '../entities/TagHost';
-import { UserTable } from '../entities/User';
-import { UserHostTable } from '../entities/UserHost';
-import type { ValidEntity } from '../types/entities';
-import { HostAliasTable } from '../entities/HostAlias';
-import { JoinTableError } from '../../core/errors/internal/db';
+import { CategoryTable } from "../entities/Category";
+import { CategoryTagTable } from "../entities/CategoryTag";
+import { HostTable } from "../entities/Host";
+import { TagTable } from "../entities/Tag";
+import { TagAliasTable } from "../entities/TagAlias";
+import { TagHostTable } from "../entities/TagHost";
+import { UserTable } from "../entities/User";
+import { UserHostTable } from "../entities/UserHost";
+import type { ValidEntity } from "../types/entities";
+import { HostAliasTable } from "../entities/HostAlias";
+import { JoinTableError } from "../../core/errors/internal/db";
 
 const joinMap = new Map<string, new () => ValidEntity>([
     [makeKey(UserTable, HostTable), UserHostTable],
@@ -18,10 +18,10 @@ const joinMap = new Map<string, new () => ValidEntity>([
 ]);
 
 const reverseMap = new Map<string, [new () => ValidEntity, new () => ValidEntity]>([
-    ['UserHostTable', [UserTable, HostTable]],
-    ['TagHostTable', [TagTable, HostTable]],
-    ['CategoryTagTable', [CategoryTable, TagTable]],
-    ['HostAliasTable', [HostTable, TagAliasTable]],
+    ["UserHostTable", [UserTable, HostTable]],
+    ["TagHostTable", [TagTable, HostTable]],
+    ["CategoryTagTable", [CategoryTable, TagTable]],
+    ["HostAliasTable", [HostTable, TagAliasTable]],
 ]);
 
 /**
@@ -40,7 +40,7 @@ export function getJoinTable(
     const result = joinMap.get(key);
 
     if (!result) {
-        throw new JoinTableError('Failed to get Join Table', [a, b]);
+        throw new JoinTableError("Failed to get Join Table", [a, b]);
     }
 
     return result;
@@ -58,14 +58,12 @@ export function getConnectedTables(
     const result = reverseMap.get(joinTable.name);
 
     if (!result) {
-        throw new JoinTableError('Failed to get Join Table for connected', [joinTable]);
+        throw new JoinTableError("Failed to get Join Table for connected", [joinTable]);
     }
 
     return result;
 }
 
-
-
 export function makeKey(a: new () => ValidEntity, b: new () => ValidEntity): string {
-    return [a.name, b.name].sort().join('-');
+    return [a.name, b.name].sort().join("-");
 }

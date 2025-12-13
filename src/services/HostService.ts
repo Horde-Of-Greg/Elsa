@@ -1,5 +1,5 @@
-import { app } from '../core/App';
-import type { HostRepository } from '../db/repositories/HostRepository';
+import { app } from "../core/App";
+import type { HostRepository } from "../db/repositories/HostRepository";
 
 export class HostService {
     private hostRepo: HostRepository;

@@ -1,32 +1,32 @@
-import type { Message } from 'discord.js';
-import { InternalError } from './InternalError';
+import type { Message } from "discord.js";
+import { InternalError } from "./InternalError";
 
 export class NoContextError extends InternalError {
-    readonly code: 'COMMAND_NO_CONTEXT';
+    readonly code: "COMMAND_NO_CONTEXT";
 
     constructor() {
-        super('Failed to receive a context');
+        super("Failed to receive a context");
     }
 }
 
 export class NoGuildError extends InternalError {
-    readonly code = 'COMMAND_NO_GUILD';
+    readonly code = "COMMAND_NO_GUILD";
 
     constructor() {
-        super('We do not support commands in DMs. YET. Feature may come later.');
+        super("We do not support commands in DMs. YET. Feature may come later.");
     }
 }
 
 export class NoParsingError extends InternalError {
-    readonly code = 'COMMAND_NO_PARSING';
+    readonly code = "COMMAND_NO_PARSING";
 
     constructor(message: Message) {
-        super('Command was not parsed at all.', { message });
+        super("Command was not parsed at all.", { message });
     }
 }
 
 export class ArgNotDefinedError extends InternalError {
-    readonly code = 'ARG_NOT_DEFINED';
+    readonly code = "ARG_NOT_DEFINED";
 
     constructor(argName: string, className: string) {
         super(
@@ -36,7 +36,7 @@ export class ArgNotDefinedError extends InternalError {
 }
 
 export class NoArgsDefinedError extends InternalError {
-    readonly code = 'NO_ARGS_DEFINED';
+    readonly code = "NO_ARGS_DEFINED";
 
     constructor(argName: string, className: string) {
         super(

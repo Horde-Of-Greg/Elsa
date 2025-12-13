@@ -1,10 +1,10 @@
-import { config } from '../config/config';
-import { app } from '../core/App';
-import type { UserService } from '../services/UserService';
-import type { TagService } from '../services/TagService';
-import type { PermissionsService } from '../services/PermsService';
-import type { HostService } from '../services/HostService';
-import { ArgNotDefinedError, NoArgsDefinedError } from '../core/errors/internal/commands';
+import { config } from "../config/config";
+import { app } from "../core/App";
+import type { UserService } from "../services/UserService";
+import type { TagService } from "../services/TagService";
+import type { PermissionsService } from "../services/PermsService";
+import type { HostService } from "../services/HostService";
+import { ArgNotDefinedError, NoArgsDefinedError } from "../core/errors/internal/commands";
 import type {
     CommandContext,
     CommandParams,
@@ -12,12 +12,12 @@ import type {
     ParseResult,
     RequirableParseResult,
     validCooldown,
-} from './types';
-import { MissingArgumentError } from '../core/errors/client/400';
-import { AppError } from '../core/errors/AppError';
-import { UnknownInternalError } from '../core/errors/internal/InternalError';
-import { getTimeNow, type AppDate } from '../utils/time';
-import { CooldownError } from '../core/errors/client/429';
+} from "./types";
+import { MissingArgumentError } from "../core/errors/client/400";
+import { AppError } from "../core/errors/AppError";
+import { UnknownInternalError } from "../core/errors/internal/InternalError";
+import { getTimeNow, type AppDate } from "../utils/time";
+import { CooldownError } from "../core/errors/client/429";
 
 //TODO: Use Redis for this.
 const channelCooldowns = new Map<string, AppDate>();
@@ -166,14 +166,10 @@ export abstract class CommandInstance {
         );
     }
 
-    private requireParseResult<K extends RequirableParseResult>(
-        key: K,
-    ): NonNullable<ParseResult[K]> {
+    private requireParseResult<K extends RequirableParseResult>(key: K): NonNullable<ParseResult[K]> {
         const value = this.parseResult[key];
         if (value === undefined) {
-            throw new MissingArgumentError(
-                `See \`${config.PREFIX}help\` for details on command usages.`,
-            );
+            throw new MissingArgumentError(`See \`${config.PREFIX}help\` for details on command usages.`);
         }
 
         return value as NonNullable<ParseResult[K]>;
@@ -204,7 +200,7 @@ export abstract class CommandInstance {
     }
 
     private checkCooldown(cd_s: validCooldown, lastRan: AppDate | undefined): void {
-        if (cd_s === 'disabled') return;
+        if (cd_s === "disabled") return;
         if (!lastRan) return;
 
         const timeSinceLastCommand_ms = getTimeNow().getTime() - lastRan.getTime();
@@ -216,16 +212,10 @@ export abstract class CommandInstance {
     }
 
     private checkChannelCooldown(): void {
-        this.checkCooldown(
-            this.params.cooldowns.channel,
-            channelCooldowns.get(this.cooldownKeys.channel),
-        );
+        this.checkCooldown(this.params.cooldowns.channel, channelCooldowns.get(this.cooldownKeys.channel));
     }
 
     private checkGuildCooldown(): void {
-        this.checkCooldown(
-            this.params.cooldowns.guild,
-            guildCooldowns.get(this.cooldownKeys.guild),
-        );
+        this.checkCooldown(this.params.cooldowns.guild, guildCooldowns.get(this.cooldownKeys.guild));
     }
 }

@@ -1,9 +1,9 @@
-import z from 'zod';
-import { isDiscordToken } from './tests';
+import z from "zod";
+import { isDiscordToken } from "./tests";
 
 export const EnvSchema = z.object({
-    ENVIRONMENT: z.enum(['development', 'test', 'production']).default('development'),
-    DISCORD_TOKEN: z.string().refine(isDiscordToken, 'Invalid DISCORD_TOKEN'),
+    ENVIRONMENT: z.enum(["development", "test", "production"]).default("development"),
+    DISCORD_TOKEN: z.string().refine(isDiscordToken, "Invalid DISCORD_TOKEN"),
     POSTGRES_HOST: z.string(),
     POSTGRES_PORT: z.coerce.number().int().positive().default(5432),
     POSTGRES_DB: z.string(),
@@ -12,7 +12,7 @@ export const EnvSchema = z.object({
 });
 
 export const ConfigSchema = z.object({
-    PREFIX: z.string().min(1).max(3).default('!'),
+    PREFIX: z.string().min(1).max(3).default("!"),
     NAME: z.string().min(1),
     // TODO: make use of the Configs to actually define Commands
     LOGS: z.object({

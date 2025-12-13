@@ -1,9 +1,9 @@
-import type { Guild, User } from 'discord.js';
-import { app } from '../core/App';
-import { PermLevel } from '../db/entities/UserHost';
-import type { HostRepository } from '../db/repositories/HostRepository';
-import type { UserRepository } from '../db/repositories/UserRepository';
-import { PermissionDeniedError } from '../core/errors/client/403';
+import type { Guild, User } from "discord.js";
+import { app } from "../core/App";
+import { PermLevel } from "../db/entities/UserHost";
+import type { HostRepository } from "../db/repositories/HostRepository";
+import type { UserRepository } from "../db/repositories/UserRepository";
+import { PermissionDeniedError } from "../core/errors/client/403";
 
 export class PermissionsService {
     private userRepo: UserRepository;

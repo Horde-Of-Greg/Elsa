@@ -1,13 +1,6 @@
-import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    ManyToOne,
-    JoinColumn,
-    Index,
-} from 'typeorm';
-import { UserTable } from './User';
-import { HostTable } from './Host';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, Index } from "typeorm";
+import { UserTable } from "./User";
+import { HostTable } from "./Host";
 
 export enum PermLevel {
     DEFAULT,
@@ -17,14 +10,14 @@ export enum PermLevel {
     OWNER,
 }
 
-@Entity({ name: 'user_hosts' })
-@Index(['userId', 'hostId'], { unique: true })
+@Entity({ name: "user_hosts" })
+@Index(["userId", "hostId"], { unique: true })
 export class UserHostTable {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({
-        type: 'enum',
+        type: "enum",
         enum: PermLevel,
         default: PermLevel.DEFAULT,
     })
@@ -32,13 +25,13 @@ export class UserHostTable {
 
     @Column()
     userId: number;
-    @ManyToOne(() => UserTable, (u) => u.userHosts, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'userId' })
+    @ManyToOne(() => UserTable, (u) => u.userHosts, { onDelete: "CASCADE" })
+    @JoinColumn({ name: "userId" })
     user: UserTable;
 
     @Column()
     hostId: number;
-    @ManyToOne(() => HostTable, (h) => h.userHosts, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'hostId' })
+    @ManyToOne(() => HostTable, (h) => h.userHosts, { onDelete: "CASCADE" })
+    @JoinColumn({ name: "hostId" })
     host: HostTable;
 }

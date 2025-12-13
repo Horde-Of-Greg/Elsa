@@ -1,11 +1,11 @@
-import { EmbedBuilder } from '@discordjs/builders';
-import type { TagTable } from '../../../db/entities/Tag';
-import { AppError } from '../AppError';
-import type { MessageReplyOptions } from 'discord.js';
-import { EmbedColors } from '../../../assets/colors/colors';
+import { EmbedBuilder } from "@discordjs/builders";
+import type { TagTable } from "../../../db/entities/Tag";
+import { AppError } from "../AppError";
+import type { MessageReplyOptions } from "discord.js";
+import { EmbedColors } from "../../../assets/colors/colors";
 
 export class TagExistsError extends AppError {
-    readonly code = 'TAG_EXISTS';
+    readonly code = "TAG_EXISTS";
     readonly httpStatus = 409;
 
     constructor(readonly tag: TagTable) {
@@ -16,7 +16,7 @@ export class TagExistsError extends AppError {
         return {
             embeds: [
                 new EmbedBuilder()
-                    .setTitle('Tag already exists')
+                    .setTitle("Tag already exists")
                     .setColor(EmbedColors.YELLOW)
                     .setDescription(
                         `Cannot add tag ${this.tag.name} as it already exists, and is owned by <@${this.tag.author.discordId}>`,
@@ -29,7 +29,7 @@ export class TagExistsError extends AppError {
 }
 
 export class TagBodyExistsError extends AppError {
-    readonly code = 'TAG_BODY_EXISTS';
+    readonly code = "TAG_BODY_EXISTS";
     readonly httpStatus: 409;
 
     constructor(
@@ -47,7 +47,7 @@ export class TagBodyExistsError extends AppError {
         return {
             embeds: [
                 new EmbedBuilder()
-                    .setTitle('Tag body duplicate')
+                    .setTitle("Tag body duplicate")
                     .setColor(EmbedColors.YELLOW)
                     .setDescription(
                         `Cannot add tag ${this.tagName} as it contains the same body as tag: ${this.existingTag.name}. Please use !alias instead.`,

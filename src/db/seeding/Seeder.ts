@@ -1,9 +1,9 @@
-import type { SeederConfig } from '../../config/schema';
-import { app } from '../../core/App';
-import { getGuildById } from '../../utils/discord/guilds';
-import { getUserById } from '../../utils/discord/users';
-import { sleep } from '../../utils/time';
-import { PermLevel } from '../entities/UserHost';
+import type { SeederConfig } from "../../config/schema";
+import { app } from "../../core/App";
+import { getGuildById } from "../../utils/discord/guilds";
+import { getUserById } from "../../utils/discord/users";
+import { sleep } from "../../utils/time";
+import { PermLevel } from "../entities/UserHost";
 
 export class Seeder {
     constructor(private readonly config: SeederConfig) {}
@@ -11,7 +11,7 @@ export class Seeder {
     async seed() {
         await this.drop();
         await this.createSudoers();
-        app.core.logger.simpleLog('success', 'Seeded Database.');
+        app.core.logger.simpleLog("success", "Seeded Database.");
     }
 
     private async drop() {
@@ -20,18 +20,18 @@ export class Seeder {
         const wait_s = 3;
 
         app.core.logger.simpleLog(
-            'warn',
+            "warn",
             `Clearing all data from database in ${wait_s.toString()}s. Ctrl + C to stop.`,
         );
 
         for (let i = 0; i < wait_s; i++) {
-            app.core.logger.simpleLog('warn', (wait_s - i).toString());
+            app.core.logger.simpleLog("warn", (wait_s - i).toString());
             await sleep(1000);
         }
 
         await app.database.dataSource.synchronize(true);
 
-        app.core.logger.simpleLog('success', 'Database cleared.');
+        app.core.logger.simpleLog("success", "Database cleared.");
     }
 
     private async createSudoers() {
@@ -41,7 +41,7 @@ export class Seeder {
         for (const guild_id of guild_ids) {
             const guild = await getGuildById(guild_id);
             if (!guild) {
-                throw new Error('Could not find guild in seeder');
+                throw new Error("Could not find guild in seeder");
             }
 
             for (const sudoer of sudoers) {

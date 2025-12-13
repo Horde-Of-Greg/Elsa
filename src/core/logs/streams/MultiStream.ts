@@ -1,4 +1,4 @@
-import { BaseWritableStream, type StreamConfig } from './BaseWritableStream';
+import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream";
 
 export interface MultiStreamConfig extends StreamConfig {
     streams: BaseWritableStream[];
@@ -23,7 +23,7 @@ export class MultiStream extends BaseWritableStream {
             this.streams.map(
                 (s) =>
                     new Promise<void>((resolve) => {
-                        s.once('drain', resolve);
+                        s.once("drain", resolve);
                     }),
             ),
         );
@@ -35,7 +35,7 @@ export class MultiStream extends BaseWritableStream {
                 (s) =>
                     new Promise<void>((resolve, reject) => {
                         s.end(() => resolve());
-                        s.once('error', reject);
+                        s.once("error", reject);
                     }),
             ),
         );

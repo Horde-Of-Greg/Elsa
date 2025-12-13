@@ -1,6 +1,6 @@
-import type { TimerResult } from '../types/time/Timer';
+import type { TimerResult } from "../types/time/Timer";
 
-type TimeUnit = 'micro' | 'ms' | 's' | 'm';
+type TimeUnit = "micro" | "ms" | "s" | "m";
 
 interface UnitConfig {
     label: string;
@@ -26,9 +26,9 @@ export class Timer {
      *   - `adjusted`: The elapsed time converted to the specified unit
      *   - `formatted`: A human-readable string with the adjusted time and unit label (e.g., "123.45ms")
      */
-    getTime(unit: TimeUnit | 'auto' = 'auto', precision: number = 2): TimerResult {
+    getTime(unit: TimeUnit | "auto" = "auto", precision: number = 2): TimerResult {
         const raw = performance.now() - this.startTime;
-        const selectedUnit = unit === 'auto' ? this.selectUnit(raw) : unit;
+        const selectedUnit = unit === "auto" ? this.selectUnit(raw) : unit;
         const config = Timer.UNITS[selectedUnit];
 
         const adjusted = raw * config.factor;
@@ -39,16 +39,16 @@ export class Timer {
     }
 
     private static readonly UNITS: Record<TimeUnit, UnitConfig> = {
-        micro: { label: 'μs', factor: 1000, threshold: 1 },
-        ms: { label: 'ms', factor: 1, threshold: 1000 },
-        s: { label: 's', factor: 1 / 1000, threshold: 60000 },
-        m: { label: 'm', factor: 1 / 60000, threshold: -1 },
+        micro: { label: "μs", factor: 1000, threshold: 1 },
+        ms: { label: "ms", factor: 1, threshold: 1000 },
+        s: { label: "s", factor: 1 / 1000, threshold: 60000 },
+        m: { label: "m", factor: 1 / 60000, threshold: -1 },
     };
 
     private selectUnit(timeMs: number): TimeUnit {
-        if (timeMs < Timer.UNITS.micro.threshold) return 'micro';
-        if (timeMs < Timer.UNITS.ms.threshold) return 'ms';
-        if (timeMs < Timer.UNITS.s.threshold) return 's';
-        return 'm';
+        if (timeMs < Timer.UNITS.micro.threshold) return "micro";
+        if (timeMs < Timer.UNITS.ms.threshold) return "ms";
+        if (timeMs < Timer.UNITS.s.threshold) return "s";
+        return "m";
     }
 }

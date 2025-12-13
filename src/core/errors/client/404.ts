@@ -1,6 +1,7 @@
 import { EmbedBuilder, type MessageReplyOptions } from "discord.js";
-import { AppError } from "../AppError";
+
 import { EmbedColors } from "../../../assets/colors/colors";
+import { AppError } from "../AppError";
 
 export class TagNotFoundError extends AppError {
     readonly code = "TAG_NOT_FOUND";

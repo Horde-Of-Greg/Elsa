@@ -1,10 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn, Index } from "typeorm";
-import { UserTable } from "./User";
-import { TagHostTable } from "./TagHost";
-import { TagOverridesTable } from "./TagOverrides";
+import { Column, Entity, Index,JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+
+import { SHA256Hash } from "../../utils/crypto/sha256Hash";
 import { CategoryTagTable } from "./CategoryTag";
 import { TagAliasTable } from "./TagAlias";
-import { SHA256Hash } from "../../utils/crypto/sha256Hash";
+import { TagHostTable } from "./TagHost";
+import { TagOverridesTable } from "./TagOverrides";
+import { UserTable } from "./User";
 
 @Entity({ name: "tags" })
 export class TagTable {

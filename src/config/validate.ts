@@ -1,10 +1,10 @@
 import {
-    ConfigSchema,
-    EnvSchema,
-    SeederConfigSchema,
     type Config,
+    ConfigSchema,
     type Env,
+    EnvSchema,
     type SeederConfig,
+    SeederConfigSchema,
 } from "./schema";
 //TODO: This is awful
 export function validateEnvs(): Env {

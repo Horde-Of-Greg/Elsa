@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+
 import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream";
 
 export interface FileStreamConfig extends StreamConfig {

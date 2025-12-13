@@ -1,7 +1,8 @@
 import type { Message } from "discord.js";
+
 import type { CommandContext } from "../../commands/types";
-import { DiscordEventHandler } from "../DiscordEventHandler";
 import { app } from "../../core/App";
+import { DiscordEventHandler } from "../DiscordEventHandler";
 
 export class MessageCreateHandler extends DiscordEventHandler<"messageCreate"> {
     readonly eventName = "messageCreate";

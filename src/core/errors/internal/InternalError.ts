@@ -1,7 +1,8 @@
 import { EmbedBuilder } from "@discordjs/builders";
-import { AppError } from "../AppError";
 import type { MessageReplyOptions } from "discord.js";
+
 import { app } from "../../App";
+import { AppError } from "../AppError";
 
 export abstract class InternalError extends AppError {
     readonly httpStatus: 500;

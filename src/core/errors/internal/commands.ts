@@ -1,4 +1,5 @@
 import type { Message } from "discord.js";
+
 import { InternalError } from "./InternalError";
 
 export class NoContextError extends InternalError {

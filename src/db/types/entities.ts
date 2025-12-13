@@ -4,8 +4,8 @@ import type { HostTable } from "../entities/Host";
 import type { HostAliasTable } from "../entities/HostAlias";
 import type { TagTable } from "../entities/Tag";
 import type { TagAliasTable } from "../entities/TagAlias";
-import type { TagOverridesTable } from "../entities/TagOverrides";
 import type { TagHostTable } from "../entities/TagHost";
+import type { TagOverridesTable } from "../entities/TagOverrides";
 import type { UserTable } from "../entities/User";
 import type { UserHostTable } from "../entities/UserHost";
 

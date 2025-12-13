@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Index } from "typeorm";
-import { UserHostTable } from "./UserHost";
+import { Column, Entity, Index,OneToMany, PrimaryGeneratedColumn } from "typeorm";
+
 import { TagTable } from "./Tag";
 import { TagOverridesTable } from "./TagOverrides";
+import { UserHostTable } from "./UserHost";
 
 @Entity({ name: "users" })
 export class UserTable {

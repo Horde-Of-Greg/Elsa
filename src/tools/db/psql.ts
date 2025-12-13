@@ -1,5 +1,7 @@
-import { execSync } from "child_process";
 import "dotenv/config";
+
+import { execSync } from "child_process";
+
 import { app } from "../../core/App";
 
 const user = process.env.POSTGRES_USER;

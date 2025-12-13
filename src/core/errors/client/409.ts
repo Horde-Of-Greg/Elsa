@@ -1,8 +1,9 @@
 import { EmbedBuilder } from "@discordjs/builders";
+import type { MessageReplyOptions } from "discord.js";
+
+import { EmbedColors } from "../../../assets/colors/colors";
 import type { TagTable } from "../../../db/entities/Tag";
 import { AppError } from "../AppError";
-import type { MessageReplyOptions } from "discord.js";
-import { EmbedColors } from "../../../assets/colors/colors";
 
 export class TagExistsError extends AppError {
     readonly code = "TAG_EXISTS";

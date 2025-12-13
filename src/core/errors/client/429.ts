@@ -1,8 +1,9 @@
-import { type MessageReplyOptions, EmbedBuilder, type User } from "discord.js";
-import { AppError } from "../AppError";
+import { EmbedBuilder, type MessageReplyOptions, type User } from "discord.js";
+
+import { EmbedColors } from "../../../assets/colors/colors";
 import { type CommandParams } from "../../../commands/types";
 import { app } from "../../App";
-import { EmbedColors } from "../../../assets/colors/colors";
+import { AppError } from "../AppError";
 
 export class CooldownError extends AppError {
     readonly code = "TAG_EXISTS";

@@ -1,5 +1,6 @@
-import path from "path";
 import { readFileSync, writeFileSync } from "fs";
+import path from "path";
+
 import { app } from "../../core/App";
 
 if (!process.argv[2]) {

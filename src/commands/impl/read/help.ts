@@ -1,9 +1,10 @@
-import { EmbedBuilder, type APIEmbedField } from "discord.js";
+import { type APIEmbedField,EmbedBuilder } from "discord.js";
+
+import { config } from "../../../config/config";
 import { app } from "../../../core/App";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { CommandDef, CommandInstance } from "../../Command";
 import { commands } from "../../Commands";
-import { config } from "../../../config/config";
 
 export class CommandHelpDef extends CommandDef<CommandHelpInstance> {
     constructor() {

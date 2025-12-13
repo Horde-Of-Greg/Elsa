@@ -1,6 +1,7 @@
+import { EmbedBuilder, type MessageReplyOptions } from "discord.js";
+
 import { EmbedColors } from "../../../assets/colors/colors";
 import { AppError } from "../AppError";
-import { EmbedBuilder, type MessageReplyOptions } from "discord.js";
 
 export class MissingArgumentError extends AppError {
     readonly code = "MISSING_ARGUMENT";

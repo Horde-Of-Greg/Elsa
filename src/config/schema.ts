@@ -1,4 +1,5 @@
 import z from "zod";
+
 import { isDiscordToken } from "./tests";
 
 export const EnvSchema = z.object({

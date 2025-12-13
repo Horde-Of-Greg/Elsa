@@ -1,5 +1,5 @@
-import { BaseRepository } from "./BaseRepository";
 import { HostTable } from "../entities/Host";
+import { BaseRepository } from "./BaseRepository";
 
 export class HostRepository extends BaseRepository<HostTable> {
     constructor() {

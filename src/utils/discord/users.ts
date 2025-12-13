@@ -1,4 +1,5 @@
-import type { User, Snowflake } from "discord.js";
+import type { Snowflake,User } from "discord.js";
+
 import { app } from "../../core/App";
 
 /**

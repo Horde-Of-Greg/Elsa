@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, Index } from "typeorm";
-import { UserTable } from "./User";
+import { Column, Entity, Index,JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+
 import { HostTable } from "./Host";
+import { UserTable } from "./User";
 
 export enum PermLevel {
     DEFAULT,

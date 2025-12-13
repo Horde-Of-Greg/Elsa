@@ -1,6 +1,7 @@
 import { Console } from "console";
-import type { BaseWritableStream } from "./streams/BaseWritableStream";
 import { deprecate } from "util";
+
+import type { BaseWritableStream } from "./streams/BaseWritableStream";
 
 export interface LoggerConfig {
     name: string;

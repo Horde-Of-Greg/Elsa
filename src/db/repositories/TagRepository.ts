@@ -1,12 +1,12 @@
-import { BaseRepository } from "./BaseRepository";
-import { TagTable } from "../entities/Tag";
-import { UserTable } from "../entities/User";
-import { TagHostStatus, TagHostTable } from "../entities/TagHost";
-import { TagAliasTable } from "../entities/TagAlias";
-import { HostTable } from "../entities/Host";
+import type { SHA256Hash } from "../../utils/crypto/sha256Hash";
 import { CategoryTable } from "../entities/Category";
 import { CategoryTagTable } from "../entities/CategoryTag";
-import type { SHA256Hash } from "../../utils/crypto/sha256Hash";
+import { HostTable } from "../entities/Host";
+import { TagTable } from "../entities/Tag";
+import { TagAliasTable } from "../entities/TagAlias";
+import { TagHostStatus, TagHostTable } from "../entities/TagHost";
+import { UserTable } from "../entities/User";
+import { BaseRepository } from "./BaseRepository";
 
 export type TagElements = {
     name: string;

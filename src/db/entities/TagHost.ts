@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, JoinColumn, Index } from "typeorm";
-import { TagTable } from "./Tag";
+import { Column, Entity, Index,JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+
 import { HostTable } from "./Host";
+import { TagTable } from "./Tag";
 import { TagOverridesTable } from "./TagOverrides";
 
 export enum TagHostStatus {

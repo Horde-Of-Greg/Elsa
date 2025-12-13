@@ -1,7 +1,8 @@
 import type { Message } from "discord.js";
+
+import { config } from "../config/config";
 import type { CommandDef, CommandInstance } from "./Command";
 import { commands } from "./Commands";
-import { config } from "../config/config";
 import type { CommandContext, ParseResult } from "./types";
 
 export class CommandRouter {

@@ -1,6 +1,6 @@
-import { app } from "./App";
 import { env, seederConfig } from "../config/config";
 import { Seeder } from "../db/seeding/Seeder";
+import { app } from "./App";
 
 export const Events = {
     initCore() {

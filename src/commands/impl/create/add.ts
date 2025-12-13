@@ -1,10 +1,10 @@
-import { TagBodyExistsError, TagExistsError } from "../../../core/errors/client/409";
-import type { SHA256Hash } from "../../../utils/crypto/sha256Hash";
-import { app } from "../../../core/App";
-import { PermLevel } from "../../../db/entities/UserHost";
-import { CommandDef, CommandInstance } from "../../Command";
-import { ensurePositive } from "../../../utils/numbers/positive";
 import { Emojis } from "../../../assets/emojis";
+import { app } from "../../../core/App";
+import { TagBodyExistsError, TagExistsError } from "../../../core/errors/client/409";
+import { PermLevel } from "../../../db/entities/UserHost";
+import type { SHA256Hash } from "../../../utils/crypto/sha256Hash";
+import { ensurePositive } from "../../../utils/numbers/positive";
+import { CommandDef, CommandInstance } from "../../Command";
 
 export class CommandAddDef extends CommandDef<CommandAddInstance> {
     constructor() {

@@ -1,9 +1,10 @@
 import { EmbedBuilder, type MessageReplyOptions } from "discord.js";
-import { PermLevel } from "../../../db/entities/UserHost";
-import { AppError } from "../AppError";
-import { app } from "../../App";
-import type { UserTable } from "../../../db/entities/User";
+
 import { EmbedColors } from "../../../assets/colors/colors";
+import type { UserTable } from "../../../db/entities/User";
+import { PermLevel } from "../../../db/entities/UserHost";
+import { app } from "../../App";
+import { AppError } from "../AppError";
 
 export class PermissionDeniedError extends AppError {
     readonly code = "PERMISSION_DENIED";

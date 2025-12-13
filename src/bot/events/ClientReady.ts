@@ -1,6 +1,7 @@
 import type { Client } from "discord.js";
-import { DiscordEventHandler } from "../DiscordEventHandler";
+
 import { app } from "../../core/App";
+import { DiscordEventHandler } from "../DiscordEventHandler";
 
 export class ReadyHandler extends DiscordEventHandler<"clientReady"> {
     readonly eventName = "clientReady";

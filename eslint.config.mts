@@ -1,10 +1,11 @@
 import eslint from "@eslint/js";
 import { defineConfig } from "eslint/config";
-import tseslint from "typescript-eslint";
 import nodePlugin from "eslint-plugin-n";
-import unusedImports from "eslint-plugin-unused-imports";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
 import sonarJs from "eslint-plugin-sonarjs";
+import unusedImports from "eslint-plugin-unused-imports";
 import globals from "globals";
+import tseslint from "typescript-eslint";
 
 export default defineConfig(
     {
@@ -29,6 +30,7 @@ export default defineConfig(
             "unused-imports": unusedImports,
             "n": nodePlugin,
             "sonarjs": sonarJs,
+            "importsort": simpleImportSort,
         },
         rules: {
             "no-unused-vars": "off",
@@ -54,6 +56,8 @@ export default defineConfig(
             "no-param-reassign": "warn",
             "no-implicit-coercion": "warn",
             "no-warning-comments": ["warn", { terms: ["todo", "fixme"], location: "start" }],
+            "importsort/imports": "error",
+            "importsort/exports": "error",
         },
     },
 );

@@ -1,5 +1,9 @@
 {
     "PREFIX": "!",
     "NAME": "Elsa",
-    "VERBOSE_LOGGING": true
+    "LOGS": {
+        "VERBOSE_LOGGING": true,
+        "OUTPUT_PATH": "logs/",
+        "ALLOW_ABSOLUTE_PATH": false
+    }
 }

@@ -7,4 +7,5 @@ node_modules/
 # Configs
 config/*.json
 
-logs/*.log
+# Logs
+logs/

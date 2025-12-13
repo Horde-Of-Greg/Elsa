@@ -3,7 +3,7 @@ import { DatabaseContainer } from "./containers/Database";
 import { DiscordContainer } from "./containers/Discord";
 import { ServicesContainer } from "./containers/Services";
 
-export class AppContainer {
+class AppContainer {
     readonly core = new CoreContainer();
     readonly database = new DatabaseContainer();
     readonly discord = new DiscordContainer();

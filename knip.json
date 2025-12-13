@@ -1,0 +1,9 @@
+{
+    "$schema": "https://unpkg.com/knip@5/schema.json",
+    "project": ["**/*.{js,ts,tsx}"],
+    "ignoreExportsUsedInFile": {
+        "interface": true,
+        "type": true
+    },
+    "tags": ["-lintignore"]
+}

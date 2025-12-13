@@ -12,10 +12,10 @@ export const EnvSchema = z.object({
     POSTGRES_PASSWORD: z.string(),
 });
 
-export const ConfigSchema = z.object({
-    PREFIX: z.string().min(1).max(3).default("!"),
+export const appConfigSchema = z.object({
+    PREFIX: z.string().min(1).max(3).default('!'),
     NAME: z.string().min(1),
-    // TODO: make use of the Configs to actually define Commands
+    // TODO: make use of the appConfigs to actually define Commands
     LOGS: z.object({
         VERBOSE_LOGGING: z.boolean(),
         OUTPUT_PATH: z.string().regex(/^\/?(?:[a-z0-9]{0,256}\/)+$/i),
@@ -24,7 +24,7 @@ export const ConfigSchema = z.object({
     }),
 });
 
-export const SeederConfigSchema = z.object({
+export const SeederappConfigSchema = z.object({
     DEPTH: z.number().int().min(1).max(100000),
     DROP_DB: z.boolean(),
     SUDOERS: z.object({
@@ -35,5 +35,5 @@ export const SeederConfigSchema = z.object({
 });
 
 export type Env = z.infer<typeof EnvSchema>;
-export type Config = z.infer<typeof ConfigSchema>;
-export type SeederConfig = z.infer<typeof SeederConfigSchema>;
+export type AppConfig = z.infer<typeof appConfigSchema>;
+export type SeederConfig = z.infer<typeof SeederappConfigSchema>;

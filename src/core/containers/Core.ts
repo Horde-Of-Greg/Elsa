@@ -1,5 +1,4 @@
 import { Logger } from "../logs/Logger";
-import { TerminalStream } from "../logs/streams/TerminalStream";
 import { Timer } from "../Timer";
 
 export class CoreContainer {

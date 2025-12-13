@@ -1,6 +1,6 @@
 import type { Message } from "discord.js";
 
-import { config } from "../config/config";
+import { appConfig } from "../config/appConfig";
 import type { CommandDef, CommandInstance } from "./Command";
 import { commands } from "./Commands";
 import type { CommandContext, ParseResult } from "./types";
@@ -40,7 +40,7 @@ export class CommandRouter {
     private parse(message: Message): ParseResult | null {
         const pattern = [
             "^",
-            config.PREFIX,
+            appConfig.PREFIX,
             "([a-z0-9]+)",
             "(?:-([a-z0-9]*))?",
             "(?:\\s(\\w+))?",

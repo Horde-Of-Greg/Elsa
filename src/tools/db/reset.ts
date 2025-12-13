@@ -1,4 +1,4 @@
-import "dotenv/config";
+import "dotenv/appConfig";
 
 import { execSync } from "child_process";
 import readline from "readline";

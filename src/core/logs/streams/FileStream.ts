@@ -1,11 +1,12 @@
-import fs from "fs";
-import path from "path";
+import fs from 'fs';
+import path from 'path';
 
-import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream";
+import { appConfig } from '../../../config/appConfig';
+import { BaseWritableStream, type StreamConfig } from './BaseWritableStream';
 
 export interface FileStreamConfig extends StreamConfig {
-    filePath: string;
-    flags?: "a" | "w";
+    fileName: string;
+    flags?: 'a' | 'w';
 }
 
 export class FileStream extends BaseWritableStream {
@@ -14,7 +15,7 @@ export class FileStream extends BaseWritableStream {
 
     constructor(config: FileStreamConfig) {
         super(config);
-        this.filePath = path.resolve(config.filePath);
+        this.filePath = path.join(appConfig.LOGS.OUTPUT_PATH, config.fileName);
         this.ensureDirectory();
         this.openFile(config.flags ?? "a");
     }
@@ -35,7 +36,8 @@ export class FileStream extends BaseWritableStream {
         if (!this.fileHandle) {
             throw new Error(`FileStream "${this.name}" is not open`);
         }
-        const clean = data.replace(/\\x1b\[[0-9;]*m/g, "");
+        // eslint-disable-next-line no-control-regex
+        const clean = data.replace(/\x1b\[[0-9;]*m/g, '');
         this.fileHandle.write(clean);
     }
 

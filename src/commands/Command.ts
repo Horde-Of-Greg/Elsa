@@ -1,4 +1,4 @@
-import { config } from "../config/config";
+import { appConfig } from "../config/appConfig";
 import { app } from "../core/App";
 import { AppError } from "../core/errors/AppError";
 import { MissingArgumentError } from "../core/errors/client/400";
@@ -169,7 +169,7 @@ export abstract class CommandInstance {
     private requireParseResult<K extends RequirableParseResult>(key: K): NonNullable<ParseResult[K]> {
         const value = this.parseResult[key];
         if (value === undefined) {
-            throw new MissingArgumentError(`See \`${config.PREFIX}help\` for details on command usages.`);
+            throw new MissingArgumentError(`See \`${appConfig.PREFIX}help\` for details on command usages.`);
         }
 
         return value as NonNullable<ParseResult[K]>;

@@ -1,8 +1,8 @@
 import { DataSource } from "typeorm";
 
-import { env } from "../config/config";
+import { env } from "../config/appConfig";
 
-export function dataSourceConfig() {
+export function dataSourceappConfig() {
     return new DataSource({
         type: "postgres",
         host: env.POSTGRES_HOST,

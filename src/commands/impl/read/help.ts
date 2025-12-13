@@ -1,6 +1,6 @@
-import { type APIEmbedField, EmbedBuilder } from "discord.js";
+import { type APIEmbedField,EmbedBuilder } from "discord.js";
 
-import { config } from "../../../config/config";
+import { appConfig } from "../../../config/appConfig";
 import { app } from "../../../core/App";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { CommandDef, CommandInstance } from "../../Command";
@@ -44,7 +44,7 @@ class CommandHelpInstance extends CommandInstance {
             this.message.push({
                 name: `\`${params.name}\``,
                 // prettier-ignore
-                value: `Usage: \`${config.PREFIX}${[params.name].concat(params.aliases).join('|')} ${args.join(" ")}\`
+                value: `Usage: \`${appConfig.PREFIX}${[params.name].concat(params.aliases).join('|')} ${args.join(" ")}\`
                 Description: ${params.info.description}`,
             });
         }

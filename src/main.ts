@@ -1,6 +1,6 @@
-import { env } from "./config/config";
-import { app } from "./core/App";
-import { Events } from "./core/Events";
+import { env } from './config/appConfig';
+import { app } from './core/App';
+import { Events } from './core/Events';
 
 async function main() {
     Events.initCore();

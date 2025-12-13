@@ -29,11 +29,11 @@ export class Timer {
     getTime(unit: TimeUnit | "auto" = "auto", precision: number = 2): TimerResult {
         const raw = performance.now() - this.startTime;
         const selectedUnit = unit === "auto" ? this.selectUnit(raw) : unit;
-        const config = Timer.UNITS[selectedUnit];
+        const appConfig = Timer.UNITS[selectedUnit];
 
-        const adjusted = raw * config.factor;
+        const adjusted = raw * appConfig.factor;
 
-        const formatted = `${adjusted.toFixed(precision)}${config.label}`;
+        const formatted = `${adjusted.toFixed(precision)}${appConfig.label}`;
 
         return { raw, adjusted, formatted };
     }

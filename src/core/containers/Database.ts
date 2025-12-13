@@ -1,6 +1,6 @@
 import type { DataSource } from "typeorm";
 
-import { dataSourceConfig } from "../../db/dataSource";
+import { dataSourceappConfig } from "../../db/dataSource";
 import { HostRepository } from "../../db/repositories/HostRepository";
 import { TagOverridesRepository } from "../../db/repositories/TagOverridesRepository";
 import { TagRepository } from "../../db/repositories/TagRepository";
@@ -30,7 +30,7 @@ export class DatabaseContainer {
     }
 
     get dataSource(): DataSource {
-        return (this._dataSource ??= dataSourceConfig());
+        return (this._dataSource ??= dataSourceappConfig());
     }
 
     reset(): void {

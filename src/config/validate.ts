@@ -1,11 +1,11 @@
 import {
-    type Config,
-    ConfigSchema,
+    type AppConfig,
+    appConfigSchema,
     type Env,
     EnvSchema,
+    SeederappConfigSchema,
     type SeederConfig,
-    SeederConfigSchema,
-} from "./schema";
+} from './schema';
 //TODO: This is awful
 export function validateEnvs(): Env {
     const parsed = EnvSchema.safeParse(process.env);
@@ -16,20 +16,24 @@ export function validateEnvs(): Env {
     return parsed.data;
 }
 
-export function validateConfigs(json: object): Config {
-    const parsed = ConfigSchema.safeParse(json);
+export function validateAppConfigs(json: object): AppConfig {
+    const parsed = appConfigSchema.safeParse(json);
     if (!parsed.success) {
-        const errors = parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ");
-        throw new Error(`Config validation failed: ${errors}`);
+        const errors = parsed.error.issues
+            .map((i) => `${i.path.join('.')}: ${i.message}`)
+            .join('; ');
+        throw new Error(`appConfig validation failed: ${errors}`);
     }
     return parsed.data;
 }
 
 export function validateSeederConfigs(json: object): SeederConfig {
-    const parsed = SeederConfigSchema.safeParse(json);
+    const parsed = SeederappConfigSchema.safeParse(json);
     if (!parsed.success) {
-        const errors = parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ");
-        throw new Error(`Config validation failed: ${errors}`);
+        const errors = parsed.error.issues
+            .map((i) => `${i.path.join('.')}: ${i.message}`)
+            .join('; ');
+        throw new Error(`appConfig validation failed: ${errors}`);
     }
     return parsed.data;
 }

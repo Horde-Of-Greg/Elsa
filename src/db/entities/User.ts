@@ -1,4 +1,4 @@
-import { Column, Entity, Index,OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 import { TagTable } from "./Tag";
 import { TagOverridesTable } from "./TagOverrides";

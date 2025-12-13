@@ -1,4 +1,4 @@
-import type { Guild,User } from "discord.js";
+import type { Guild, User } from "discord.js";
 
 import { app } from "../core/App";
 import type { PermLevel } from "../db/entities/UserHost";

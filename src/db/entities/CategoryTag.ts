@@ -1,4 +1,4 @@
-import { Column, Entity, Index,JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 import { CategoryTable } from "./Category";
 import { TagTable } from "./Tag";

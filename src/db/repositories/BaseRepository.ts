@@ -1,4 +1,4 @@
-import type { DeepPartial, FindOptionsRelations,FindOptionsWhere, Repository } from "typeorm";
+import type { DeepPartial, FindOptionsRelations, FindOptionsWhere, Repository } from "typeorm";
 
 import { app } from "../../core/App";
 import type { ValidEntity } from "../types/entities";

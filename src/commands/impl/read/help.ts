@@ -1,4 +1,4 @@
-import { type APIEmbedField,EmbedBuilder } from "discord.js";
+import { type APIEmbedField, EmbedBuilder } from "discord.js";
 
 import { config } from "../../../config/config";
 import { app } from "../../../core/App";

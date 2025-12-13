@@ -9,7 +9,7 @@ import type { HostService } from "../services/HostService";
 import type { PermissionsService } from "../services/PermsService";
 import type { TagService } from "../services/TagService";
 import type { UserService } from "../services/UserService";
-import { type AppDate,getTimeNow } from "../utils/time";
+import { type AppDate, getTimeNow } from "../utils/time";
 import type {
     CommandContext,
     CommandParams,

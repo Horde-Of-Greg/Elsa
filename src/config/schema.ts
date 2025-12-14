@@ -13,7 +13,7 @@ export const EnvSchema = z.object({
 });
 
 export const appConfigSchema = z.object({
-    PREFIX: z.string().min(1).max(3).default('!'),
+    PREFIX: z.string().min(1).max(3).default("!"),
     NAME: z.string().min(1),
     // TODO: make use of the appConfigs to actually define Commands
     LOGS: z.object({
@@ -27,6 +27,7 @@ export const appConfigSchema = z.object({
 export const SeederappConfigSchema = z.object({
     DEPTH: z.number().int().min(1).max(100000),
     DROP_DB: z.boolean(),
+    WAIT_TO_DROP_DB: z.boolean().default(true),
     SUDOERS: z.object({
         DO_SUDOERS: z.boolean(),
         USERS: z.array(z.string()),

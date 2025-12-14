@@ -1,3 +1,4 @@
+import { seederConfig } from "../../config/appConfig";
 import type { SeederConfig } from "../../config/schema";
 import { app } from "../../core/App";
 import { getGuildById } from "../../utils/discord/guilds";
@@ -20,12 +21,14 @@ export class Seeder {
         const wait_s = 3;
 
         app.core.logger.warnUser(
-            `Clearing all data from database in ${wait_s.toString()}s. Ctrl + C to stop.`,
+            `Clearing all data from database ${seederConfig.WAIT_TO_DROP_DB ? `in ${wait_s.toString()}s. Ctrl + C to stop.` : ""}`,
         );
 
-        for (let i = 0; i < wait_s; i++) {
-            app.core.logger.warnUser((wait_s - i).toString());
-            await sleep(1000);
+        if (seederConfig.WAIT_TO_DROP_DB) {
+            for (let i = 0; i < wait_s; i++) {
+                app.core.logger.warnUser((wait_s - i).toString());
+                await sleep(1000);
+            }
         }
 
         await app.database.dataSource.synchronize(true);

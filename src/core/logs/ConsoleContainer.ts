@@ -1,5 +1,9 @@
 import { Console } from "console";
+import fs from "fs";
+import path from "path";
 
+import { appConfig, env } from "../../config/appConfig";
+import { compressWithZstd } from "../../utils/compression/zstd";
 import { FileStream } from "./streams/FileStream";
 import { MultiStream } from "./streams/MultiStream";
 import { TerminalStream } from "./streams/TerminalStream";
@@ -95,7 +99,41 @@ class ConsoleContainer {
             ...Object.values(this._errStreams ?? {}),
         ];
 
-        await Promise.all(allStreams.map((stream) => new Promise<void>((resolve) => stream.end(resolve))));
+        if (env.ENVIRONMENT === "production") {
+            await this.archiveLogs();
+            await this.clearLogs();
+        }
+
+        await Promise.all(
+            allStreams.map(
+                (stream) =>
+                    new Promise<void>((resolve, reject) => {
+                        stream.once("close", resolve);
+                        stream.once("error", reject);
+                        stream.end();
+                    }),
+            ),
+        );
+    }
+
+    private async archiveLogs(): Promise<void> {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+        const logDir = appConfig.LOGS.OUTPUT_PATH;
+        const archiveDir = path.join(logDir, "archive");
+
+        await fs.promises.mkdir(archiveDir, { recursive: true });
+        compressWithZstd(logDir, path.join(archiveDir, timestamp));
+    }
+
+    private async clearLogs(): Promise<void> {
+        const logDir = appConfig.LOGS.OUTPUT_PATH;
+        const files = await fs.promises.readdir(logDir);
+
+        for (const file of files) {
+            if (file.endsWith(".log")) {
+                await fs.promises.truncate(path.join(logDir, file), 0);
+            }
+        }
     }
 }
 

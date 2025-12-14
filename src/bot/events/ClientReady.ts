@@ -8,7 +8,7 @@ export class ReadyHandler extends DiscordEventHandler<"clientReady"> {
     readonly once = true;
 
     handle(client: Client): void {
-        app.core.logger.simpleLog("info", `Ready as ${client.user?.tag}`);
+        app.core.logger.info(`Ready as ${client.user?.tag}`);
         app.discord.bot.notifyReady();
     }
 }

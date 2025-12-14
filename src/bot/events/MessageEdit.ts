@@ -10,7 +10,7 @@ export class MessageEditHandler extends DiscordEventHandler<"messageUpdate"> {
 
     async handle(oldMessage: Message | PartialMessage, newMessage: Message | PartialMessage): Promise<void> {
         if (newMessage.partial || !newMessage.guild) return;
-        app.core.logger.simpleLog("debug", "Received Edited Message");
+        app.core.logger.debug("Received Edited Message");
 
         const context: CommandContext = {
             message: newMessage as Message,

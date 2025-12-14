@@ -1,10 +1,10 @@
-import { env } from './config/appConfig';
-import { app } from './core/App';
-import { Events } from './core/Events';
+import { env } from "./config/appConfig";
+import { app } from "./core/App";
+import { Events } from "./core/Events";
 
 async function main() {
     Events.initCore();
-    app.core.logger.simpleLog("info", `Environment: ${env.ENVIRONMENT}`);
+    app.core.logger.info(`Environment: ${env.ENVIRONMENT}`);
     await Events.initDb();
     await Events.initBot();
     await Events.seed();

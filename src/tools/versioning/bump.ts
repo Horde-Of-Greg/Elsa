@@ -46,11 +46,11 @@ function editPackage(versionType: VersionType) {
     packageJson.version = newVersion;
     writeFileSync(PACKAGE_PATH, JSON.stringify(packageJson, null, 4) + "\n");
 
-    app.core.logger.simpleLog("success", `✓ Version bumped from ${oldVersion} to ${newVersion}`);
+    app.core.logger.info(`✓ Version bumped from ${oldVersion} to ${newVersion}`);
     process.exit(0);
 }
 
 function returnUsageAndExit() {
-    app.core.logger.simpleLog("info", "Usage: npm run bump -- <major|minor|patch>");
+    app.core.logger.info("Usage: npm run bump -- <major|minor|patch>");
     process.exit(1);
 }

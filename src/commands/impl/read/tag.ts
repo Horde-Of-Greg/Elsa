@@ -55,7 +55,7 @@ class CommandTagInstance extends CommandInstance {
         }
     }
     protected logExecution(): void {
-        app.core.logger.simpleLog("debug", `Sent tag ${this.tag.name}`);
+        app.core.logger.debug(`Sent tag ${this.tag.name}`);
     }
 
     private get debugEmbed(): EmbedBuilder {

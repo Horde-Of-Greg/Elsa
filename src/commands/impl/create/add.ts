@@ -60,7 +60,7 @@ class CommandAddInstance extends CommandInstance {
     }
 
     protected logExecution(): void {
-        app.core.logger.simpleLog("info", `User ${this.context.author.tag} created tag: ${this.tagName}`);
+        app.core.logger.info(`User ${this.context.author.tag} created tag: ${this.tagName}`);
     }
 
     /*

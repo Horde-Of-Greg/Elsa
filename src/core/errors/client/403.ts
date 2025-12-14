@@ -40,8 +40,7 @@ export class PermissionDeniedError extends AppError {
     }
 
     log(): void {
-        app.core.logger.simpleLog(
-            "warn",
+        app.core.logger.warn(
             `User ${this.user.name !== null ? this.user.name : "Unknown"} tried to run a ${
                 PermLevel[this.requiredLevel]
             } action with ${PermLevel[this.userLevel]} perms.`,

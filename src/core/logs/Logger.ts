@@ -1,10 +1,11 @@
-import { Console } from 'console';
-import { deprecate } from 'util';
+import { Console } from "console";
 
-import { env } from '../../config/appConfig';
-import { FileStream } from './streams/FileStream';
-import { MultiStream } from './streams/MultiStream';
-import { TerminalStream } from './streams/TerminalStream';
+import { AnsiFg, AnsiFgBright, AnsiStyle } from "../../assets/colors/ansi";
+import { appConfig, env } from "../../config/appConfig";
+import { getTimeNow } from "../../utils/time";
+import { FileStream } from "./streams/FileStream";
+import { MultiStream } from "./streams/MultiStream";
+import { TerminalStream } from "./streams/TerminalStream";
 
 export class Logger {
     private readonly terminalConsole: Console;
@@ -12,13 +13,13 @@ export class Logger {
     private readonly console: Console;
 
     private readonly infoStreams = {
-        terminal: new TerminalStream({ name: 'info-terminal', target: 'stdout' }),
-        files: new FileStream({ name: 'info-files', fileName: 'logs.log' }),
+        terminal: new TerminalStream({ name: "info-terminal", target: "stdout" }),
+        files: new FileStream({ name: "info-files", fileName: "logs.log" }),
     };
 
     private readonly errStreams = {
-        terminal: new TerminalStream({ name: 'err-terminal', target: 'stderr' }),
-        files: new FileStream({ name: 'error-files', fileName: 'errors.log' }),
+        terminal: new TerminalStream({ name: "err-terminal", target: "stderr" }),
+        files: new FileStream({ name: "error-files", fileName: "errors.log" }),
     };
 
     constructor() {
@@ -35,35 +36,40 @@ export class Logger {
         });
 
         this.console = new Console({
-            stdout: new MultiStream({ name: 'info', streams: Object.values(this.infoStreams) }),
-            stderr: new MultiStream({ name: 'error', streams: Object.values(this.errStreams) }),
+            stdout: new MultiStream({ name: "info", streams: Object.values(this.infoStreams) }),
+            stderr: new MultiStream({ name: "error", streams: Object.values(this.errStreams) }),
         });
+        this.logAll();
+    }
+    private logAll() {
+        if (!appConfig.LOGS.VERBOSE_LOGGING) return;
+        this.info("this is an info log");
+        this.warn("this is a warning log");
+        this.error("this is an error log");
+        this.debug("this is a debug log");
     }
 
-    simpleLog = deprecate((oldType: string, message: string) => {
-        this.info(this.terminalConsole, message);
-    }, 'simpleLog() is deprecated. Please use logger.info, logger.warn, logger.error or logger.debug instead');
-
-    private info(consoleUsed: Console, message: string, ...args: unknown[]): void {
-        this.console.log(this.format('INFO', message), ...args);
+    info(message: string, ...args: unknown[]): void {
+        this.console.log(this.format("INFO", message, AnsiFg.CYAN), ...args);
     }
 
-    private warn(consoleUsed: Console, message: string, ...args: unknown[]): void {
-        consoleUsed.warn(this.format('WARN', message), ...args);
+    warn(message: string, ...args: unknown[]): void {
+        this.console.warn(this.format("WARN", message, AnsiFgBright.YELLOW), ...args);
     }
 
-    private error(consoleUsed: Console, message: string, ...args: unknown[]): void {
-        this.console.error(this.format('ERROR', message), ...args);
+    error(message: string, ...args: unknown[]): void {
+        this.console.error(this.format("ERROR", message, AnsiFg.RED), ...args);
     }
 
-    private debug(consoleUsed: Console, message: string, ...args: unknown[]): void {
-        if (env.ENVIRONMENT === 'production') return;
-        this.console.debug(this.format('DEBUG', message), ...args);
+    debug(message: string, ...args: unknown[]): void {
+        if (env.ENVIRONMENT === "production") return;
+        this.console.debug(this.format("DEBUG", message, AnsiFg.MAGENTA), ...args);
     }
 
-    private format(level: string, message: string): string {
-        const timestamp = new Date().toISOString();
-        return `[${timestamp}] [${level}] ${message}`;
+    private format(level: string, message: string, color: AnsiFg | AnsiFgBright): string {
+        const timestamp = getTimeNow().toISOString();
+        const newMessage = message[0].toUpperCase() + message.slice(1);
+        return `${color}[${timestamp}] [${level}] ${newMessage}${AnsiStyle.RESET}`;
     }
 
     async shutdown(): Promise<void> {
@@ -71,9 +77,7 @@ export class Logger {
             new Promise<void>((r) =>
                 Object.values(this.infoStreams).forEach((infoStream) => infoStream.end(r)),
             ),
-            new Promise<void>((r) =>
-                Object.values(this.errStreams).forEach((errStream) => errStream.end(r)),
-            ),
+            new Promise<void>((r) => Object.values(this.errStreams).forEach((errStream) => errStream.end(r))),
         ]);
     }
 }

@@ -46,7 +46,7 @@ export abstract class InternalError extends AppError {
     }
 
     log(): void {
-        app.core.logger.simpleLog("error", this.message);
+        app.core.logger.error(this.message);
     }
 }
 

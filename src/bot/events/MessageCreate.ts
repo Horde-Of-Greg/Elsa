@@ -11,7 +11,7 @@ export class MessageCreateHandler extends DiscordEventHandler<"messageCreate"> {
     async handle(message: Message): Promise<void> {
         if (!message.guild) return;
         if (message.author.bot) return;
-        app.core.logger.simpleLog("debug", "Received New Message");
+        app.core.logger.debug("Received New Message");
 
         const context: CommandContext = {
             message,

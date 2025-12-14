@@ -5,18 +5,18 @@ import { app } from "./App";
 export const Events = {
     initCore() {
         app.core.startTimer("main");
-        app.core.logger.simpleLog("info", "Core Ready");
+        app.core.logger.info("Core Ready");
     },
 
     async initDb() {
         await app.database.dataSource.initialize();
-        app.core.logger.simpleLog("success", "Database initialized");
+        app.core.logger.info("Database initialized");
     },
 
     async initBot() {
         await app.discord.bot.login(env.DISCORD_TOKEN);
 
-        app.core.logger.simpleLog("success", "Bot initialized");
+        app.core.logger.info("Bot initialized");
     },
 
     async seed() {

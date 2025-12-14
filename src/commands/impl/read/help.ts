@@ -1,4 +1,4 @@
-import { type APIEmbedField,EmbedBuilder } from "discord.js";
+import { type APIEmbedField, EmbedBuilder } from "discord.js";
 
 import { appConfig } from "../../../config/appConfig";
 import { app } from "../../../core/App";
@@ -57,6 +57,6 @@ class CommandHelpInstance extends CommandInstance {
         await this.context.message.reply({ embeds: [embed] });
     }
     protected logExecution(): void {
-        app.core.logger.simpleLog("debug", `Sent command ${this.params.name}`);
+        app.core.logger.debug(`Sent command ${this.params.name}`);
     }
 }

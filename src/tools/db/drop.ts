@@ -19,24 +19,24 @@ const rl = readline.createInterface({
     output: process.stdout,
 });
 
-app.core.logger.simpleLog("warn", `WARNING: This will DELETE database: ${db}`);
+app.core.logger.warn(`WARNING: This will DELETE database: ${db}`);
 rl.question("Are you sure you want to continue? (y/n): ", (answer) => {
     rl.close();
 
     if (!/^y(?:es)?$/i.test(answer.toLowerCase())) {
-        app.core.logger.simpleLog("info", "Operation cancelled");
+        app.core.logger.info("Operation cancelled");
         process.exit(0);
     }
 
-    app.core.logger.simpleLog("info", `Dropping database: ${db}`);
+    app.core.logger.info(`Dropping database: ${db}`);
 
     try {
         execSync(`psql -U ${user} -h ${host} -d postgres -c "DROP DATABASE IF EXISTS ${db}"`, {
             stdio: "inherit",
         });
-        app.core.logger.simpleLog("success", "✓ Database dropped successfully");
+        app.core.logger.info("✓ Database dropped successfully");
     } catch (error) {
-        app.core.logger.simpleLog("error", "✗ Failed to drop database");
+        app.core.logger.error("✗ Failed to drop database");
         process.exit(1);
     }
 });

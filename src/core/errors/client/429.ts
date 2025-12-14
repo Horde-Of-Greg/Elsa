@@ -46,6 +46,6 @@ export class CooldownError extends AppError {
     }
 
     log(): void {
-        app.core.logger.simpleLog("warn", this.message);
+        app.core.logger.warn(this.message);
     }
 }

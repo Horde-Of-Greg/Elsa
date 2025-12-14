@@ -19,31 +19,31 @@ const rl = readline.createInterface({
     output: process.stdout,
 });
 
-app.core.logger.simpleLog("warn", `WARNING: This will DELETE ALL DATA in database: ${db}`);
+app.core.logger.warn(`WARNING: This will DELETE ALL DATA in database: ${db}`);
 rl.question("Are you sure you want to continue? (y/n): ", (answer) => {
     rl.close();
 
     if (!/^y(?:es)?$/i.test(answer.toLowerCase())) {
-        app.core.logger.simpleLog("info", "Operation cancelled");
+        app.core.logger.info("Operation cancelled");
         process.exit(0);
     }
 
-    app.core.logger.simpleLog("info", `Resetting database: ${db}`);
+    app.core.logger.info(`Resetting database: ${db}`);
 
     try {
-        app.core.logger.simpleLog("info", "Dropping existing database...");
+        app.core.logger.info("Dropping existing database...");
         execSync(`psql -U ${user} -h ${host} -d postgres -c "DROP DATABASE IF EXISTS ${db}"`, {
             stdio: "inherit",
         });
 
-        app.core.logger.simpleLog("info", "Creating new database...");
+        app.core.logger.info("Creating new database...");
         execSync(`psql -U ${user} -h ${host} -d postgres -c "CREATE DATABASE ${db}"`, {
             stdio: "inherit",
         });
 
-        app.core.logger.simpleLog("success", "✓ Database reset successfully");
+        app.core.logger.info("✓ Database reset successfully");
     } catch (error) {
-        app.core.logger.simpleLog("error", "✗ Failed to reset database");
+        app.core.logger.error("✗ Failed to reset database");
         process.exit(1);
     }
 });

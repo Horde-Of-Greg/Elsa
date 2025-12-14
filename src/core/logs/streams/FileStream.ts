@@ -1,8 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import { appConfig, env } from "../../../config/appConfig";
-import { sleep } from "../../../utils/time";
+import { appConfig } from "../../../config/appConfig";
 import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream";
 
 export interface FileStreamConfig extends StreamConfig {
@@ -67,14 +66,5 @@ export class FileStream extends BaseWritableStream {
 
             this.fileHandle.once("error", reject);
         });
-        if (env.ENVIRONMENT !== "production") {
-            await this.clearLog();
-        }
-    }
-
-    private async clearLog(): Promise<void> {
-        await sleep(100); //Make SURE files are closed
-
-        await fs.promises.truncate(this.filePath, 0);
     }
 }

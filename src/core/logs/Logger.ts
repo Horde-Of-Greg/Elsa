@@ -1,4 +1,4 @@
-import type { Console } from "console";
+import { Console } from "console";
 
 import { AnsiFg, AnsiFgBright, AnsiStyle } from "../../assets/colors/ansi";
 import { env } from "../../config/appConfig";
@@ -24,16 +24,13 @@ const logConfigs: Record<keyof typeof LogLevel, AnsiFg | AnsiFgBright> = {
 };
 
 export class Logger {
-    private readonly console: Console;
-    private readonly terminalConsole: Console;
-    private readonly debugConsole: Console;
-    private readonly debugFileConsole: Console;
+    private console: Console;
+    private terminalConsole: Console;
+    private debugConsole: Console;
+    private debugFileConsole: Console;
 
     constructor() {
-        this.console = consoleContainer.appConsole;
-        this.terminalConsole = consoleContainer.terminalConsole;
-        this.debugConsole = consoleContainer.debugConsole;
-        this.debugFileConsole = consoleContainer.debugFileConsole;
+        this.initConsoles();
     }
 
     trace(message: string, ...args: unknown[]): void {
@@ -76,5 +73,36 @@ export class Logger {
 
     async shutdown(): Promise<void> {
         await consoleContainer.shutdown();
+    }
+
+    async stop(): Promise<void> {
+        this.warnUser("Stopping Logger!");
+        await consoleContainer.stop();
+        this.switchToBackupConsoles();
+    }
+
+    start(): void {
+        consoleContainer.start();
+        this.initConsoles();
+        this.info("Logger Back!");
+    }
+
+    private switchToBackupConsoles() {
+        const console = new Console({
+            stdout: process.stdout,
+            stderr: process.stderr,
+            colorMode: false,
+        });
+        this.console = console;
+        this.terminalConsole = console;
+        this.debugConsole = console;
+        this.debugFileConsole = console;
+    }
+
+    private initConsoles() {
+        this.console = consoleContainer.appConsole;
+        this.terminalConsole = consoleContainer.terminalConsole;
+        this.debugConsole = consoleContainer.debugConsole;
+        this.debugFileConsole = consoleContainer.debugFileConsole;
     }
 }

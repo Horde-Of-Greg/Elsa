@@ -1,3 +1,5 @@
+import "./index";
+
 import { env } from "./config/appConfig";
 import { app } from "./core/App";
 import { Events } from "./core/Events";

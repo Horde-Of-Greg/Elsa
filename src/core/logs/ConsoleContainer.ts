@@ -92,17 +92,25 @@ class ConsoleContainer {
         }));
     }
 
-    async shutdown(): Promise<void> {
+    start(): void {
+        this._infoStreams = undefined;
+        this._debugStreams = undefined;
+        this._errStreams = undefined;
+
+        this._terminalConsole = undefined;
+        this._debugTerminalConsole = undefined;
+        this._fileConsole = undefined;
+        this._debugFileConsole = undefined;
+        this._appConsole = undefined;
+        this._debugConsole = undefined;
+    }
+
+    async stop(): Promise<void> {
         const allStreams = [
             ...Object.values(this._infoStreams ?? {}),
             ...Object.values(this._debugStreams ?? {}),
             ...Object.values(this._errStreams ?? {}),
         ];
-
-        if (env.ENVIRONMENT === "production") {
-            await this.archiveLogs();
-            await this.clearLogs();
-        }
 
         await Promise.all(
             allStreams.map(
@@ -116,7 +124,32 @@ class ConsoleContainer {
         );
     }
 
-    private async archiveLogs(): Promise<void> {
+    async shutdown(): Promise<void> {
+        const allStreams = [
+            ...Object.values(this._infoStreams ?? {}),
+            ...Object.values(this._debugStreams ?? {}),
+            ...Object.values(this._errStreams ?? {}),
+        ];
+
+        if (env.ENVIRONMENT === "production") {
+            await this.archiveLogs();
+        }
+
+        await this.clearLogs();
+
+        await Promise.all(
+            allStreams.map(
+                (stream) =>
+                    new Promise<void>((resolve, reject) => {
+                        stream.once("close", resolve);
+                        stream.once("error", reject);
+                        stream.end();
+                    }),
+            ),
+        );
+    }
+
+    async archiveLogs(): Promise<void> {
         const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
         const logDir = appConfig.LOGS.OUTPUT_PATH;
         const archiveDir = path.join(logDir, "archive");
@@ -125,7 +158,7 @@ class ConsoleContainer {
         compressWithZstd(logDir, path.join(archiveDir, timestamp));
     }
 
-    private async clearLogs(): Promise<void> {
+    async clearLogs(): Promise<void> {
         const logDir = appConfig.LOGS.OUTPUT_PATH;
         const files = await fs.promises.readdir(logDir);
 

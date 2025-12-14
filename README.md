@@ -14,15 +14,9 @@ Use docker, figure it out. I'll explain more, mabye.
 
 ## 3. Copy the config templates to their respective files
 
-### Bash
-
 ```bash
 find . -name '*.template' -exec sh -c 'cp "$0" "${0%.template}"' {} \;
 ```
-
-### Powershell
-
-Figure it out lol
 
 ## 4. Set up the configs
 

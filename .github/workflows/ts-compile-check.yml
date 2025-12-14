@@ -1,0 +1,40 @@
+name: TypeScript Compilation Check
+
+on:
+    pull_request:
+        paths-ignore:
+            - ".gitignore"
+            - ".github/**"
+            - "README.md"
+            - "LICENSE"
+            - ".vscode/**"
+    push:
+        branches:
+            - "main"
+        paths-ignore:
+            - ".gitignore"
+            - ".github/**"
+            - "README.md"
+            - "LICENSE"
+            - ".vscode/**"
+
+jobs:
+    ts-check:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: npm
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Compile Check
+              run: npm run tscheck

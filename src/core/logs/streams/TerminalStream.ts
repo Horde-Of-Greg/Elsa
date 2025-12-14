@@ -17,11 +17,11 @@ export class TerminalStream extends BaseWritableStream {
     }
 
     protected flush(): Promise<void> {
-        throw new Error("Method not implemented.");
+        return Promise.resolve();
     }
 
     protected cleanup(): Promise<void> {
-        throw new Error("Method not implemented.");
+        return Promise.resolve();
     }
 
     /**

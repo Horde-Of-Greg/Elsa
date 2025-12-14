@@ -19,10 +19,12 @@ export class Seeder {
 
         const wait_s = 3;
 
-        app.core.logger.warn(`Clearing all data from database in ${wait_s.toString()}s. Ctrl + C to stop.`);
+        app.core.logger.warnUser(
+            `Clearing all data from database in ${wait_s.toString()}s. Ctrl + C to stop.`,
+        );
 
         for (let i = 0; i < wait_s; i++) {
-            app.core.logger.warn((wait_s - i).toString());
+            app.core.logger.warnUser((wait_s - i).toString());
             await sleep(1000);
         }
 

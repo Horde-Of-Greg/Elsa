@@ -3,9 +3,7 @@ import type { Console } from "console";
 import { AnsiFg, AnsiFgBright, AnsiStyle } from "../../assets/colors/ansi";
 import { env } from "../../config/appConfig";
 import { getTimeNow } from "../../utils/time";
-import { consoleContainer } from "./consoleRepo";
-import { FileStream } from "./streams/FileStream";
-import { TerminalStream } from "./streams/TerminalStream";
+import { consoleContainer } from "./ConsoleContainer";
 import { LogLevel } from "./types";
 
 interface LogConfigs {
@@ -16,12 +14,13 @@ interface LogConfigs {
     error: AnsiFgBright | AnsiFg;
 }
 
-const logConfigs: LogConfigs = {
-    trace: AnsiFg.RED,
-    debug: AnsiFg.MAGENTA,
-    info: AnsiFg.CYAN,
-    warn: AnsiFgBright.YELLOW,
-    error: AnsiFg.RED,
+const logConfigs: Record<keyof typeof LogLevel, AnsiFg | AnsiFgBright> = {
+    TRACE: AnsiFg.RED,
+    DEBUG: AnsiFg.MAGENTA,
+    INFO: AnsiFg.CYAN,
+    WARN: AnsiFgBright.YELLOW,
+    ERROR: AnsiFg.RED,
+    FATAL: AnsiFgBright.RED,
 };
 
 export class Logger {
@@ -29,21 +28,6 @@ export class Logger {
     private readonly terminalConsole: Console;
     private readonly debugConsole: Console;
     private readonly debugFileConsole: Console;
-
-    private readonly infoStreams = {
-        terminal: new TerminalStream({ name: "info-terminal", target: "stdout" }),
-        files: new FileStream({ name: "info-files", fileName: "logs.log" }),
-    };
-
-    private readonly debugStreams = {
-        terminal: new TerminalStream({ name: "debug-terminal", target: "stdout" }),
-        files: new FileStream({ name: "debug-files", fileName: "debug.log" }),
-    };
-
-    private readonly errStreams = {
-        terminal: new TerminalStream({ name: "err-terminal", target: "stderr" }),
-        files: new FileStream({ name: "error-files", fileName: "errors.log" }),
-    };
 
     constructor() {
         this.console = consoleContainer.appConsole;
@@ -53,31 +37,35 @@ export class Logger {
     }
 
     trace(message: string, ...args: unknown[]): void {
-        if (!(env.ENVIRONMENT === "production")) {
-            this.debugConsole.trace(this.format(LogLevel.TRACE, message, logConfigs.trace), ...args);
+        if (env.ENVIRONMENT !== "production") {
+            this.debugConsole.trace(this.format(LogLevel.TRACE, message, logConfigs.TRACE), ...args);
             return;
         }
         this.debugFileConsole.trace(this.format(LogLevel.TRACE, message), ...args);
     }
 
     debug(message: string, ...args: unknown[]): void {
-        if (!(env.ENVIRONMENT === "production")) {
-            this.debugConsole.debug(this.format(LogLevel.TRACE, message, logConfigs.debug), ...args);
+        if (env.ENVIRONMENT !== "production") {
+            this.debugConsole.debug(this.format(LogLevel.DEBUG, message, logConfigs.DEBUG), ...args);
             return;
         }
-        this.debugFileConsole.debug(this.format(LogLevel.TRACE, message), ...args);
+        this.debugFileConsole.debug(this.format(LogLevel.DEBUG, message), ...args);
     }
 
     info(message: string, ...args: unknown[]): void {
-        this.console.log(this.format(LogLevel.INFO, message, logConfigs.info), ...args);
+        this.console.log(this.format(LogLevel.INFO, message, logConfigs.INFO), ...args);
     }
 
     warn(message: string, ...args: unknown[]): void {
-        this.terminalConsole.warn(this.format(LogLevel.WARN, message, logConfigs.warn), ...args);
+        this.console.warn(this.format(LogLevel.WARN, message, logConfigs.WARN), ...args);
+    }
+
+    warnUser(message: string, ...args: unknown[]): void {
+        this.terminalConsole.warn(this.format(LogLevel.WARN, message, logConfigs.WARN), ...args);
     }
 
     error(message: string, ...args: unknown[]): void {
-        this.console.error(this.format(LogLevel.ERROR, message, logConfigs.error), ...args);
+        this.console.error(this.format(LogLevel.ERROR, message, logConfigs.ERROR), ...args);
     }
 
     private format(level: LogLevel, message: string, color?: AnsiFg | AnsiFgBright): string {
@@ -87,11 +75,6 @@ export class Logger {
     }
 
     async shutdown(): Promise<void> {
-        await Promise.all([
-            new Promise<void>((r) =>
-                Object.values(this.infoStreams).forEach((infoStream) => infoStream.end(r)),
-            ),
-            new Promise<void>((r) => Object.values(this.errStreams).forEach((errStream) => errStream.end(r))),
-        ]);
+        await consoleContainer.shutdown();
     }
 }

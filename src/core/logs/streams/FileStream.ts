@@ -1,12 +1,12 @@
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
 
-import { appConfig } from '../../../config/appConfig';
-import { BaseWritableStream, type StreamConfig } from './BaseWritableStream';
+import { appConfig } from "../../../config/appConfig";
+import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream";
 
 export interface FileStreamConfig extends StreamConfig {
     fileName: string;
-    flags?: 'a' | 'w';
+    flags?: "a" | "w";
 }
 
 export class FileStream extends BaseWritableStream {
@@ -37,13 +37,18 @@ export class FileStream extends BaseWritableStream {
             throw new Error(`FileStream "${this.name}" is not open`);
         }
         // eslint-disable-next-line no-control-regex
-        const clean = data.replace(/\x1b\[[0-9;]*m/g, '');
+        const clean = data.replace(/\x1b\[[0-9;]*m/g, "");
         this.fileHandle.write(clean);
     }
 
     protected override async flush(): Promise<void> {
         return new Promise((resolve, reject) => {
             if (!this.fileHandle) return resolve();
+
+            if (!this.fileHandle.writableNeedDrain) {
+                return resolve();
+            }
+
             this.fileHandle.once("drain", resolve);
             this.fileHandle.once("error", reject);
         });

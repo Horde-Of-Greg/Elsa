@@ -87,6 +87,16 @@ class ConsoleContainer {
             stderr: new MultiStream({ name: "error", streams: Object.values(this.errStreams) }),
         }));
     }
+
+    async shutdown(): Promise<void> {
+        const allStreams = [
+            ...Object.values(this._infoStreams ?? {}),
+            ...Object.values(this._debugStreams ?? {}),
+            ...Object.values(this._errStreams ?? {}),
+        ];
+
+        await Promise.all(allStreams.map((stream) => new Promise<void>((resolve) => stream.end(resolve))));
+    }
 }
 
 export const consoleContainer = new ConsoleContainer();

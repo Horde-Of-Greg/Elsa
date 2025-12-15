@@ -1,0 +1,36 @@
+name: Version Bump
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    bump:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+
+            - run: npm ci
+
+            - name: Analyze Commit
+              id: commit-lint
+              run: npx tsx src/tools/versioning/commit-lint.ts
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Bump Version
+              id: bump-ver
+              if: steps.commit-lint.outputs.bump-type != 'none'
+              run: npm version ${{ steps.commit-lint.outputs.bump-type }}
+
+            - name: Commit version bump
+              uses: stefanzweifel/git-auto-commit-action@v5
+              with:
+                  commit_message: "[BOT] Bump Ver"
+                  file_pattern: package.json

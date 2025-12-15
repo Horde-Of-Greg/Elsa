@@ -11,6 +11,7 @@ async function main() {
     await Events.initDb();
     await Events.initBot();
     await Events.seed();
+    app.core.logger.info("App Ready!");
 }
 
 main().catch((e) => {

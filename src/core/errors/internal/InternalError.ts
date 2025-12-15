@@ -14,7 +14,7 @@ export abstract class InternalError extends AppError {
                 new EmbedBuilder()
                     .setTitle("Internal Error Occurred")
                     .setDescription("This is not your fault. It is ours. Oopsies.")
-                    .setColor(0xff0000) // Red
+                    .setColor(0xff0000) // TODO: Use the proper enum
                     .addFields(
                         {
                             name: "Code",

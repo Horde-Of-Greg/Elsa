@@ -1,0 +1,19 @@
+name: PR Title Lint
+on:
+    pull_request:
+        types: [opened, edited, synchronize, reopened]
+
+jobs:
+    lint-pr-title:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+            - run: npm ci
+
+            - name: Lint PR Title
+              run: npm run actions:lint-pr
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

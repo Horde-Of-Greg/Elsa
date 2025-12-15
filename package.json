@@ -16,14 +16,19 @@
         "lint:check": "eslint .",
         "lint:fix": "eslint . --fix",
         "lint:report": "eslint \"src/**/*.ts\" --format json --output-file temp/lint/eslint_report.json",
-        "bump": "ts-node src/tools/versioning/bump.ts",
-        "knip": "knip"
+        "knip": "knip",
+        "actions:bump": "ts-node src/tools/versioning/bump.ts",
+        "actions:lint-pr": "ts-node src/tools/versioning/pr-lint.ts",
+        "actions:lint-commit": "ts-node src/tools/versioning/commit-lint.ts"
     },
     "dependencies": {
+        "@actions/core": "^2.0.1",
+        "@actions/github": "^6.0.1",
         "discord.js": "^14.14.1",
         "dotenv": "^16.3.1",
         "jiti": "^2.6.1",
         "node-cron": "^4.2.1",
+        "octokit": "^5.0.5",
         "pg": "^8.16.3",
         "prettier": "^3.7.4",
         "reflect-metadata": "^0.2.2",

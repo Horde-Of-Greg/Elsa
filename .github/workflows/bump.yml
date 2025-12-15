@@ -25,7 +25,7 @@ jobs:
               run: npm run actions:lint-commit
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  ENVIRONMENT: "actions"
+                  ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
 
             - name: Configure Git
               run: |

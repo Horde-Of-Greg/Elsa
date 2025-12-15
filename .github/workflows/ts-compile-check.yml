@@ -22,7 +22,11 @@ jobs:
     ts-check:
         runs-on: ubuntu-latest
         permissions:
+            actions: none
+            checks: write
             contents: read
+            issues: none
+            pull-requests: none
 
         steps:
             - uses: actions/checkout@v4

@@ -18,13 +18,18 @@ async function main() {
 
         const match = commitTitle.match(typesRegex);
 
-        if (!match) {
-            core.setFailed("Title of the Commit is not Correct. See CONTRIBUTING.md");
-            core.setOutput(outputName, "none");
-            process.exit(1);
+        let type: AcceptedType;
+        if (match) {
+            type = match[1] as AcceptedType;
+        } else {
+            if (/\d+\.\d+\.\d+/.test(commitTitle)) {
+                type = "CI";
+            } else {
+                core.setFailed("Title of the Commit is not Correct. See CONTRIBUTING.md");
+                core.setOutput(outputName, "none");
+                process.exit(1);
+            }
         }
-
-        const type = match[1] as AcceptedType;
 
         let bumpType: AcceptedBump | "none";
 

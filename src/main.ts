@@ -1,6 +1,6 @@
 import "./index";
 
-import { env } from "./config/appConfig";
+import { env } from "./config/env";
 import { app } from "./core/App";
 import { Events } from "./core/Events";
 import { gracefulShutdown } from "./handlers/shutdown";

@@ -1,9 +1,9 @@
-import { env } from "../../config/appConfig";
-import { app } from "../../core/App";
+import { env } from "../../config/env";
 
 export function requireActionsEnv() {
     if (env.ENVIRONMENT !== "actions") {
-        app.core.logger.error('Tried to run an actions script inside a dev other than "actions".');
+        // eslint-disable-next-line no-console
+        console.error('Tried to run an actions script inside a dev other than "actions".');
     }
     process.exit(1);
 }

@@ -1,7 +1,8 @@
 import fs from "fs";
 import path from "path";
 
-import { appConfig, env } from "../../../config/appConfig";
+import { appConfig } from "../../../config/appConfig";
+import { env } from "../../../config/env";
 import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream";
 
 export interface FileStreamConfig extends StreamConfig {

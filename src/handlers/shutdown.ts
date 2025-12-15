@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 // Reasoning: This is the shutdown script, the logger won't, or may not be active.
-import { env } from "../config/appConfig";
+import { env } from "../config/env";
 import { app } from "../core/App";
 
 let isShuttingDown = false;

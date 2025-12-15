@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm";
 
-import { env } from "../config/appConfig";
+import { env } from "../config/env";
 
 export function dataSourceappConfig() {
     return new DataSource({

@@ -22,9 +22,10 @@ jobs:
 
             - name: Analyze Commit
               id: commit-lint
-              run: npx tsx src/tools/versioning/commit-lint.ts
+              run: npm run actions:lint-commit
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  ENVIRONMENT: "actions"
 
             - name: Configure Git
               run: |

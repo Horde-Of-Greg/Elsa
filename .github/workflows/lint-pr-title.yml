@@ -17,3 +17,4 @@ jobs:
               run: npm run actions:lint-pr
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  ENVIRONMENT: "actions"

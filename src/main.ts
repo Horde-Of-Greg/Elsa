@@ -1,6 +1,6 @@
 import "./index";
 
-import { env } from "./config/appConfig";
+import { env } from "./config/env";
 import { app } from "./core/App";
 import { Events } from "./core/Events";
 import { gracefulShutdown } from "./handlers/shutdown";
@@ -11,6 +11,7 @@ async function main() {
     await Events.initDb();
     await Events.initBot();
     await Events.seed();
+    app.core.logger.info("App Ready!");
 }
 
 main().catch((e) => {

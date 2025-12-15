@@ -1,6 +1,6 @@
 import { EmbedBuilder } from "discord.js";
 
-import { env } from "../../../config/appConfig";
+import { env } from "../../../config/env";
 import { app } from "../../../core/App";
 import { TagNotFoundError } from "../../../core/errors/client/404";
 import type { TagTable } from "../../../db/entities/Tag";

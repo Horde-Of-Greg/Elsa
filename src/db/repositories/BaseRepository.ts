@@ -83,9 +83,9 @@ export abstract class BaseRepository<T extends ValidEntity> {
      * @returns The junction table record, or null if not found, or error
      *
      * @example
-     * // In UserRepository:
+     * In UserRepository:
      * const userHost = await this.findByJoin(UserHostTable, user, host);
-     * // userHost is typed as UserHostTable | null | StandardError
+     * userHost is typed as UserHostTable | null | StandardError
      */
     protected async findOneByJoin<J extends ValidEntity, O extends ValidEntity>(
         joinTable: new () => J,
@@ -126,9 +126,9 @@ export abstract class BaseRepository<T extends ValidEntity> {
      * @returns Array of junction table records
      *
      * @example
-     * // In UserRepository - find all UserHost records for a user:
+     * In UserRepository - find all UserHost records for a user:
      * const userHosts = await this.findAllJoins(UserHostTable, user);
-     * // With filter:
+     * With filter:
      * const adminHosts = await this.findAllJoins(UserHostTable, user, { permLevel: PermLevel.ADMIN });
      */
     protected async findAllByJoin<J extends ValidEntity, O extends ValidEntity>(

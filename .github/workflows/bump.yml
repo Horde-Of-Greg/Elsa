@@ -1,0 +1,43 @@
+name: Version Bump
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    bump:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+
+            - run: npm ci
+
+            - name: Analyze Commit
+              id: commit-lint
+              run: npm run actions:lint-commit
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
+
+            - name: Configure Git
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+
+            - name: Bump Version
+              if: steps.commit-lint.outputs.bump-type != 'none' || github.actor != 'github-actions[bot]'
+              run: npm version ${{ steps.commit-lint.outputs.bump-type }}
+
+            - name: Push Changes
+              if: steps.commit-lint.outputs.bump-type != 'none'
+              run: |
+                  git push
+                  git push --tags

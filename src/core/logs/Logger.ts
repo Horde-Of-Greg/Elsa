@@ -1,7 +1,7 @@
 import { Console } from "console";
 
 import { AnsiFg, AnsiFgBright, AnsiStyle } from "../../assets/colors/ansi";
-import { env } from "../../config/appConfig";
+import { env } from "../../config/env";
 import { getTimeNow } from "../../utils/time";
 import { consoleContainer } from "./ConsoleContainer";
 import { LogLevel } from "./types";

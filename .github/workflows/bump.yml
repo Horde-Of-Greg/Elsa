@@ -28,9 +28,3 @@ jobs:
               id: bump-ver
               if: steps.commit-lint.outputs.bump-type != 'none'
               run: npm version ${{ steps.commit-lint.outputs.bump-type }}
-
-            - name: Commit version bump
-              uses: stefanzweifel/git-auto-commit-action@v5
-              with:
-                  commit_message: "[BOT] Bump Ver"
-                  file_pattern: package.json

@@ -26,8 +26,11 @@ jobs:
     lint:
         runs-on: ubuntu-latest
         permissions:
-            contents: read
+            actions: none
             checks: write
+            contents: read
+            issues: none
+            pull-requests: none
 
         steps:
             - uses: actions/checkout@v4

@@ -6,6 +6,12 @@ on:
 jobs:
     lint-pr-title:
         runs-on: ubuntu-latest
+        permissions:
+            actions: none
+            checks: write
+            contents: read
+            issues: none
+            pull-requests: read
         steps:
             - uses: actions/checkout@v4
             - uses: actions/setup-node@v4

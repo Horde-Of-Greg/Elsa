@@ -4,6 +4,13 @@ on:
 
 jobs:
     check_new_dependencies:
+        permissions:
+            actions: none
+            checks: write
+            contents: read
+            issues: none
+            pull-requests: write
+
         runs-on: ubuntu-latest
         steps:
             - name: Check for new dependencies

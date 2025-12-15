@@ -9,7 +9,11 @@ jobs:
     build:
         runs-on: ubuntu-latest
         permissions:
+            actions: none
+            checks: none
             contents: read
+            issues: none
+            pull-requests: none
 
         steps:
             - uses: actions/checkout@v4

@@ -25,6 +25,7 @@ export class Dependencies {
         this.database.reset();
         this.discord.reset();
         this.services.reset();
+        this.repositories.reset();
     }
 }
 

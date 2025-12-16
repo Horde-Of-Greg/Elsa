@@ -27,7 +27,7 @@ export async function gracefulShutdown(signal: string): Promise<void> {
         await dependencies.database.dataSource.destroy();
 
         console.log("Closing DB...");
-        await core.discord.bot.client.destroy();
+        await dependencies.discord.bot.client.destroy();
 
         console.log("Flushing logs...");
         await core.logger.shutdown();

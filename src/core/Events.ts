@@ -18,7 +18,7 @@ export const Events = {
 
     async initBot() {
         if (env.ENVIRONMENT === "actions") return;
-        await core.discord.bot.login(env.DISCORD_TOKEN);
+        await dependencies.discord.bot.login(env.DISCORD_TOKEN);
 
         core.logger.info("Bot initialized");
     },

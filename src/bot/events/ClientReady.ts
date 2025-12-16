@@ -1,6 +1,7 @@
 import type { Client } from "discord.js";
 
 import { core } from "../../core/Core";
+import { dependencies } from "../../core/Dependencies";
 import { DiscordEventHandler } from "../DiscordEventHandler";
 
 export class ReadyHandler extends DiscordEventHandler<"clientReady"> {
@@ -9,6 +10,6 @@ export class ReadyHandler extends DiscordEventHandler<"clientReady"> {
 
     handle(client: Client): void {
         core.logger.info(`Ready as ${client.user?.tag}`);
-        core.discord.bot.notifyReady();
+        dependencies.discord.bot.notifyReady();
     }
 }

@@ -1,6 +1,6 @@
 import type { Snowflake, User } from "discord.js";
 
-import { core } from "../../core/Core";
+import { dependencies } from "../../core/Dependencies";
 
 /**
  * Fetch a Discord User object by their ID.
@@ -9,7 +9,7 @@ import { core } from "../../core/Core";
  */
 export async function getUserById(userId: Snowflake): Promise<User | null> {
     try {
-        return await core.discord.bot.client.users.fetch(userId);
+        return await dependencies.discord.bot.client.users.fetch(userId);
     } catch (error) {
         return null;
     }

@@ -19,14 +19,6 @@ export abstract class AppError extends Error {
         Error.captureStackTrace(this, this.constructor);
     }
 
-    /* TODO: Some script to search errors by code. Would make debugging much easier.
-     * e.g.
-     * input : `npm run search-error TAG_EXISTS`
-     * output: `{ class: TagExistsError, file: 409.ts, lines: { start: 3, end: 10 } }`
-     *
-     * Maybe even add some documentation metadata? Not sure.
-     */
-
     toJSON() {
         return {
             name: this.name,

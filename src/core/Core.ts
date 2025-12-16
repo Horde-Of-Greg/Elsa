@@ -1,7 +1,7 @@
-import { Logger } from "../logs/Logger";
-import { Timer } from "../Timer";
+import { Logger } from "./logs/Logger";
+import { Timer } from "./Timer";
 
-export class CoreContainer {
+class Core {
     private _logger?: Logger;
     private _timers = new Map<string, Timer>();
 
@@ -33,3 +33,5 @@ export class CoreContainer {
         this._timers.clear();
     }
 }
+
+export const core = new Core();

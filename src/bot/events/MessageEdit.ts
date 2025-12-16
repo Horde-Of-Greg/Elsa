@@ -1,7 +1,7 @@
 import type { Message, PartialMessage } from "discord.js";
 
 import type { CommandContext } from "../../commands/types";
-import { app } from "../../core/App";
+import { core } from "../../core/Core";
 import { DiscordEventHandler } from "../DiscordEventHandler";
 
 export class MessageEditHandler extends DiscordEventHandler<"messageUpdate"> {
@@ -10,7 +10,7 @@ export class MessageEditHandler extends DiscordEventHandler<"messageUpdate"> {
 
     async handle(oldMessage: Message | PartialMessage, newMessage: Message | PartialMessage): Promise<void> {
         if (newMessage.partial || !newMessage.guild) return;
-        app.core.logger.debug("Received Edited Message");
+        core.logger.debug("Received Edited Message");
 
         const context: CommandContext = {
             message: newMessage as Message,

@@ -1,6 +1,7 @@
 import type { Guild, User } from "discord.js";
 
-import { app } from "../core/App";
+import type { RepositoryResolver } from "../core/containers/Repository";
+import { dependencies } from "../core/Dependencies";
 import { PermissionDeniedError } from "../core/errors/client/403";
 import { PermLevel } from "../db/entities/UserHost";
 import type { HostRepository } from "../db/repositories/HostRepository";
@@ -10,9 +11,9 @@ export class PermissionsService {
     private userRepo: UserRepository;
     private hostRepo: HostRepository;
 
-    constructor() {
-        this.userRepo = app.database.userRepo;
-        this.hostRepo = app.database.hostRepo;
+    constructor(repositories: RepositoryResolver = dependencies.repositories) {
+        this.userRepo = repositories.userRepo;
+        this.hostRepo = repositories.hostRepo;
     }
 
     async requirePermLevel(user: User, host: Guild, permRequired: PermLevel): Promise<void> {

@@ -1,7 +1,7 @@
 import { EmbedBuilder } from "@discordjs/builders";
 import type { MessageReplyOptions } from "discord.js";
 
-import { app } from "../../App";
+import { core } from "../../Core";
 import { AppError } from "../AppError";
 
 export abstract class InternalError extends AppError {
@@ -46,7 +46,7 @@ export abstract class InternalError extends AppError {
     }
 
     log(): void {
-        app.core.logger.error(this.message);
+        core.logger.error(this.message);
     }
 }
 

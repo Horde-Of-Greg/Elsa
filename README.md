@@ -1,6 +1,6 @@
 <h1 align="center">Elsa</h1>
 
-<p align="center"><b></b>Discord Bot to save and execute tags. Based on Leveret by <a href="https://github.com/NotMyWingNeeve">Neeve</a></b></p>
+<p align="center"><b></b>Discord Bot to save and execute tags.</b></p>
 <h1 align="center">
     <a><img src="https://img.shields.io/github/last-commit/Horde-Of-Greg/Elsa?style=for-the-badge" alt="Last Commit">
     <a href="https://github.com/Horde-Of-Greg/Elsa/tags"><img src="https://img.shields.io/github/v/tag/Horde-Of-Greg/Elsa?include_prereleases&sort=semver&style=for-the-badge" alt="Last Tag">
@@ -10,6 +10,7 @@
 </h1>
 
 # Features
+
 - Add/Send tags that can be created by users.
 - Create JS/TS(/more?) scripts for tags. Runs in a VM. (Coming).
 - Every component of the tags are overridable by server, including banning/putting in a waiting list.
@@ -18,6 +19,7 @@
 - Extensive, configurable logging with automatic log rotations.
 
 # External Dependencies
+
 - **PostgreSQL** (DB)
 - **Redis**/**Valkey** (Caching)
 - [**zstd**](https://github.com/facebook/zstd) (Log Compression)

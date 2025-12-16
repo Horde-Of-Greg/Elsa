@@ -1,17 +1,17 @@
 import "./index";
 
 import { env } from "./config/env";
-import { app } from "./core/App";
+import { core } from "./core/Core";
 import { Events } from "./core/Events";
 import { gracefulShutdown } from "./handlers/shutdown";
 
 async function main() {
     Events.initCore();
-    app.core.logger.info(`Environment: ${env.ENVIRONMENT}`);
+    core.logger.info(`Environment: ${env.ENVIRONMENT}`);
     await Events.initDb();
     await Events.initBot();
     await Events.seed();
-    app.core.logger.info("App Ready!");
+    core.logger.info("App Ready!");
 }
 
 main().catch((e) => {

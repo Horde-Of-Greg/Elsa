@@ -1,6 +1,7 @@
 import { seederConfig } from "../../config/appConfig";
 import type { SeederConfig } from "../../config/schema";
-import { app } from "../../core/App";
+import { core } from "../../core/Core";
+import { dependencies } from "../../core/Dependencies";
 import { getGuildById } from "../../utils/discord/guilds";
 import { getUserById } from "../../utils/discord/users";
 import { sleep } from "../../utils/time";
@@ -12,7 +13,7 @@ export class Seeder {
     async seed() {
         await this.drop();
         await this.createSudoers();
-        app.core.logger.info("Seeded Database.");
+        core.logger.info("Seeded Database.");
     }
 
     private async drop() {
@@ -20,20 +21,20 @@ export class Seeder {
 
         const wait_s = 3;
 
-        app.core.logger.warnUser(
+        core.logger.warnUser(
             `Clearing all data from database ${seederConfig.WAIT_TO_DROP_DB ? `in ${wait_s.toString()}s. Ctrl + C to stop.` : ""}`,
         );
 
         if (seederConfig.WAIT_TO_DROP_DB) {
             for (let i = 0; i < wait_s; i++) {
-                app.core.logger.warnUser((wait_s - i).toString());
+                core.logger.warnUser((wait_s - i).toString());
                 await sleep(1000);
             }
         }
 
-        await app.database.dataSource.synchronize(true);
+        await dependencies.database.dataSource.synchronize(true);
 
-        app.core.logger.info("Database cleared.");
+        core.logger.info("Database cleared.");
     }
 
     private async createSudoers() {
@@ -51,7 +52,7 @@ export class Seeder {
                 if (!user_dc) {
                     throw new Error(`User with id:${sudoer} not found.`);
                 }
-                await app.services.userService.createUserWithPerms(user_dc, guild, PermLevel.OWNER);
+                await dependencies.services.userService.createUserWithPerms(user_dc, guild, PermLevel.OWNER);
             }
         }
     }

@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
 // Reasoning: This is the shutdown script, the logger won't, or may not be active.
 import { env } from "../config/env";
-import { app } from "../core/App";
+import { core } from "../core/Core";
+import { dependencies } from "../core/Dependencies";
 
 let isShuttingDown = false;
 
@@ -14,7 +15,7 @@ export async function gracefulShutdown(signal: string): Promise<void> {
     }
     isShuttingDown = true;
 
-    app.core.logger.info(`Received ${signal}, shutting down gracefully...\n`);
+    core.logger.info(`Received ${signal}, shutting down gracefully...\n`);
 
     const timeout = setTimeout(() => {
         console.error("Shutdown timeout - forcing exit");
@@ -23,13 +24,13 @@ export async function gracefulShutdown(signal: string): Promise<void> {
 
     try {
         console.log("Disconnecting Discord...");
-        await app.database.dataSource.destroy();
+        await dependencies.database.dataSource.destroy();
 
         console.log("Closing DB...");
-        await app.discord.bot.client.destroy();
+        await dependencies.discord.bot.client.destroy();
 
         console.log("Flushing logs...");
-        await app.core.logger.shutdown();
+        await core.logger.shutdown();
 
         console.log("Cleanup completed successfully");
         clearTimeout(timeout);

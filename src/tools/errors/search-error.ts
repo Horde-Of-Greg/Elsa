@@ -15,13 +15,15 @@ if (!ARG) {
 const ROOT_DIR = process.cwd();
 const SRC = path.join(ROOT_DIR, "src");
 //prettier-ignore
-const CLASS_MATCHER = new RegExp(`export class ([A-Z][A-Za-z]+) extends [A-Z][A-Za-z]+ {(?:\n\\s*(?:readonly )?httpStatus\\s?=\\s?\\d{3};?)?\n\\s*(?:readonly )?code\\s?=\\s?"${ARG}";?`)
+const CLASS_MATCHER = new RegExp(`export class ([A-Z][A-Za-z]+) extends [A-Z][A-Za-z]+ {(?:\n\\s*(?:readonly )?httpStatus\\s?=\\s?\\d{3};?)?\n\\s*(?:readonly )?code\\s?=\\s?"([A-Z_]+)";?`)
 const USAGE_MATCHER = (className: string) => new RegExp(`throw new ${className}`);
 
 void main();
 
 async function main() {
-    const MATCHING_CLASSES = await searchDir(SRC, CLASS_MATCHER);
+    const MATCHING_CLASSES = (await searchDir(SRC, CLASS_MATCHER)).filter(
+        (result) => result.match[2] === ARG,
+    );
     for (const matching_class of MATCHING_CLASSES) {
         const matches = await searchDir(SRC, USAGE_MATCHER(matching_class.match[1]));
         for (const match of matches) {

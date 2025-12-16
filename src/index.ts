@@ -1,5 +1,5 @@
 //config
-import "./config/appConfig";
+import "./config/config";
 import "./config/env";
 
 //schedules

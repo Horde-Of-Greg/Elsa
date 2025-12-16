@@ -45,7 +45,21 @@ find . -name '*.template' -exec sh -c 'cp "$0" "${0%.template}"' {} \;
 ## 4. Set up the configs
 
 Edit the values in the `.env` (required) and `config/` (required)
+See `config/.CONFIG.md`
 
 ## 5. Run the bot
 
-Run `npm start` (or `npm run dev` if you're in a dev env)
+### Production
+
+```bash
+npm ci # Clean install of dependencies
+npm run build # Compile ts to js
+npm start # Start the app
+```
+
+### Development
+
+```bash
+npm i # Install dependencies
+npm run dev # Start the app without compilation
+```

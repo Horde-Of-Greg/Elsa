@@ -2,7 +2,7 @@ import { EmbedBuilder, type MessageReplyOptions, type User } from "discord.js";
 
 import { EmbedColors } from "../../../assets/colors/colors";
 import { type CommandParams } from "../../../commands/types";
-import { app } from "../../App";
+import { core } from "../../Core";
 import { AppError } from "../AppError";
 
 export class CooldownError extends AppError {
@@ -46,6 +46,6 @@ export class CooldownError extends AppError {
     }
 
     log(): void {
-        app.core.logger.warn(this.message);
+        core.logger.warn(this.message);
     }
 }

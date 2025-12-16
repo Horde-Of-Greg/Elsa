@@ -1,7 +1,7 @@
 import type { Message } from "discord.js";
 
 import type { CommandContext } from "../../commands/types";
-import { app } from "../../core/App";
+import { core } from "../../core/Core";
 import { DiscordEventHandler } from "../DiscordEventHandler";
 
 export class MessageCreateHandler extends DiscordEventHandler<"messageCreate"> {
@@ -11,7 +11,7 @@ export class MessageCreateHandler extends DiscordEventHandler<"messageCreate"> {
     async handle(message: Message): Promise<void> {
         if (!message.guild) return;
         if (message.author.bot) return;
-        app.core.logger.debug("Received New Message");
+        core.logger.debug("Received New Message");
 
         const context: CommandContext = {
             message,

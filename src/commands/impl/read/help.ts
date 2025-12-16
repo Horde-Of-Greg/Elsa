@@ -1,7 +1,7 @@
 import { type APIEmbedField, EmbedBuilder } from "discord.js";
 
 import { appConfig } from "../../../config/appConfig";
-import { app } from "../../../core/App";
+import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { CommandDef, CommandInstance } from "../../Command";
 import { commands } from "../../Commands";
@@ -57,6 +57,6 @@ class CommandHelpInstance extends CommandInstance {
         await this.context.message.reply({ embeds: [embed] });
     }
     protected logExecution(): void {
-        app.core.logger.debug(`Sent command ${this.params.name}`);
+        core.logger.debug(`Sent command ${this.params.name}`);
     }
 }

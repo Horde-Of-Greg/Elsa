@@ -3,7 +3,7 @@ import path from "path";
 
 import { appConfig } from "../../config/appConfig";
 import { env } from "../../config/env";
-import { app } from "../App";
+import { core } from "../Core";
 import { ReaddirError } from "../errors/internal/schedules";
 import { consoleContainer } from "./ConsoleContainer";
 
@@ -37,9 +37,9 @@ export class LogRotation {
     }
 
     private async rotate(): Promise<void> {
-        await app.core.logger.stop();
+        await core.logger.stop();
         await consoleContainer.archiveLogs();
         await consoleContainer.clearLogs();
-        app.core.logger.start();
+        core.logger.start();
     }
 }

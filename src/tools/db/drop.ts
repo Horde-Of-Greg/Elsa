@@ -3,7 +3,7 @@ import "dotenv/appConfig";
 import { execSync } from "child_process";
 import readline from "readline";
 
-import { app } from "../../core/App";
+import { core } from "../../core/Core";
 
 const user = process.env.POSTGRES_USER;
 const host = process.env.POSTGRES_HOST;
@@ -19,24 +19,24 @@ const rl = readline.createInterface({
     output: process.stdout,
 });
 
-app.core.logger.warn(`WARNING: This will DELETE database: ${db}`);
+core.logger.warn(`WARNING: This will DELETE database: ${db}`);
 rl.question("Are you sure you want to continue? (y/n): ", (answer) => {
     rl.close();
 
     if (!/^y(?:es)?$/i.test(answer.toLowerCase())) {
-        app.core.logger.info("Operation cancelled");
+        core.logger.info("Operation cancelled");
         process.exit(0);
     }
 
-    app.core.logger.info(`Dropping database: ${db}`);
+    core.logger.info(`Dropping database: ${db}`);
 
     try {
         execSync(`psql -U ${user} -h ${host} -d postgres -c "DROP DATABASE IF EXISTS ${db}"`, {
             stdio: "inherit",
         });
-        app.core.logger.info("✓ Database dropped successfully");
+        core.logger.info("✓ Database dropped successfully");
     } catch (error) {
-        app.core.logger.error("✗ Failed to drop database");
+        core.logger.error("✗ Failed to drop database");
         process.exit(1);
     }
 });

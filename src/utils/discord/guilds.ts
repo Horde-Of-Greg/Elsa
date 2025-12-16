@@ -1,6 +1,6 @@
 import type { Guild, Snowflake } from "discord.js";
 
-import { app } from "../../core/App";
+import { core } from "../../core/Core";
 
 /**
  * Fetch a Discord Guild object by its ID.
@@ -9,7 +9,7 @@ import { app } from "../../core/App";
  */
 export async function getGuildById(guildId: Snowflake): Promise<Guild | null> {
     try {
-        return await app.discord.bot.client.guilds.fetch(guildId);
+        return await core.discord.bot.client.guilds.fetch(guildId);
     } catch (error) {
         return null;
     }

@@ -1,6 +1,7 @@
 import type { DeepPartial, FindOptionsRelations, FindOptionsWhere, Repository } from "typeorm";
 
-import { app } from "../../core/App";
+import type { DatabaseResolver } from "../../core/containers/Database";
+import { dependencies } from "../../core/Dependencies";
 import type { ValidEntity } from "../types/entities";
 
 //TODO: Add Transaction support.
@@ -14,8 +15,11 @@ import type { ValidEntity } from "../types/entities";
 export abstract class BaseRepository<T extends ValidEntity> {
     protected repo: Repository<T>;
 
-    constructor(entityClass: new () => T) {
-        this.repo = app.database.dataSource.getRepository(entityClass);
+    constructor(
+        entityClass: new () => T,
+        private database: DatabaseResolver = dependencies.database,
+    ) {
+        this.repo = this.database.dataSource.getRepository(entityClass);
     }
 
     /**
@@ -70,7 +74,7 @@ export abstract class BaseRepository<T extends ValidEntity> {
         where: FindOptionsWhere<J>,
         relations?: FindOptionsRelations<J>,
     ): Promise<J | null> {
-        return app.database.dataSource.getRepository(otherTable).findOne({ where, relations });
+        return this.database.dataSource.getRepository(otherTable).findOne({ where, relations });
     }
 
     /**
@@ -95,9 +99,9 @@ export abstract class BaseRepository<T extends ValidEntity> {
         const thisTable = thisEntity.constructor as new () => T;
         const otherTable = otherEntity.constructor as new () => O;
 
-        const joinMetadata = app.database.dataSource.getMetadata(joinTable);
-        const thisMetadata = app.database.dataSource.getMetadata(thisTable);
-        const otherMetadata = app.database.dataSource.getMetadata(otherTable);
+        const joinMetadata = this.database.dataSource.getMetadata(joinTable);
+        const thisMetadata = this.database.dataSource.getMetadata(thisTable);
+        const otherMetadata = this.database.dataSource.getMetadata(otherTable);
 
         const thisRelation = joinMetadata.relations.find((rel) => rel.type === thisMetadata.target);
         const otherRelation = joinMetadata.relations.find((rel) => rel.type === otherMetadata.target);
@@ -113,7 +117,7 @@ export abstract class BaseRepository<T extends ValidEntity> {
             [otherRelation.propertyName]: otherEntity.id,
         } as FindOptionsWhere<J>;
 
-        return app.database.dataSource.getRepository(joinTable).findOne({ where });
+        return this.database.dataSource.getRepository(joinTable).findOne({ where });
     }
 
     /**
@@ -139,8 +143,8 @@ export abstract class BaseRepository<T extends ValidEntity> {
     ): Promise<J[]> {
         const thatTable = thatEntity.constructor as new () => O;
 
-        const joinMetadata = app.database.dataSource.getMetadata(joinTable);
-        const thatMetadata = app.database.dataSource.getMetadata(thatTable);
+        const joinMetadata = this.database.dataSource.getMetadata(joinTable);
+        const thatMetadata = this.database.dataSource.getMetadata(thatTable);
 
         const thatRelation = joinMetadata.relations.find((rel) => rel.type === thatMetadata.target);
 
@@ -153,7 +157,7 @@ export abstract class BaseRepository<T extends ValidEntity> {
             ...where,
         } as FindOptionsWhere<J>;
 
-        return app.database.dataSource.getRepository(joinTable).find({ where: fullWhere, relations });
+        return this.database.dataSource.getRepository(joinTable).find({ where: fullWhere, relations });
     }
 
     /**
@@ -189,7 +193,7 @@ export abstract class BaseRepository<T extends ValidEntity> {
      * @returns A new entity instance ready to be saved on the table given.
      */
     protected createOnOtherTable<J extends ValidEntity>(table: new () => J, data: DeepPartial<J>): J {
-        return app.database.dataSource.getRepository(table).create(data);
+        return this.database.dataSource.getRepository(table).create(data);
     }
 
     /**
@@ -221,7 +225,7 @@ export abstract class BaseRepository<T extends ValidEntity> {
      */
     protected async saveOnOtherTable<J extends ValidEntity>(entity: J): Promise<J> {
         const table = entity.constructor as new () => J;
-        return app.database.dataSource.getRepository(table).save(entity);
+        return this.database.dataSource.getRepository(table).save(entity);
     }
 
     /**
@@ -233,7 +237,7 @@ export abstract class BaseRepository<T extends ValidEntity> {
     protected async saveManyOnOtherTable<J extends ValidEntity>(entities: J[]): Promise<J[]> {
         if (entities.length === 0) return [];
         const table = entities[0].constructor as new () => J;
-        return app.database.dataSource.getRepository(table).save(entities);
+        return this.database.dataSource.getRepository(table).save(entities);
     }
 
     /**

@@ -1,5 +1,6 @@
 import { appConfig } from "../config/appConfig";
-import { app } from "../core/App";
+import type { ServicesResolver } from "../core/containers/Services";
+import { core } from "../core/Core";
 import { AppError } from "../core/errors/AppError";
 import { MissingArgumentError } from "../core/errors/client/400";
 import { CooldownError } from "../core/errors/client/429";
@@ -10,6 +11,7 @@ import type { PermissionsService } from "../services/PermsService";
 import type { TagService } from "../services/TagService";
 import type { UserService } from "../services/UserService";
 import { type AppDate, getTimeNow } from "../utils/time";
+import { dependencies } from "./../core/Dependencies";
 import type {
     CommandContext,
     CommandParams,
@@ -27,12 +29,14 @@ type CommandInstanceConstructor<TInstance extends CommandInstance> = new (
     context: CommandContext,
     parseResult: ParseResult,
     params: CommandParams,
+    services: ServicesResolver,
 ) => TInstance;
 
 export abstract class CommandDef<TInstance extends CommandInstance> {
     constructor(
         protected params: CommandParams,
         private instanceConstructor: CommandInstanceConstructor<TInstance>,
+        private services = dependencies.services,
     ) {}
 
     /**
@@ -53,15 +57,15 @@ export abstract class CommandDef<TInstance extends CommandInstance> {
      * Create a new instance to execute this command.
      */
     createInstance(context: CommandContext, parseResult: ParseResult): TInstance {
-        return new this.instanceConstructor(context, parseResult, this.params);
+        return new this.instanceConstructor(context, parseResult, this.params, this.services);
     }
 }
 
 export abstract class CommandInstance {
-    protected permsService: PermissionsService = app.services.permsService;
-    protected hostService: HostService = app.services.hostService;
-    protected tagService: TagService = app.services.tagService;
-    protected userService: UserService = app.services.userService;
+    protected permsService: PermissionsService;
+    protected hostService: HostService;
+    protected tagService: TagService;
+    protected userService: UserService;
 
     protected timerKey: string = this.makeTimerKey();
     protected cooldownKeys: CooldownKeys = this.makeCooldownKey();
@@ -70,11 +74,17 @@ export abstract class CommandInstance {
         protected context: CommandContext,
         protected parseResult: ParseResult,
         protected params: CommandParams,
-    ) {}
+        protected readonly services: ServicesResolver,
+    ) {
+        this.permsService = this.services.permsService;
+        this.hostService = this.services.hostService;
+        this.tagService = this.services.tagService;
+        this.userService = this.services.userService;
+    }
 
     async run(): Promise<void> {
         try {
-            app.core.startTimer(this.timerKey);
+            core.startTimer(this.timerKey);
             await this.validateData();
             await this.validatePermissions();
             this.checkCooldowns();
@@ -85,7 +95,7 @@ export abstract class CommandInstance {
         } catch (error: unknown) {
             await this.replyError(error instanceof Error ? error : new Error(String(error)));
         } finally {
-            app.core.stopTimer(this.timerKey);
+            core.stopTimer(this.timerKey);
         }
     }
 

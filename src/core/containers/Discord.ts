@@ -1,5 +1,10 @@
 import { DiscordBot } from "../../bot/DiscordBot";
 
+export interface DiscordResolver {
+    get bot(): DiscordBot;
+    reset(): void;
+}
+
 export class DiscordContainer {
     private _bot?: DiscordBot;
 

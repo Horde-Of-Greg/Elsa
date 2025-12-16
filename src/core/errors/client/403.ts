@@ -3,7 +3,7 @@ import { EmbedBuilder, type MessageReplyOptions } from "discord.js";
 import { EmbedColors } from "../../../assets/colors/colors";
 import type { UserTable } from "../../../db/entities/User";
 import { PermLevel } from "../../../db/entities/UserHost";
-import { app } from "../../App";
+import { core } from "../../Core";
 import { AppError } from "../AppError";
 
 export class PermissionDeniedError extends AppError {
@@ -40,7 +40,7 @@ export class PermissionDeniedError extends AppError {
     }
 
     log(): void {
-        app.core.logger.warn(
+        core.logger.warn(
             `User ${this.user.name !== null ? this.user.name : "Unknown"} tried to run a ${
                 PermLevel[this.requiredLevel]
             } action with ${PermLevel[this.userLevel]} perms.`,

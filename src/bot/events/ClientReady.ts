@@ -1,6 +1,6 @@
 import type { Client } from "discord.js";
 
-import { app } from "../../core/App";
+import { core } from "../../core/Core";
 import { DiscordEventHandler } from "../DiscordEventHandler";
 
 export class ReadyHandler extends DiscordEventHandler<"clientReady"> {
@@ -8,7 +8,7 @@ export class ReadyHandler extends DiscordEventHandler<"clientReady"> {
     readonly once = true;
 
     handle(client: Client): void {
-        app.core.logger.info(`Ready as ${client.user?.tag}`);
-        app.discord.bot.notifyReady();
+        core.logger.info(`Ready as ${client.user?.tag}`);
+        core.discord.bot.notifyReady();
     }
 }

@@ -3,6 +3,14 @@ import { PermissionsService } from "../../services/PermsService";
 import { TagService } from "../../services/TagService";
 import { UserService } from "../../services/UserService";
 
+export interface ServicesResolver {
+    get hostService(): HostService;
+    get permsService(): PermissionsService;
+    get tagService(): TagService;
+    get userService(): UserService;
+    reset(): void;
+}
+
 export class ServicesContainer {
     private _hostService?: HostService;
     private _permsService?: PermissionsService;

@@ -1,7 +1,7 @@
 import { EmbedBuilder } from "discord.js";
 
 import { env } from "../../../config/env";
-import { app } from "../../../core/App";
+import { core } from "../../../core/Core";
 import { TagNotFoundError } from "../../../core/errors/client/404";
 import type { TagTable } from "../../../db/entities/Tag";
 import { PermLevel } from "../../../db/entities/UserHost";
@@ -55,7 +55,7 @@ class CommandTagInstance extends CommandInstance {
         }
     }
     protected logExecution(): void {
-        app.core.logger.debug(`Sent tag ${this.tag.name}`);
+        core.logger.debug(`Sent tag ${this.tag.name}`);
     }
 
     private get debugEmbed(): EmbedBuilder {
@@ -78,7 +78,7 @@ class CommandTagInstance extends CommandInstance {
                 },
             )
             .setFooter({
-                text: `took: ${app.core.queryTimer(this.timerKey).getTime().formatted} | debug: true`,
+                text: `took: ${core.queryTimer(this.timerKey).getTime().formatted} | debug: true`,
             });
     }
 }

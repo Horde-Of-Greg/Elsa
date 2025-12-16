@@ -1,9 +1,12 @@
-import { Logger } from "../logs/Logger";
-import { Timer } from "../Timer";
+import { DiscordContainer } from "./containers/Discord";
+import { Logger } from "./logs/Logger";
+import { Timer } from "./Timer";
 
-export class CoreContainer {
+class Core {
     private _logger?: Logger;
     private _timers = new Map<string, Timer>();
+
+    readonly discord = new DiscordContainer();
 
     get logger(): Logger {
         return (this._logger ??= new Logger());
@@ -31,5 +34,8 @@ export class CoreContainer {
     reset(): void {
         this._logger = undefined;
         this._timers.clear();
+        this.discord.reset();
     }
 }
+
+export const core = new Core();

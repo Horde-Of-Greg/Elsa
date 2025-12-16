@@ -1,5 +1,5 @@
 import { Emojis } from "../../../assets/emojis";
-import { app } from "../../../core/App";
+import { core } from "../../../core/Core";
 import { TagBodyExistsError, TagExistsError } from "../../../core/errors/client/409";
 import { PermLevel } from "../../../db/entities/UserHost";
 import type { SHA256Hash } from "../../../utils/crypto/sha256Hash";
@@ -60,7 +60,7 @@ class CommandAddInstance extends CommandInstance {
     }
 
     protected logExecution(): void {
-        app.core.logger.info(`User ${this.context.author.tag} created tag: ${this.tagName}`);
+        core.logger.info(`User ${this.context.author.tag} created tag: ${this.tagName}`);
     }
 
     /*

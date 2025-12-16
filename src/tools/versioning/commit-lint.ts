@@ -34,7 +34,7 @@ async function main() {
         let bumpType: AcceptedBump | "none";
 
         switch (type) {
-            case "MAJOR":
+            case "BREAK":
                 bumpType = "major";
                 break;
             case "FEAT":

@@ -2,7 +2,7 @@ import { Console } from "console";
 import fs from "fs";
 import path from "path";
 
-import { appConfig } from "../../config/appConfig";
+import { appConfig } from "../../config/config";
 import { env } from "../../config/env";
 import { compressWithZstd } from "../../utils/compression/zstd";
 import { FileStream } from "./streams/FileStream";

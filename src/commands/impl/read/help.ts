@@ -1,6 +1,6 @@
 import { type APIEmbedField, EmbedBuilder } from "discord.js";
 
-import { appConfig } from "../../../config/appConfig";
+import { appConfig } from "../../../config/config";
 import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { CommandDef, CommandInstance } from "../../Command";

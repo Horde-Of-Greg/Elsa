@@ -1,4 +1,4 @@
-import { seederConfig } from "../../config/appConfig";
+import { seederConfig } from "../../config/config";
 import type { SeederConfig } from "../../config/schema";
 import { core } from "../../core/Core";
 import { dependencies } from "../../core/Dependencies";

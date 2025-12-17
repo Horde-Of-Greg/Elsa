@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import { appConfig } from "../../../config/appConfig";
+import { appConfig } from "../../../config/config";
 import { env } from "../../../config/env";
 import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream";
 

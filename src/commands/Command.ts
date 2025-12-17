@@ -1,4 +1,4 @@
-import { appConfig } from "../config/appConfig";
+import { appConfig } from "../config/config";
 import type { ServicesResolver } from "../core/containers/Services";
 import { core } from "../core/Core";
 import { AppError } from "../core/errors/AppError";

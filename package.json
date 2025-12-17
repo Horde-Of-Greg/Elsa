@@ -16,10 +16,11 @@
         "lint:check": "eslint .",
         "lint:fix": "eslint . --fix",
         "lint:report": "eslint \"src/**/*.ts\" --format json --output-file temp/lint/eslint_report.json",
-        "knip": "knip",
+        "lint:knip": "knip",
         "actions:bump": "ts-node src/tools/versioning/bump.ts",
         "actions:lint-pr": "ts-node src/tools/versioning/pr-lint.ts",
-        "actions:lint-commit": "ts-node src/tools/versioning/commit-lint.ts"
+        "actions:lint-commit": "ts-node src/tools/versioning/commit-lint.ts",
+        "tools:search-error": "ts-node src/tools/errors/search-error.ts"
     },
     "dependencies": {
         "@actions/core": "^2.0.1",

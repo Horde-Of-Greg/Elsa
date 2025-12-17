@@ -1,6 +1,6 @@
 import type { Message } from "discord.js";
 
-import { appConfig } from "../config/appConfig";
+import { appConfig } from "../config/config";
 import type { CommandDef, CommandInstance } from "./Command";
 import { commands } from "./Commands";
 import type { CommandContext, ParseResult } from "./types";

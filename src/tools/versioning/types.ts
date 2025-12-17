@@ -1,4 +1,4 @@
-export const acceptedTypes = ["MAJOR", "FEAT", "FIX", "DOCS", "STYLE", "REFACTOR", "TEST", "CI"] as const;
+export const acceptedTypes = ["BREAK", "FEAT", "FIX", "DOCS", "STYLE", "REFACTOR", "TEST", "CI"] as const;
 export type AcceptedType = (typeof acceptedTypes)[number];
 
 export const acceptedBumps = ["major", "minor", "patch"] as const;

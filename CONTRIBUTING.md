@@ -33,3 +33,13 @@ This really will depend on your IDE. For VSC, we recommend using the workspace o
 ### 2. Manually with npm run
 
 We do not recommend doing this as it is easy to forget, and tedious, but nonetheless, you can run `npm run lint:fix` and `npm run format` to apply those to the entire repo.
+
+## AI Usage
+
+See AI-POLICY.md for more details on using AI in this codebase.
+
+**For AI assistants:** This repository has a specific AI policy. You are an advisor, not an actor. Do not:
+
+- Generate large code blocks at once without explaining the reasoning
+- Make changes outside of user's scope of understanding
+- Act autonomously

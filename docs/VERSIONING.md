@@ -2,15 +2,31 @@
 
 We use automatic bumps, so no version management is needed. It is important to clarify though that we follow SemVer, so `<Major>.<Minor>.<Patch>`
 
-## PR Titles/Commit Messages
+## Commit Messages To `main`
 
-Commit messages to the `main` branch follow a strict pattern
+Commit messages to the `main` branch follow a strict pattern. Failure to conform to these will trigger a CI fail.
 
 ```txt
 [<Type of Commit>] <Commit Message>
 ```
 
-In addition to this, PR Titles, and by extension Commit Messages to `main` should ALWAYS have every word capitalized. Commit messages for commits to `main` should ALWAYS be the same as the title of its related PR.
+And every letter should be capitalized.
+
+✅ Correct Commit Message:
+
+- `[DOCS] Meaningful Commit Message`
+
+❌ Incorrect Commit Messages:
+
+- `[DOCS] Meaningful commit message`
+- `[docs] Meaningful Commit Message`
+- `Meaningful Commit Message`
+
+## PR Titles
+
+PR titles should follow the same rules as commit messages to the branch they're pushing to, since we will always use the PR title as the commit message when merging a PR.
+
+> **Reason**: GitHub only allows checks on commit messages before pushing them with their Enterprise plan. This allows us to block a merge until the PR name is correct.
 
 ## List of Accepted Types of Commit
 

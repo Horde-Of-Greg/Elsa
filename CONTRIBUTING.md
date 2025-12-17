@@ -1,29 +1,35 @@
 # Standards
 
-## PR Titles/Commit Messages
+## Naming
 
-Commit messages to the `main` branch follow a strict pattern
+### 1. No shortening variables names
 
-```txt
-[<Type of Commit>] <Commit Message>
-```
+Do not shorten variables names, except for units (see below). This just makes things confusing. Exceptions might apply in specific cases.
 
-This is because we have CIs to bump the version of the codebase based on the commit metadata.
-In addition to this, PR Titles, and by extension Commit Messages to `main` should ALWAYS have every word capitalized. Commit messages for commits to `main` should ALWAYS be the same as the title of its related PR.
+`Example`: shortening like `tagHostService` to `thServ`, is the best way to forget what `thServ` is.
 
-## Versioning
+### 2. Suffix units
 
-As stated previously, we use automatic bumps, so no version management is needed. It is important to clarify though that we follow SemVer, so `<Major>.<Minor>.<Patch>`
+Say we have variables `time` in method1 and method2, but method1 works in seconds, and method2 in ms. This is the perfect way to create a bug if not properly named. So make sure they are named `time_s` and `time_ms`.
 
-## List of Accepted Types of Commit
+### 3. Casing
 
-| Commit Type | Version Bump  | Usage                                            |
-| ----------- | ------------- | ------------------------------------------------ |
-| `BREAK`     | Major (X.0.0) | Changes that break existing features.            |
-| `FEAT`      | Minor (0.X.0) | Changes that implement new features.             |
-| `FIX`       | Patch (0.0.X) | Bug fixes, performance fixes.                    |
-| `DOCS`      | None          | Changes to docs (including comments)             |
-| `STYLE`     | None          | Changes to the formatter(s)                      |
-| `REFACTOR`  | None          | Changes to the code that don't change its logic. |
-| `TEST`      | None          | Changes relating to the tests                    |
-| `CI`        | None          | Changes relating to CI/CD                        |
+- `Classes`: `PascalCase`
+- `functions`: `camelCase()`
+- `variables`: `camelCase`
+- `CONSTANTS`: `ALL_CAPS_SNAKE_CASE`
+- `script-name`: `kebab-case`
+
+## Linting/Formatting
+
+Linting and formatting are handled by `eslint` and `prettier` respectively. Make sure you submit code which passes these lints and formats, otherwise it will get rejected.
+
+There are two ways to do this:
+
+### 1. Extensions/Plugins + Format on save
+
+This really will depend on your IDE. For VSC, we recommend using the workspace options provided by the repo in `.vscode/` along with [prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) and [eslint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
+
+### 2. Manually with npm run
+
+We do not recommend doing this as it is easy to forget, and tedious, but nonetheless, you can run `npm run lint:fix` and `npm run format` to apply those to the entire repo.

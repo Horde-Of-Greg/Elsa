@@ -44,8 +44,9 @@ find . -name '*.template' -exec sh -c 'cp "$0" "${0%.template}"' {} \;
 
 ## 4. Set up the configs
 
-Edit the values in the `.env` (required) and `config/` (required)
-See `config/.CONFIG.md`
+Edit the values in the `.env` (required) and `config/` (required).
+
+See `docs/CONFIG.md`
 
 ## 5. Run the bot
 

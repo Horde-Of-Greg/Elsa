@@ -12,7 +12,7 @@
 | POSTGRES_USER     | string | Database username           | `True` (non-CI) | none          |
 | POSTGRES_PASSWORD | string | Database password           | `True` (non-CI) | none          |
 
-> **Note:** Postgres fields are only required when `ENVIRONMENT` is not `actions`.
+> **Note:** Postgres fields are not required when `ENVIRONMENT` is `actions`.
 
 ### Environment Values
 
@@ -35,17 +35,17 @@ Located in `config/appConfig.json`
 | LOGS.OUTPUT_PATH         | string  | Directory for log files              | `True`   | none    |
 | LOGS.ALLOW_ABSOLUTE_PATH | boolean | Allow absolute paths for OUTPUT_PATH | `True`   | none    |
 
-> **Note:** If `ALLOW_ABSOLUTE_PATH` is `false`, `OUTPUT_PATH` must be a relative path (no leading `/`).
+> **Note:** If `ALLOW_ABSOLUTE_PATH` is `false`, `OUTPUT_PATH` must be a relative path (no leading `/`). This is a safeguard to avoid dumping into random directories, whilst still allowing to put logs in, say, `var/logs/Elsa`.
 
 ## Seeder Config
 
 Located in `config/seeder_config.json`. Used for database seeding during development.
 
-| Name               | Type     | Description                                 | Required | Default |
-| ------------------ | -------- | ------------------------------------------- | -------- | ------- |
-| DEPTH              | int      | Number of seed entries to create (1-100000) | `True`   | none    |
-| DROP_DB            | boolean  | Drop database before seeding                | `True`   | none    |
-| WAIT_TO_DROP_DB    | boolean  | Wait for confirmation before dropping       | `False`  | `true`  |
-| SUDOERS.DO_SUDOERS | boolean  | Create sudoer entries                       | `True`   | none    |
-| SUDOERS.USERS      | string[] | Discord User IDs to make sudoers            | `True`   | none    |
-| SUDOERS.GUILDS     | string[] | Discord Guild IDs for sudoer scope          | `True`   | none    |
+| Name               | Type      | Description                            | Required | Default |
+| ------------------ | --------- | -------------------------------------- | -------- | ------- |
+| DEPTH              | int       | Unused for now.                        | `True`   | none    |
+| DROP_DB            | boolean   | Wether to drop database before seeding | `True`   | none    |
+| WAIT_TO_DROP_DB    | boolean   | Wait for confirmation before dropping  | `False`  | `true`  |
+| SUDOERS.DO_SUDOERS | boolean   | Create sudoer entries                  | `True`   | none    |
+| SUDOERS.USERS      | string[ ] | Discord User IDs to make sudoers       | `True`   | none    |
+| SUDOERS.GUILDS     | string[ ] | Discord Guild IDs for sudoer scope     | `True`   | none    |

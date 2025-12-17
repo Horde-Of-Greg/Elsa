@@ -4,7 +4,7 @@
 
 ### Abstract Classes
 
-Abstract classes enforce implementation contracts. Extend them; the compiler tells you what to implement. Base classes handle shared behavior (lifecycle, error handling, logging).
+Abstract classes enforce implementation contracts. Extend them, the compiler tells you what to implement. Base classes handle shared behavior (lifecycle, error handling, logging).
 
 ### Lazy Singleton Containers
 
@@ -20,7 +20,7 @@ This allows for flexibility in testing, since not ALL the dependencies have to b
 
 ### Dependency Injection
 
-Services and other classes should accept dependencies as constructor parameters with defaults:
+Services and other classes should accept dependencies as constructor parameters, but can accept defaults:
 
 ```typescript
 class TagService {
@@ -41,7 +41,7 @@ const service = new TagService();
 const service = new TagService(mockTagRepo, mockUserRepo);
 ```
 
-Always use this pattern when a class depends on other services or repositories.
+Always use this pattern when a class depends on other services or repositories. The important part is we can inject mocks, this is why using defaults are fine, and a good junction between convenience and flexibility.
 
 ### Definition/Instance Split (Commands)
 

@@ -29,6 +29,16 @@ export type CommandParams = {
     };
 };
 
+export type CacheParams =
+    | {
+          useCache: true;
+          ttl_s: PositiveNumber;
+          clear: boolean;
+      }
+    | {
+          useCache: false;
+      };
+
 export type validCooldown = PositiveNumber | -1;
 
 export type RequirableParseResult = Exclude<keyof ParseResult, "command" | "server">;

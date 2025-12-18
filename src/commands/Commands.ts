@@ -33,7 +33,8 @@ class Commands {
         return (this._setRank ??= new CommandSetRankDef());
     }
 
-    getAll(): CommandDef<CommandInstance>[] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    getAll(): CommandDef<any, CommandInstance<any>>[] {
         return [this.add, this.help, this.tag, this.setRank];
     }
 }

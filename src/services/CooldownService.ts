@@ -1,26 +1,12 @@
 import { type Channel, Guild, type User } from "discord.js";
 
+import { type CooldownKey, redisKeys } from "../caching/keys";
 import type { RedisClient } from "../caching/RedisClient";
 import type { CommandParams } from "../commands/types";
 import type { CacheResolver } from "../core/containers/Cache";
 import { dependencies } from "../core/Dependencies";
 import { CooldownError } from "../core/errors/client/429";
-import { makeRedisKey, type RedisKey } from "../types/cache/redis";
 import { ensurePositive } from "../utils/numbers/positive";
-
-type Scope = "channel" | "guild";
-
-type CooldownParams = {
-    scope: Scope;
-    tagName: string;
-    authorId: string;
-    scopeId: string;
-};
-
-type CooldownKeyParams = {
-    key: RedisKey;
-    readonly scope: Scope;
-};
 
 export class CooldownService {
     private client: RedisClient;
@@ -35,25 +21,16 @@ export class CooldownService {
 
         if (cooldown_s <= 0) return;
 
-        const keyParams = this.makeCooldownKey({
+        const key: CooldownKey = redisKeys.cooldown({
             scope: scopeType,
             tagName: params.name,
             authorId: user.id,
             scopeId: scope.id,
         });
-        const result = await this.client.addBlankWithTTL(keyParams.key, ensurePositive(cooldown_s));
+        const result = await this.client.addBlankWithTTL(key, ensurePositive(cooldown_s));
         if (result === "OK") return;
 
-        const retryAfter_ms = await this.client.getRemainingTTL(keyParams.key);
+        const retryAfter_ms = await this.client.getRemainingTTL(key);
         throw new CooldownError(retryAfter_ms / 1000, user, params);
-    }
-
-    private makeCooldownKey(params: CooldownParams): CooldownKeyParams {
-        return {
-            key: makeRedisKey(
-                `cd:${params.scope.charAt(0)}:${params.tagName}:${params.authorId}:${params.scopeId}`,
-            ),
-            scope: params.scope,
-        };
     }
 }

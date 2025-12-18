@@ -1,3 +1,4 @@
+import { Cache } from "../caching/Cache";
 import { appConfig } from "../config/config";
 import type { ServicesResolver } from "../core/containers/Services";
 import { core } from "../core/Core";
@@ -10,21 +11,32 @@ import type { HostService } from "../services/HostService";
 import type { PermissionsService } from "../services/PermsService";
 import type { TagService } from "../services/TagService";
 import type { UserService } from "../services/UserService";
-import type { CommandContext, CommandParams, ParseResult, RequirableParseResult } from "../types/command";
+import type {
+    CacheParams,
+    CommandContext,
+    CommandParams,
+    ParseResult,
+    RequirableParseResult,
+} from "../types/command";
 import { dependencies } from "./../core/Dependencies";
 
-type CommandInstanceConstructor<TInstance extends CommandInstance> = new (
+type CommandInstanceConstructor<TReply, LInstance extends CommandInstance<TReply>> = new (
     context: CommandContext,
     parseResult: ParseResult,
+    cacheKey: string,
     params: CommandParams,
     services: ServicesResolver,
-) => TInstance;
+    cache: Cache<TReply> | undefined,
+    cacheParams: CacheParams,
+) => LInstance;
 
-export abstract class CommandDef<TInstance extends CommandInstance> {
+export abstract class CommandDef<TReply, LInstance extends CommandInstance<TReply>> {
     constructor(
         protected params: CommandParams,
-        private instanceConstructor: CommandInstanceConstructor<TInstance>,
+        private instanceConstructor: CommandInstanceConstructor<TReply, LInstance>,
+        private cacheParams: CacheParams,
         private services = dependencies.services,
+        private cacheProvider = dependencies.cache,
     ) {}
 
     /**
@@ -44,25 +56,46 @@ export abstract class CommandDef<TInstance extends CommandInstance> {
     /**
      * Create a new instance to execute this command.
      */
-    createInstance(context: CommandContext, parseResult: ParseResult): TInstance {
-        return new this.instanceConstructor(context, parseResult, this.params, this.services);
+    createInstance(context: CommandContext, parseResult: ParseResult, cacheKey: string): LInstance {
+        return new this.instanceConstructor(
+            context,
+            parseResult,
+            cacheKey,
+            this.params,
+            this.services,
+            this.cache,
+            this.cacheParams,
+        );
     }
+
+    cache: Cache<TReply> | undefined = this.cacheParams.useCache
+        ? new Cache(
+              `cmd-run:${this.params.name}`,
+              this.cacheParams.ttl_s,
+              this.cacheParams.clear,
+              this.cacheProvider.client,
+          )
+        : undefined;
 }
 
-export abstract class CommandInstance {
+export abstract class CommandInstance<TReply> {
     protected cooldownService: CooldownService;
     protected permsService: PermissionsService;
     protected hostService: HostService;
     protected tagService: TagService;
     protected userService: UserService;
+    protected content: TReply;
 
     protected timerKey: string = this.makeTimerKey();
 
     constructor(
         protected context: CommandContext,
         protected parseResult: ParseResult,
+        protected cacheKey: string,
         protected params: CommandParams,
         protected readonly services: ServicesResolver,
+        protected cache: Cache<TReply> | undefined,
+        protected cacheParams: CacheParams,
     ) {
         this.cooldownService = this.services.cooldownService;
         this.permsService = this.services.permsService;
@@ -77,7 +110,7 @@ export abstract class CommandInstance {
             await this.validateData();
             await this.validatePermissions();
             await this.checkCooldown();
-            await this.execute();
+            await this.getContent();
             await this.reply();
             this.logExecution();
         } catch (error: unknown) {
@@ -96,7 +129,7 @@ export abstract class CommandInstance {
     /**
      * Describe what the command should do.
      */
-    protected abstract execute(): Promise<void>;
+    protected abstract execute(): Promise<TReply>;
 
     /**
      * Describe how the command should reply to the user in discord.
@@ -107,6 +140,23 @@ export abstract class CommandInstance {
      * Describe what the command should log in the server logs. Can be left empty.
      */
     protected abstract logExecution(): void;
+
+    private async getContent(): Promise<void> {
+        if (!this.cache) {
+            await this.execute();
+            return;
+        }
+        let content = await this.cache.get(this.cacheKey);
+
+        if (!content) {
+            content = await this.execute();
+        } else {
+            core.logger.debug(`${this.params.name}: Cache Hit!`);
+        }
+
+        this.content = content;
+        await this.cache.set(this.cacheKey, this.content);
+    }
 
     /*
      * Inherited Helpers

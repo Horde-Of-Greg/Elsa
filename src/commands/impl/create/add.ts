@@ -6,7 +6,7 @@ import type { SHA256Hash } from "../../../types/crypto";
 import { ensurePositive } from "../../../utils/numbers/positive";
 import { CommandDef, CommandInstance } from "../../Command";
 
-export class CommandAddDef extends CommandDef<CommandAddInstance> {
+export class CommandAddDef extends CommandDef<void, CommandAddInstance> {
     constructor() {
         super(
             {
@@ -26,11 +26,14 @@ export class CommandAddDef extends CommandDef<CommandAddInstance> {
                 },
             },
             CommandAddInstance,
+            {
+                useCache: false,
+            },
         );
     }
 }
 
-class CommandAddInstance extends CommandInstance {
+class CommandAddInstance extends CommandInstance<void> {
     private tagName!: string;
     private tagBody!: string;
     private tagBodyHash!: SHA256Hash;

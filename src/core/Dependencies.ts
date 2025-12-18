@@ -9,7 +9,7 @@ class Dependencies {
     readonly discord: DiscordResolver;
     readonly services: ServicesResolver;
     readonly repositories: RepositoryResolver;
-    readonly cache: CacheContainer;
+    readonly cache: CacheResolver;
 
     constructor(
         cache: CacheResolver,

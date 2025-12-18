@@ -1,29 +1,36 @@
 import type { Message } from "discord.js";
 
+import { Cache } from "../caching/Cache";
 import { appConfig } from "../config/config";
+import { core } from "../core/Core";
 import type { CommandContext, ParseResult } from "../types/command";
 import type { CommandDef, CommandInstance } from "./Command";
 import { commands } from "./Commands";
 
 export class CommandRouter {
-    private commandList: CommandDef<CommandInstance>[];
-    private hashMap: Map<string, CommandDef<CommandInstance>>;
-    private matcher!: RegExp;
+    private commandList: CommandDef<unknown, CommandInstance<unknown>>[];
+    private hashMap: Map<string, CommandDef<unknown, CommandInstance<unknown>>>;
+    private _matcher?: RegExp;
+    private parseCache: Cache<ParseResult>;
 
     constructor() {
         this.commandList = commands.getAll();
         this.hashMap = new Map();
         this.buildHashMap();
+        this.parseCache = new Cache("cmd-parse", 3600, false);
     }
 
     async route(context: CommandContext): Promise<void> {
-        const parseResult = this.parse(context.message);
+        const cacheKey = this.buildCacheKey(context.message.content);
+        const parseResult = await this.tryCache(cacheKey, context.message);
         if (!parseResult) return;
+
+        await this.setCache(cacheKey, parseResult);
 
         const commandDef = this.hashMap.get(parseResult.command);
         if (!commandDef) return;
 
-        const instance = commandDef.createInstance(context, parseResult);
+        const instance = commandDef.createInstance(context, parseResult, cacheKey);
 
         await instance.run();
     }
@@ -37,18 +44,19 @@ export class CommandRouter {
         }
     }
 
-    private parse(message: Message): ParseResult | null {
-        const pattern = [
-            "^",
-            appConfig.PREFIX,
-            "([a-z0-9]+)",
-            "(?:-([a-z0-9]*))?",
-            "(?:\\s(\\w+))?",
-            "(?:\\s([\\w\\s]+))?",
-            "$",
-        ].join("");
+    private async tryCache(key: string, message: Message): Promise<ParseResult | null> {
+        let parseResult = await this.parseCache.get(key);
 
-        this.matcher = new RegExp(pattern, "i");
+        if (!parseResult) {
+            parseResult = this.parse(message);
+        } else {
+            core.logger.debug("Parse: Cache Hit!");
+        }
+
+        return parseResult;
+    }
+
+    private parse(message: Message): ParseResult | null {
         const parsed = message.content.match(this.matcher);
 
         if (!parsed) return null;
@@ -71,4 +79,26 @@ export class CommandRouter {
             args: parsed[4] ? parsed[4].split(/\s+/) : undefined,
         };
     }
+
+    private async setCache(key: string, parseResult: ParseResult) {
+        await this.parseCache.set(key, parseResult);
+    }
+
+    private buildCacheKey(content: string) {
+        return content.replace(/\s+/, ":");
+    }
+
+    private get matcher() {
+        return (this._matcher ??= new RegExp(CommandRouter.pattern, "i"));
+    }
+
+    private static pattern = [
+        "^",
+        appConfig.PREFIX,
+        "([a-z0-9]+)",
+        "(?:-([a-z0-9]*))?",
+        "(?:\\s(\\w+))?",
+        "(?:\\s([\\w\\s]+))?",
+        "$",
+    ].join("");
 }

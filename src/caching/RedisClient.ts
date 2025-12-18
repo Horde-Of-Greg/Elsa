@@ -1,8 +1,8 @@
-import { createClient, type RedisArgument, type RedisClientOptions } from "redis";
+import { createClient, type RedisArgument, type RedisClientOptions, type SetOptions } from "redis";
 
 import { env } from "../config/env";
-import type { RedisKey } from "../types/cache/redis";
 import type { PositiveNumber } from "../utils/numbers/positive";
+import type { RedisKey } from "./keys";
 
 export class RedisClient {
     private client: ReturnType<typeof createClient>;
@@ -15,8 +15,8 @@ export class RedisClient {
         await this.client.connect();
     }
 
-    async add(key: RedisKey, value: RedisArgument): Promise<void> {
-        await this.client.set(key, value);
+    async add(key: RedisKey, value: RedisArgument, options?: SetOptions): Promise<void> {
+        await this.client.set(key, value, options);
     }
 
     async addBlankWithTTL(key: RedisKey, TTL: PositiveNumber) {
@@ -27,8 +27,8 @@ export class RedisClient {
         return this.client.PTTL(key);
     }
 
-    async retrieve(key: RedisKey): Promise<void> {
-        await this.client.get(key);
+    async retrieve(key: RedisKey): Promise<string | null> {
+        return this.client.get(key);
     }
 
     private static defaultOptions: RedisClientOptions = {

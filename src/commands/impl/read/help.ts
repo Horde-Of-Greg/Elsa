@@ -1,13 +1,14 @@
-import { type APIEmbedField, EmbedBuilder } from "discord.js";
+import { type APIEmbedField, EmbedBuilder, type MessageReplyOptions } from "discord.js";
 
 import { EmbedColors } from "../../../assets/colors/colors";
 import { appConfig } from "../../../config/config";
 import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
+import { ensurePositive } from "../../../utils/numbers/positive";
 import { CommandDef, CommandInstance } from "../../Command";
 import { commands } from "../../Commands";
 
-export class CommandHelpDef extends CommandDef<CommandHelpInstance> {
+export class CommandHelpDef extends CommandDef<MessageReplyOptions, CommandHelpInstance> {
     constructor() {
         super(
             {
@@ -23,17 +24,22 @@ export class CommandHelpDef extends CommandDef<CommandHelpInstance> {
                 },
             },
             CommandHelpInstance,
+            {
+                useCache: true,
+                clear: true,
+                ttl_s: ensurePositive(3600 * 24),
+            },
         );
     }
 }
 
-class CommandHelpInstance extends CommandInstance {
+class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
     private commandDefs = commands.getAll();
     private message: APIEmbedField[] = [];
 
     protected async validateData(): Promise<void> {}
 
-    protected async execute(): Promise<void> {
+    protected async execute(): Promise<MessageReplyOptions> {
         for (const commandDef of this.commandDefs) {
             const params = commandDef.getParams();
 
@@ -49,13 +55,16 @@ class CommandHelpInstance extends CommandInstance {
                 Description: ${params.info.description}`,
             });
         }
-    }
-    protected async reply(): Promise<void> {
+
         const embed = new EmbedBuilder()
             .setTitle("Commands Usage")
             .setColor(EmbedColors.CYAN)
             .setFields(this.message);
-        await this.context.message.reply({ embeds: [embed] });
+
+        return { embeds: [embed] };
+    }
+    protected async reply(): Promise<void> {
+        await this.context.message.reply(this.content);
     }
     protected logExecution(): void {
         core.logger.debug(`Sent command ${this.params.name}`);

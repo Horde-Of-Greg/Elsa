@@ -1,23 +1,33 @@
+import type { CacheResolver } from "../core/containers/Cache";
 import { dependencies } from "../core/Dependencies";
 import { makeRedisKey } from "./keys";
-import type { RedisClient } from "./RedisClient";
 
 export class Cache<T = string> {
     constructor(
         private prefix: string,
         private ttl_s: number,
-        private clearOnShutdown: boolean,
-        private client: RedisClient = dependencies.cache.client,
-    ) {}
+        readonly clearOnRestart: boolean,
+        private resolver: CacheResolver = dependencies.cache,
+    ) {
+        this.resolver.registry.register(this);
+    }
 
     async get(key: string): Promise<T | null> {
-        const raw = await this.client.retrieve(makeRedisKey(`${this.prefix}:${key}`));
+        const raw = await this.resolver.client.retrieve(makeRedisKey(`${this.prefix}:${key}`));
         return raw !== null ? JSON.parse(raw) : null;
     }
 
     async set(key: string, value: T): Promise<void> {
-        await this.client.add(makeRedisKey(`${this.prefix}:${key}`), JSON.stringify(value), {
+        await this.resolver.client.add(makeRedisKey(`${this.prefix}:${key}`), JSON.stringify(value), {
             EX: this.ttl_s,
         });
+    }
+
+    async clear(): Promise<void> {
+        const keys = await this.resolver.client.getKeys(makeRedisKey(`${this.prefix}:*`));
+
+        if (keys.length > 0) {
+            await this.resolver.client.delete(keys);
+        }
     }
 }

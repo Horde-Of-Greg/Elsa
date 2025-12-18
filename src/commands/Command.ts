@@ -73,7 +73,7 @@ export abstract class CommandDef<TReply, LInstance extends CommandInstance<TRepl
               `cmd-run:${this.params.name}`,
               this.cacheParams.ttl_s,
               this.cacheParams.clear,
-              this.cacheProvider.client,
+              this.cacheProvider,
           )
         : undefined;
 }

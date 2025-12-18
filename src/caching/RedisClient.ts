@@ -19,6 +19,14 @@ export class RedisClient {
         await this.client.set(key, value, options);
     }
 
+    async delete(keys: RedisKey[]) {
+        await this.client.del(keys);
+    }
+
+    async getKeys(query: RedisKey): Promise<RedisKey[]> {
+        return (await this.client.keys(query)) as RedisKey[];
+    }
+
     async addBlankWithTTL(key: RedisKey, TTL: PositiveNumber) {
         return this.client.set(key, "1", { NX: true, EX: TTL });
     }
@@ -29,6 +37,10 @@ export class RedisClient {
 
     async retrieve(key: RedisKey): Promise<string | null> {
         return this.client.get(key);
+    }
+
+    async shutdown() {
+        this.client.destroy();
     }
 
     private static defaultOptions: RedisClientOptions = {

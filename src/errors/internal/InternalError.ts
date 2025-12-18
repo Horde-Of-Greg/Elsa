@@ -19,17 +19,17 @@ export abstract class InternalError extends AppError {
                     .addFields(
                         {
                             name: "Code",
-                            value: this.code,
+                            value: this.code ?? "UNKNOWN",
                             inline: true,
                         },
                         {
                             name: "Message",
-                            value: this.message,
+                            value: this.message || "No message provided",
                             inline: false,
                         },
                         {
                             name: "Trace",
-                            value: `\`\`\`${this.truncatedStack}\`\`\``,
+                            value: `\`\`\`${this.truncatedStack || "No stack"}\`\`\``,
                             inline: false,
                         },
                     ),

@@ -5,17 +5,13 @@ import { AppError } from "../errors/AppError";
 import { MissingArgumentError } from "../errors/client/400";
 import { ArgNotDefinedError, NoArgsDefinedError } from "../errors/internal/commands";
 import { UnknownInternalError } from "../errors/internal/InternalError";
+import type { CooldownService } from "../services/CooldownService";
 import type { HostService } from "../services/HostService";
 import type { PermissionsService } from "../services/PermsService";
 import type { TagService } from "../services/TagService";
 import type { UserService } from "../services/UserService";
 import type { CommandContext, CommandParams, ParseResult, RequirableParseResult } from "../types/command";
-import type { AppDate } from "../types/time/time";
 import { dependencies } from "./../core/Dependencies";
-
-//TODO: Use Redis for this.
-const channelCooldowns = new Map<string, AppDate>();
-const guildCooldowns = new Map<string, AppDate>();
 
 type CommandInstanceConstructor<TInstance extends CommandInstance> = new (
     context: CommandContext,
@@ -54,6 +50,7 @@ export abstract class CommandDef<TInstance extends CommandInstance> {
 }
 
 export abstract class CommandInstance {
+    protected cooldownService: CooldownService;
     protected permsService: PermissionsService;
     protected hostService: HostService;
     protected tagService: TagService;
@@ -67,6 +64,7 @@ export abstract class CommandInstance {
         protected params: CommandParams,
         protected readonly services: ServicesResolver,
     ) {
+        this.cooldownService = this.services.cooldownService;
         this.permsService = this.services.permsService;
         this.hostService = this.services.hostService;
         this.tagService = this.services.tagService;
@@ -78,10 +76,9 @@ export abstract class CommandInstance {
             core.startTimer(this.timerKey);
             await this.validateData();
             await this.validatePermissions();
-            this.checkCooldowns();
+            await this.checkCooldown();
             await this.execute();
             await this.reply();
-            this.updateCooldown();
             this.logExecution();
         } catch (error: unknown) {
             await this.replyError(error instanceof Error ? error : new Error(String(error)));
@@ -144,6 +141,11 @@ export abstract class CommandInstance {
     /*
      * Local Helpers
      */
+
+    private async checkCooldown(): Promise<void> {
+        await this.cooldownService.assertCooldownOk(this.context.author, this.context.guild, this.params);
+        await this.cooldownService.assertCooldownOk(this.context.author, this.context.channel, this.params);
+    }
 
     private makeTimerKey() {
         return `cmd:${this.context.message.id}`;

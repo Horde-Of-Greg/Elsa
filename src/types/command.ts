@@ -29,7 +29,7 @@ export type CommandParams = {
     };
 };
 
-export type validCooldown = PositiveNumber | "disabled";
+export type validCooldown = PositiveNumber | -1;
 
 export type RequirableParseResult = Exclude<keyof ParseResult, "command" | "server">;
 

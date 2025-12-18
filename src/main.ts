@@ -11,6 +11,7 @@ import { Start } from "./lifecycle/Start";
 async function main() {
     Start.initCore();
     core.logger.info(`Environment: ${env.ENVIRONMENT}`);
+    await Start.initCache();
     await Start.initDb();
     await Start.initBot();
     await Start.seed();

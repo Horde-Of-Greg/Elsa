@@ -3,23 +3,14 @@ import type { ServicesResolver } from "../core/containers/Services";
 import { core } from "../core/Core";
 import { AppError } from "../errors/AppError";
 import { MissingArgumentError } from "../errors/client/400";
-import { CooldownError } from "../errors/client/429";
 import { ArgNotDefinedError, NoArgsDefinedError } from "../errors/internal/commands";
 import { UnknownInternalError } from "../errors/internal/InternalError";
 import type { HostService } from "../services/HostService";
 import type { PermissionsService } from "../services/PermsService";
 import type { TagService } from "../services/TagService";
 import type { UserService } from "../services/UserService";
-import type {
-    CommandContext,
-    CommandParams,
-    CooldownKeys,
-    ParseResult,
-    RequirableParseResult,
-    validCooldown,
-} from "../types/command";
+import type { CommandContext, CommandParams, ParseResult, RequirableParseResult } from "../types/command";
 import type { AppDate } from "../types/time/time";
-import { getTimeNow } from "../utils/time";
 import { dependencies } from "./../core/Dependencies";
 
 //TODO: Use Redis for this.
@@ -69,7 +60,6 @@ export abstract class CommandInstance {
     protected userService: UserService;
 
     protected timerKey: string = this.makeTimerKey();
-    protected cooldownKeys: CooldownKeys = this.makeCooldownKey();
 
     constructor(
         protected context: CommandContext,
@@ -98,16 +88,6 @@ export abstract class CommandInstance {
         } finally {
             core.stopTimer(this.timerKey);
         }
-    }
-
-    private checkCooldowns(): void {
-        this.checkChannelCooldown();
-        this.checkGuildCooldown();
-    }
-
-    protected updateCooldown(): void {
-        channelCooldowns.set(this.cooldownKeys.channel, getTimeNow());
-        guildCooldowns.set(this.cooldownKeys.guild, getTimeNow());
     }
 
     /**
@@ -201,32 +181,5 @@ export abstract class CommandInstance {
 
         error.log();
         await this.context.message.reply(error.reply);
-    }
-
-    private makeCooldownKey(): CooldownKeys {
-        return {
-            channel: `${this.params.name}:${this.context.author.id}:${this.context.channel.id}`,
-            guild: `${this.params.name}:${this.context.author.id}:${this.context.guild.id}`,
-        };
-    }
-
-    private checkCooldown(cd_s: validCooldown, lastRan: AppDate | undefined): void {
-        if (cd_s === "disabled") return;
-        if (!lastRan) return;
-
-        const timeSinceLastCommand_ms = getTimeNow().getTime() - lastRan.getTime();
-        const timeSinceLastCommand_s = timeSinceLastCommand_ms / 1000;
-        const diff = cd_s - timeSinceLastCommand_s;
-        if (diff > 0) {
-            throw new CooldownError(diff, this.context.author, this.params);
-        }
-    }
-
-    private checkChannelCooldown(): void {
-        this.checkCooldown(this.params.cooldowns.channel, channelCooldowns.get(this.cooldownKeys.channel));
-    }
-
-    private checkGuildCooldown(): void {
-        this.checkCooldown(this.params.cooldowns.guild, guildCooldowns.get(this.cooldownKeys.guild));
     }
 }

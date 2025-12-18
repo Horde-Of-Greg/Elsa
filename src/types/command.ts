@@ -38,8 +38,3 @@ export type ArgumentDefinition = {
     required: boolean;
     parseResultKey: RequirableParseResult;
 };
-
-export type CooldownKeys = {
-    channel: string;
-    guild: string;
-};

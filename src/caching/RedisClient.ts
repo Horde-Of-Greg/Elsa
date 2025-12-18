@@ -20,11 +20,11 @@ export class RedisClient {
     }
 
     async addBlankWithTTL(key: RedisKey, TTL: PositiveNumber) {
-        return await this.client.set(key, "1", { NX: true, EX: TTL });
+        return this.client.set(key, "1", { NX: true, EX: TTL });
     }
 
     async getRemainingTTL(key: RedisKey) {
-        return await this.client.PTTL(key);
+        return this.client.PTTL(key);
     }
 
     async retrieve(key: RedisKey): Promise<void> {

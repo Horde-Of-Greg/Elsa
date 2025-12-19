@@ -5,6 +5,7 @@ import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { CommandDef, CommandInstance } from "../../Command";
 import { commands } from "../../Commands";
+import { EmbedColors } from "../../../assets/colors/colors";
 
 export class CommandHelpDef extends CommandDef<CommandHelpInstance> {
     constructor() {
@@ -52,7 +53,7 @@ class CommandHelpInstance extends CommandInstance {
     protected async reply(): Promise<void> {
         const embed = new EmbedBuilder()
             .setTitle("Commands Usage")
-            .setColor(0x00dbe2)
+            .setColor(EmbedColors.CYAN)
             .setFields(this.message);
         await this.context.message.reply({ embeds: [embed] });
     }

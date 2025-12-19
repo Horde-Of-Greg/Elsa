@@ -1,5 +1,6 @@
 import { type APIEmbedField, EmbedBuilder } from "discord.js";
 
+import { EmbedColors } from "../../../assets/colors/colors";
 import { appConfig } from "../../../config/config";
 import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
@@ -52,7 +53,7 @@ class CommandHelpInstance extends CommandInstance {
     protected async reply(): Promise<void> {
         const embed = new EmbedBuilder()
             .setTitle("Commands Usage")
-            .setColor(0x00dbe2)
+            .setColor(EmbedColors.CYAN)
             .setFields(this.message);
         await this.context.message.reply({ embeds: [embed] });
     }

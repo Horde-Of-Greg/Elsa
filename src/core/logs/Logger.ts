@@ -2,7 +2,7 @@ import { Console } from "console";
 
 import { AnsiFg, AnsiFgBright, AnsiStyle } from "../../assets/colors/ansi";
 import { env } from "../../config/env";
-import { getTimeNow } from "../../utils/time";
+import { getTimestampNow } from "../../utils/time";
 import { consoleContainer } from "./ConsoleContainer";
 import { LogLevel } from "./types";
 
@@ -66,7 +66,7 @@ export class Logger {
     }
 
     private format(level: LogLevel, message: string, color?: AnsiFg | AnsiFgBright): string {
-        const timestamp = getTimeNow().toISOString();
+        const timestamp = getTimestampNow();
         const newMessage = message[0].toUpperCase() + message.slice(1);
         return `${color !== undefined ? color : ""}[${timestamp}] [${LogLevel[level]}] ${newMessage}${color !== undefined ? AnsiStyle.RESET : ""}`;
     }

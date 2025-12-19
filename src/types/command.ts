@@ -1,7 +1,7 @@
 import type { Channel, Guild, Message, User } from "discord.js";
 
 import type { PermLevel } from "../db/entities/UserHost";
-import type { PositiveNumber } from "../types/numbers";
+import type { StrictPositiveNumber } from "../utils/numbers/positive";
 
 export type CommandContext = {
     message: Message;
@@ -32,14 +32,14 @@ export type CommandParams = {
 export type CacheParams =
     | {
           useCache: true;
-          ttl_s: PositiveNumber;
+          ttl_s: StrictPositiveNumber;
           clear: boolean;
       }
     | {
           useCache: false;
       };
 
-export type validCooldown = PositiveNumber | -1;
+export type validCooldown = StrictPositiveNumber | -1;
 
 export type RequirableParseResult = Exclude<keyof ParseResult, "command" | "server">;
 

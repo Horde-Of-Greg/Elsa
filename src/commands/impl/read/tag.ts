@@ -4,7 +4,7 @@ import { env } from "../../../config/env";
 import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { TagNotFoundError } from "../../../errors/client/404";
-import { ensurePositive } from "../../../utils/numbers/positive";
+import { ensureStrictPositive } from "../../../utils/numbers/positive";
 import { CommandDef, CommandInstance } from "../../Command";
 
 type tagReplyElements = {
@@ -38,7 +38,7 @@ export class CommandTagDef extends CommandDef<tagReplyElements, CommandTagInstan
             {
                 useCache: true,
                 clear: true,
-                ttl_s: ensurePositive(3600 * 3),
+                ttl_s: ensureStrictPositive(3600 * 3),
             },
         );
     }

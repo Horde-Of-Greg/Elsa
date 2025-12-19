@@ -1,11 +1,12 @@
 import type { CacheResolver } from "../core/containers/Cache";
 import { dependencies } from "../core/Dependencies";
+import type { StrictPositiveNumber } from "../utils/numbers/positive";
 import { makeRedisKey } from "./keys";
 
 export class Cache<T = string> {
     constructor(
         private prefix: string,
-        private ttl_s: number,
+        private ttl_s: StrictPositiveNumber,
         readonly clearOnRestart: boolean,
         private resolver: CacheResolver = dependencies.cache,
     ) {

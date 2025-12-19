@@ -4,7 +4,7 @@ import { EmbedColors } from "../../../assets/colors/colors";
 import { appConfig } from "../../../config/config";
 import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
-import { ensurePositive } from "../../../utils/numbers/positive";
+import { ensureStrictPositive } from "../../../utils/numbers/positive";
 import { CommandDef, CommandInstance } from "../../Command";
 import { commands } from "../../Commands";
 
@@ -27,7 +27,7 @@ export class CommandHelpDef extends CommandDef<MessageReplyOptions, CommandHelpI
             {
                 useCache: true,
                 clear: true,
-                ttl_s: ensurePositive(3600 * 24),
+                ttl_s: ensureStrictPositive(3600 * 24),
             },
         );
     }

@@ -4,6 +4,8 @@ import { Cache } from "../caching/Cache";
 import { appConfig } from "../config/config";
 import { core } from "../core/Core";
 import type { CommandContext, ParseResult } from "../types/command";
+import { computeSHA256 } from "../utils/crypto/sha256Hash";
+import { ensureStrictPositive } from "../utils/numbers/positive";
 import type { CommandDef, CommandInstance } from "./Command";
 import { commands } from "./Commands";
 
@@ -17,7 +19,7 @@ export class CommandRouter {
         this.commandList = commands.getAll();
         this.hashMap = new Map();
         this.buildHashMap();
-        this.parseCache = new Cache("cmd-parse", 3600, false);
+        this.parseCache = new Cache("cmd-parse", ensureStrictPositive(3600), false);
     }
 
     async route(context: CommandContext): Promise<void> {
@@ -85,7 +87,7 @@ export class CommandRouter {
     }
 
     private buildCacheKey(content: string) {
-        return content.replace(/\s+/, ":");
+        return computeSHA256(content).toString();
     }
 
     private get matcher() {

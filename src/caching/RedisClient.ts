@@ -1,6 +1,7 @@
 import { createClient, type RedisArgument, type RedisClientOptions, type SetOptions } from "redis";
 
 import { env } from "../config/env";
+import { core } from "../core/Core";
 import type { PositiveNumber } from "../utils/numbers/positive";
 import type { RedisKey } from "./keys";
 
@@ -8,6 +9,8 @@ export class RedisClient {
     private client: ReturnType<typeof createClient>;
 
     constructor(readonly options: RedisClientOptions = RedisClient.defaultOptions) {
+        this.client.on("error", (err) => core.logger.error("Redis error:", err));
+        this.client.on("connect", () => core.logger.info("Redis connected"));
         this.client = createClient(this.options);
     }
 
@@ -40,7 +43,7 @@ export class RedisClient {
     }
 
     async shutdown() {
-        this.client.destroy();
+        await this.client.quit();
     }
 
     private static defaultOptions: RedisClientOptions = {

@@ -19,7 +19,7 @@ export class CooldownService {
         const scopeType = scope instanceof Guild ? "guild" : "channel";
         const cooldown_s = params.cooldowns[scopeType];
 
-        if (cooldown_s <= 0) return;
+        if (cooldown_s < 0) return;
 
         const key: CooldownKey = redisKeys.cooldown({
             scope: scopeType,

@@ -1,11 +1,11 @@
 import { type APIEmbedField, EmbedBuilder } from "discord.js";
 
+import { EmbedColors } from "../../../assets/colors/colors";
 import { appConfig } from "../../../config/config";
 import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { CommandDef, CommandInstance } from "../../Command";
 import { commands } from "../../Commands";
-import { EmbedColors } from "../../../assets/colors/colors";
 
 export class CommandHelpDef extends CommandDef<CommandHelpInstance> {
     constructor() {

@@ -6,11 +6,3 @@ export enum LogLevel {
     ERROR = 4,
     FATAL = 5,
 }
-
-export interface LogEntry {
-    level: LogLevel;
-    message: string;
-    context?: Record<string, unknown>;
-    timestamp: Date;
-    formatted: string;
-}

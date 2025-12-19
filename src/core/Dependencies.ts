@@ -3,7 +3,7 @@ import { DiscordContainer, type DiscordResolver } from "./containers/Discord";
 import { RepositoryContainer, type RepositoryResolver } from "./containers/Repository";
 import { ServicesContainer, type ServicesResolver } from "./containers/Services";
 
-export class Dependencies {
+class Dependencies {
     readonly database: DatabaseResolver;
     readonly discord: DiscordResolver;
     readonly services: ServicesResolver;

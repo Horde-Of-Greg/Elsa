@@ -4,7 +4,7 @@ import { AnsiFg, AnsiFgBright, AnsiStyle } from "../../assets/colors/ansi";
 import { env } from "../../config/env";
 import { getTimestampNow } from "../../utils/time";
 import { consoleContainer } from "./ConsoleContainer";
-import { LogLevel } from "./types";
+import { LogLevel } from "../../types/logs";
 
 interface LogConfigs {
     trace: AnsiFgBright | AnsiFg;

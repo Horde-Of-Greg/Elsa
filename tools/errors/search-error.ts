@@ -1,8 +1,8 @@
 import fs from "fs";
 import path from "path";
 
-import { env } from "../../config/env";
-import { core } from "../../core/Core";
+import { env } from "../../src/config/env";
+import { core } from "../../src/core/Core";
 
 if (env.ENVIRONMENT !== "development") process.exit(1);
 const ARG: string | undefined = process.argv[2];

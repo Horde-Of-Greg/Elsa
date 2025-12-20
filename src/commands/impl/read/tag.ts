@@ -2,9 +2,9 @@ import { EmbedBuilder } from "discord.js";
 
 import { env } from "../../../config/env";
 import { core } from "../../../core/Core";
-import { TagNotFoundError } from "../../../core/errors/client/404";
 import type { TagTable } from "../../../db/entities/Tag";
 import { PermLevel } from "../../../db/entities/UserHost";
+import { TagNotFoundError } from "../../../errors/client/404";
 import { CommandDef, CommandInstance } from "../../Command";
 
 export class CommandTagDef extends CommandDef<CommandTagInstance> {

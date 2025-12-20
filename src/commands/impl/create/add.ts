@@ -1,7 +1,7 @@
 import { Emojis } from "../../../assets/emojis";
 import { core } from "../../../core/Core";
-import { TagBodyExistsError, TagExistsError } from "../../../core/errors/client/409";
 import { PermLevel } from "../../../db/entities/UserHost";
+import { TagBodyExistsError, TagExistsError } from "../../../errors/client/409";
 import type { SHA256Hash } from "../../../utils/crypto/sha256Hash";
 import { ensurePositive } from "../../../utils/numbers/positive";
 import { CommandDef, CommandInstance } from "../../Command";

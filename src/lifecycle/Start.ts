@@ -1,10 +1,10 @@
 import { seederConfig } from "../config/config";
 import { env } from "../config/env";
+import { core } from "../core/Core";
+import { dependencies } from "../core/Dependencies";
 import { Seeder } from "../db/seeding/Seeder";
-import { core } from "./Core";
-import { dependencies } from "./Dependencies";
 
-export const Events = {
+export const Start = {
     initCore() {
         core.startTimer("main");
         core.logger.info("Core Ready");

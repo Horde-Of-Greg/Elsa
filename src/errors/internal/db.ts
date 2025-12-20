@@ -1,4 +1,4 @@
-import type { ValidEntity } from "../../../db/types/entities";
+import type { ValidEntity } from "../../types/db/entities";
 import { InternalError } from "./InternalError";
 
 abstract class DatabaseError extends InternalError {

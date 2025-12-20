@@ -1,4 +1,4 @@
-import { NegativeNumberError } from "../../core/errors/internal/general";
+import { NegativeNumberError } from "../../errors/internal/general";
 
 export type PositiveNumber = number & { readonly __brand: "positive" };
 

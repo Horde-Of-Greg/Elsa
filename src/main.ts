@@ -5,15 +5,15 @@ import "./index";
 
 import { env } from "./config/env";
 import { core } from "./core/Core";
-import { Events } from "./core/Events";
-import { gracefulShutdown } from "./handlers/shutdown";
+import { gracefulShutdown } from "./lifecycle/shutdown";
+import { Start } from "./lifecycle/Start";
 
 async function main() {
-    Events.initCore();
+    Start.initCore();
     core.logger.info(`Environment: ${env.ENVIRONMENT}`);
-    await Events.initDb();
-    await Events.initBot();
-    await Events.seed();
+    await Start.initDb();
+    await Start.initBot();
+    await Start.seed();
     core.logger.info("App Ready!");
 }
 

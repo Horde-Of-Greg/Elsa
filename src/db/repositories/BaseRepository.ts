@@ -2,7 +2,7 @@ import type { DeepPartial, FindOptionsRelations, FindOptionsWhere, Repository } 
 
 import type { DatabaseResolver } from "../../core/containers/Database";
 import { dependencies } from "../../core/Dependencies";
-import type { ValidEntity } from "../types/entities";
+import type { ValidEntity } from "../../types/db/entities";
 
 //TODO: Add Transaction support.
 

@@ -1,7 +1,7 @@
 import type { Message, PartialMessage } from "discord.js";
 
-import type { CommandContext } from "../../types/command";
 import { core } from "../../core/Core";
+import type { CommandContext } from "../../types/command";
 import { DiscordEventHandler } from "../DiscordEventHandler";
 
 export class MessageEditHandler extends DiscordEventHandler<"messageUpdate"> {

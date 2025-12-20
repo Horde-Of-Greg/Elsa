@@ -1,5 +1,3 @@
-import "dotenv/appConfig";
-
 import { execSync } from "child_process";
 
 import { env } from "../../src/config/env";

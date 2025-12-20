@@ -4,6 +4,10 @@ on:
         branches:
             - main
 
+concurrency:
+    group: bump-${{ github.ref }}
+    cancel-in-progress: false
+
 jobs:
     bump:
         runs-on: ubuntu-latest
@@ -43,5 +47,6 @@ jobs:
             - name: Push Changes
               if: steps.commit-lint.outputs.bump-type != 'none'
               run: |
+                  git pull --rebase
                   git push
                   git push --tags

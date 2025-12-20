@@ -22,6 +22,10 @@ on:
             - ".prettierignore"
             - ".vscode/**"
 
+concurrency:
+    group: lint-check-${{ github.ref }}
+    cancel-in-progress: true
+
 jobs:
     lint:
         runs-on: ubuntu-latest

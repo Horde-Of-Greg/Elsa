@@ -2,7 +2,7 @@ import { Emojis } from "../../../assets/emojis";
 import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { TagBodyExistsError, TagExistsError } from "../../../errors/client/409";
-import type { SHA256Hash } from "../../../utils/crypto/sha256Hash";
+import type { SHA256Hash } from "../../../types/crypto";
 import { ensurePositive } from "../../../utils/numbers/positive";
 import { CommandDef, CommandInstance } from "../../Command";
 

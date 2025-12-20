@@ -1,7 +1,7 @@
 import { EmbedBuilder, type MessageReplyOptions, type User } from "discord.js";
 
 import { EmbedColors } from "../../assets/colors/colors";
-import { type CommandParams } from "../../commands/types";
+import { type CommandParams } from "../../types/command";
 import { core } from "../../core/Core";
 import { AppError } from "../AppError";
 

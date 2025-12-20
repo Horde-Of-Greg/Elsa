@@ -1,3 +1,6 @@
+import type { FileStream } from "../core/logs/streams/FileStream";
+import type { TerminalStream } from "../core/logs/streams/TerminalStream";
+
 export enum LogLevel {
     TRACE = 0,
     DEBUG = 1,
@@ -6,3 +9,8 @@ export enum LogLevel {
     ERROR = 4,
     FATAL = 5,
 }
+
+export type StreamsContainer = {
+    terminal: TerminalStream;
+    files: FileStream;
+};

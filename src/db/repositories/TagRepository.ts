@@ -1,4 +1,5 @@
-import type { SHA256Hash } from "../../utils/crypto/sha256Hash";
+import type { SHA256Hash } from "../../types/crypto";
+import type { TagElements, TagHostElements } from "../../types/db/repositories";
 import { CategoryTable } from "../entities/Category";
 import { CategoryTagTable } from "../entities/CategoryTag";
 import { HostTable } from "../entities/Host";
@@ -7,18 +8,6 @@ import { TagAliasTable } from "../entities/TagAlias";
 import { TagHostStatus, TagHostTable } from "../entities/TagHost";
 import { UserTable } from "../entities/User";
 import { BaseRepository } from "./BaseRepository";
-
-export type TagElements = {
-    name: string;
-    body: string;
-    bodyHash: SHA256Hash;
-    author: UserTable;
-};
-
-export type TagHostElements = {
-    host: HostTable;
-    status?: TagHostStatus;
-};
 
 export class TagRepository extends BaseRepository<TagTable> {
     constructor() {

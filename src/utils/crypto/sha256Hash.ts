@@ -1,9 +1,6 @@
 import { createHash } from "crypto";
 
-/**
- * Custom SHA256 type to make sure the buffer you give is SHA256
- */
-export type SHA256Hash = Buffer & { readonly type: "SHA256Hash" };
+import type { SHA256Hash } from "../../types/crypto";
 
 /**
  * Compute SHA-256 hash from a string.

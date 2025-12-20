@@ -1,4 +1,4 @@
-export type AppDate = Date;
+import type { AppDate } from "../types/time/time";
 
 /**
  * Get the timestamp using the Date class.

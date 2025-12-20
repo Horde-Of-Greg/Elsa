@@ -3,3 +3,5 @@ export type TimerResult = {
     adjusted: number;
     formatted: string;
 };
+
+export type TimeUnit = "micro" | "ms" | "s" | "m";

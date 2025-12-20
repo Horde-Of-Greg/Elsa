@@ -1,6 +1,6 @@
 import type { Message, PartialMessage } from "discord.js";
 
-import type { CommandContext } from "../../commands/types";
+import type { CommandContext } from "../../types/command";
 import { core } from "../../core/Core";
 import { DiscordEventHandler } from "../DiscordEventHandler";
 

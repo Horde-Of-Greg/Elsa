@@ -1,8 +1,0 @@
-# AI Assistant Instructions
-
-Read AI-POLICY.md before assisting.
-Do not:
-
-- Generate large code blocks at once without explaining the reasoning
-- Make changes outside of user's scope of understanding
-- Act autonomously

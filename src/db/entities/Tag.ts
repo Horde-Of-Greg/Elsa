@@ -1,6 +1,6 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-import { SHA256Hash } from "../../utils/crypto/sha256Hash";
+import { SHA256Hash } from "../../types/crypto";
 import { CategoryTagTable } from "./CategoryTag";
 import { TagAliasTable } from "./TagAlias";
 import { TagHostTable } from "./TagHost";

@@ -1,6 +1,4 @@
-import type { TimerResult } from "../types/time/Timer";
-
-type TimeUnit = "micro" | "ms" | "s" | "m";
+import type { TimerResult, TimeUnit } from "../types/time/timer";
 
 interface UnitConfig {
     label: string;

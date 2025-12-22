@@ -1,6 +1,5 @@
-import { NegativeNumberError } from "../../core/errors/internal/general";
-
-export type PositiveNumber = number & { readonly __brand: "positive" };
+import { NegativeNumberError } from "../../errors/internal/general";
+import type { PositiveNumber } from "../../types/numbers";
 
 export function ensurePositive(n: number): PositiveNumber {
     if (n <= 0) throw new NegativeNumberError();

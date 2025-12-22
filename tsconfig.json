@@ -11,5 +11,5 @@
         "emitDecoratorMetadata": true,
         "strictPropertyInitialization": false
     },
-    "exclude": ["*.config.*"]
+    "exclude": ["*.config.*", "node_modules", "dist", "tools"]
 }

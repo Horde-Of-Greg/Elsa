@@ -1,7 +1,7 @@
 import type { Channel, Guild, Message, User } from "discord.js";
 
 import type { PermLevel } from "../db/entities/UserHost";
-import type { PositiveNumber } from "../utils/numbers/positive";
+import type { PositiveNumber } from "../types/numbers";
 
 export type CommandContext = {
     message: Message;

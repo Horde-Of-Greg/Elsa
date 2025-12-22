@@ -4,15 +4,11 @@ import path from "path";
 
 import { appConfig } from "../../config/config";
 import { env } from "../../config/env";
+import type { StreamsContainer } from "../../types/logs";
 import { compressWithZstd } from "../../utils/compression/zstd";
 import { FileStream } from "./streams/FileStream";
 import { MultiStream } from "./streams/MultiStream";
 import { TerminalStream } from "./streams/TerminalStream";
-
-type StreamsContainer = {
-    terminal: TerminalStream;
-    files: FileStream;
-};
 
 class ConsoleContainer {
     private _infoStreams?: StreamsContainer;

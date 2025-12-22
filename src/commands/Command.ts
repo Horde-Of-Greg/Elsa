@@ -1,17 +1,15 @@
 import { appConfig } from "../config/config";
 import type { ServicesResolver } from "../core/containers/Services";
 import { core } from "../core/Core";
-import { AppError } from "../core/errors/AppError";
-import { MissingArgumentError } from "../core/errors/client/400";
-import { CooldownError } from "../core/errors/client/429";
-import { ArgNotDefinedError, NoArgsDefinedError } from "../core/errors/internal/commands";
-import { UnknownInternalError } from "../core/errors/internal/InternalError";
+import { AppError } from "../errors/AppError";
+import { MissingArgumentError } from "../errors/client/400";
+import { CooldownError } from "../errors/client/429";
+import { ArgNotDefinedError, NoArgsDefinedError } from "../errors/internal/commands";
+import { UnknownInternalError } from "../errors/internal/InternalError";
 import type { HostService } from "../services/HostService";
 import type { PermissionsService } from "../services/PermsService";
 import type { TagService } from "../services/TagService";
 import type { UserService } from "../services/UserService";
-import { type AppDate, getTimeNow } from "../utils/time";
-import { dependencies } from "./../core/Dependencies";
 import type {
     CommandContext,
     CommandParams,
@@ -19,7 +17,10 @@ import type {
     ParseResult,
     RequirableParseResult,
     validCooldown,
-} from "./types";
+} from "../types/command";
+import type { AppDate } from "../types/time/time";
+import { getTimeNow } from "../utils/time";
+import { dependencies } from "./../core/Dependencies";
 
 //TODO: Use Redis for this.
 const channelCooldowns = new Map<string, AppDate>();

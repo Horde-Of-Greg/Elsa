@@ -1,9 +1,7 @@
-import "dotenv/appConfig";
-
 import { execSync } from "child_process";
 import readline from "readline";
 
-import { core } from "../../core/Core";
+import { core } from "../../src/core/Core";
 
 const user = process.env.POSTGRES_USER;
 const host = process.env.POSTGRES_HOST;
@@ -19,7 +17,7 @@ const rl = readline.createInterface({
     output: process.stdout,
 });
 
-core.logger.warn(`WARNING: This will DELETE ALL DATA in database: ${db}`);
+core.logger.warn(`WARNING: This will DELETE database: ${db}`);
 rl.question("Are you sure you want to continue? (y/n): ", (answer) => {
     rl.close();
 
@@ -28,22 +26,15 @@ rl.question("Are you sure you want to continue? (y/n): ", (answer) => {
         process.exit(0);
     }
 
-    core.logger.info(`Resetting database: ${db}`);
+    core.logger.info(`Dropping database: ${db}`);
 
     try {
-        core.logger.info("Dropping existing database...");
         execSync(`psql -U ${user} -h ${host} -d postgres -c "DROP DATABASE IF EXISTS ${db}"`, {
             stdio: "inherit",
         });
-
-        core.logger.info("Creating new database...");
-        execSync(`psql -U ${user} -h ${host} -d postgres -c "CREATE DATABASE ${db}"`, {
-            stdio: "inherit",
-        });
-
-        core.logger.info("✓ Database reset successfully");
+        core.logger.info("✓ Database dropped successfully");
     } catch (error) {
-        core.logger.error("✗ Failed to reset database");
+        core.logger.error("✗ Failed to drop database");
         process.exit(1);
     }
 });

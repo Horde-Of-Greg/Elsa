@@ -1,7 +1,7 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
-import { requireActionsEnv } from "../../utils/github/actions";
+import { requireActionsEnv } from "../../src/utils/github/actions";
 import { typesRegex } from "./types";
 
 requireActionsEnv();

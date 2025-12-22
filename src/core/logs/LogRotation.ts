@@ -3,8 +3,8 @@ import path from "path";
 
 import { appConfig } from "../../config/config";
 import { env } from "../../config/env";
+import { ReaddirError } from "../../errors/internal/schedules";
 import { core } from "../Core";
-import { ReaddirError } from "../errors/internal/schedules";
 import { consoleContainer } from "./ConsoleContainer";
 
 export class LogRotation {

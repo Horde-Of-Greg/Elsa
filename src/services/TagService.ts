@@ -4,8 +4,10 @@ import type { RepositoryResolver } from "../core/containers/Repository";
 import type { ServicesResolver } from "../core/containers/Services";
 import { dependencies } from "../core/Dependencies";
 import type { TagTable } from "../db/entities/Tag";
-import type { TagElements, TagHostElements, TagRepository } from "../db/repositories/TagRepository";
-import { computeSHA256, type SHA256Hash } from "../utils/crypto/sha256Hash";
+import type { TagRepository } from "../db/repositories/TagRepository";
+import type { SHA256Hash } from "../types/crypto";
+import type { TagElements, TagHostElements } from "../types/db/repositories";
+import { computeSHA256 } from "../utils/crypto/sha256Hash";
 import type { HostService } from "./HostService";
 import type { UserService } from "./UserService";
 

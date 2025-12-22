@@ -6,17 +6,20 @@ export const EnvSchema = z
     .object({
         ENVIRONMENT: z.enum(["development", "test", "production", "actions"]).default("development"),
         DISCORD_TOKEN: z.string().refine(isDiscordToken, "Invalid DISCORD_TOKEN"),
-        POSTGRES_HOST: z.string().optional(),
+        POSTGRES_HOST: z.string().default("localhost"),
         POSTGRES_PORT: z.coerce.number().int().positive().default(5432),
         POSTGRES_DB: z.string().optional(),
         POSTGRES_USER: z.string().optional(),
         POSTGRES_PASSWORD: z.string().optional(),
+        REDIS_USERNAME: z.string().default("default"),
+        REDIS_PASSWORD: z.string().optional(),
+        REDIS_HOST: z.string().default("localhost"),
+        REDIS_PORT: z.coerce.number().int().positive().default(6379),
     })
     .refine(
         (data) => {
             if (data.ENVIRONMENT !== "actions") {
                 return Boolean(
-                    data.POSTGRES_HOST !== undefined &&
                     data.POSTGRES_DB !== undefined &&
                     data.POSTGRES_USER !== undefined &&
                     data.POSTGRES_PASSWORD !== undefined,
@@ -26,7 +29,19 @@ export const EnvSchema = z
         },
         {
             message: "Postgres credentials required for non-actions environments",
-            path: ["POSTGRES_HOST"],
+            path: ["POSTGRES_PASSWORD"],
+        },
+    )
+    .refine(
+        (data) => {
+            if (data.ENVIRONMENT !== "actions") {
+                return Boolean(data.REDIS_PASSWORD !== undefined);
+            }
+            return true;
+        },
+        {
+            message: "Redis credentials required for non-actions environments",
+            path: ["REDIS_PASSWORD"],
         },
     );
 

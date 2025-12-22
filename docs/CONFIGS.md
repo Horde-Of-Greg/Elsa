@@ -6,13 +6,17 @@
 | ----------------- | ------ | --------------------------- | --------------- | ------------- |
 | ENVIRONMENT       | enum   | Environment the app runs in | `False`         | `development` |
 | DISCORD_TOKEN     | string | Discord Token to use        | `True`          | none          |
-| POSTGRES_HOST     | string | Hostname/IP for postgres    | `True` (non-CI) | none          |
+| POSTGRES_HOST     | string | Hostname/IP for postgres    | `False`         | `localhost`   |
 | POSTGRES_PORT     | int    | Port to use for postgres    | `False`         | `5432`        |
 | POSTGRES_DB       | string | Database name               | `True` (non-CI) | none          |
 | POSTGRES_USER     | string | Database username           | `True` (non-CI) | none          |
 | POSTGRES_PASSWORD | string | Database password           | `True` (non-CI) | none          |
+| REDIS_USERNAME    | string | Redis username              | `False`         | `default`     |
+| REDIS_PASSWORD    | string | Redis password              | `True` (non-CI) | none          |
+| REDIS_HOST        | string | Hostname/IP for redis       | `False`         | `localhost`   |
+| REDIS_PORT        | int    | Port to use for redis       | `False`         | `6379`        |
 
-> **Note:** Postgres fields are not required when `ENVIRONMENT` is `actions`.
+> **Note:** Postgres and Redis fields are not required when `ENVIRONMENT` is `actions`.
 
 ### Environment Values
 

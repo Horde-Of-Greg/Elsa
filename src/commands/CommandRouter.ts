@@ -2,13 +2,14 @@ import type { Message } from "discord.js";
 
 import { appConfig } from "../config/config";
 import type { CommandContext, ParseResult } from "../types/command";
+import { computeSHA256 } from "../utils/crypto/sha256Hash";
 import type { CommandDef, CommandInstance } from "./Command";
 import { commands } from "./Commands";
 
 export class CommandRouter {
-    private commandList: CommandDef<CommandInstance>[];
-    private hashMap: Map<string, CommandDef<CommandInstance>>;
-    private matcher!: RegExp;
+    private commandList: CommandDef<unknown, CommandInstance<unknown>>[];
+    private hashMap: Map<string, CommandDef<unknown, CommandInstance<unknown>>>;
+    private _matcher?: RegExp;
 
     constructor() {
         this.commandList = commands.getAll();
@@ -17,13 +18,14 @@ export class CommandRouter {
     }
 
     async route(context: CommandContext): Promise<void> {
+        const cacheKey = this.buildCacheKey(context.message.content);
         const parseResult = this.parse(context.message);
         if (!parseResult) return;
 
         const commandDef = this.hashMap.get(parseResult.command);
         if (!commandDef) return;
 
-        const instance = commandDef.createInstance(context, parseResult);
+        const instance = commandDef.createInstance(context, parseResult, cacheKey);
 
         await instance.run();
     }
@@ -38,17 +40,6 @@ export class CommandRouter {
     }
 
     private parse(message: Message): ParseResult | null {
-        const pattern = [
-            "^",
-            appConfig.PREFIX,
-            "([a-z0-9]+)",
-            "(?:-([a-z0-9]*))?",
-            "(?:\\s(\\w+))?",
-            "(?:\\s([\\w\\s]+))?",
-            "$",
-        ].join("");
-
-        this.matcher = new RegExp(pattern, "i");
         const parsed = message.content.match(this.matcher);
 
         if (!parsed) return null;
@@ -71,4 +62,22 @@ export class CommandRouter {
             args: parsed[4] ? parsed[4].split(/\s+/) : undefined,
         };
     }
+
+    private buildCacheKey(content: string) {
+        return computeSHA256(content).toString();
+    }
+
+    private get matcher() {
+        return (this._matcher ??= new RegExp(CommandRouter.pattern, "i"));
+    }
+
+    private static pattern = [
+        "^",
+        appConfig.PREFIX,
+        "([a-z0-9]+)",
+        "(?:-([a-z0-9]*))?",
+        "(?:\\s(\\w+))?",
+        "(?:\\s([\\w\\s]+))?",
+        "$",
+    ].join("");
 }

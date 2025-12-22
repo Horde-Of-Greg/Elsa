@@ -10,6 +10,13 @@ export const Start = {
         core.logger.info("Core Ready");
     },
 
+    async initCache() {
+        await dependencies.cache.client.init();
+        core.logger.info("Cache Layer initialized");
+        await dependencies.cache.registry.clearAll();
+        core.logger.info("Cleared Caches");
+    },
+
     async initDb() {
         if (env.ENVIRONMENT === "actions") return;
         await dependencies.database.dataSource.initialize();

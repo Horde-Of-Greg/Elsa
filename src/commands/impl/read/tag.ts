@@ -2,12 +2,20 @@ import { EmbedBuilder } from "discord.js";
 
 import { env } from "../../../config/env";
 import { core } from "../../../core/Core";
-import type { TagTable } from "../../../db/entities/Tag";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { TagNotFoundError } from "../../../errors/client/404";
+import { ensureStrictPositive } from "../../../utils/numbers/positive";
 import { CommandDef, CommandInstance } from "../../Command";
 
-export class CommandTagDef extends CommandDef<CommandTagInstance> {
+type tagReplyElements = {
+    name: string;
+    body: string;
+    authorId_db: string;
+    authorId_dc: string;
+    authorName: string;
+};
+
+export class CommandTagDef extends CommandDef<tagReplyElements, CommandTagInstance> {
     constructor() {
         super(
             {
@@ -15,8 +23,8 @@ export class CommandTagDef extends CommandDef<CommandTagInstance> {
                 aliases: ["t"],
                 permLevelRequired: PermLevel.DEFAULT,
                 cooldowns: {
-                    channel: "disabled",
-                    guild: "disabled",
+                    channel: -1,
+                    guild: -1,
                 },
                 info: {
                     description: "Return the body of a tag stored in the database.",
@@ -27,12 +35,16 @@ export class CommandTagDef extends CommandDef<CommandTagInstance> {
                 },
             },
             CommandTagInstance,
+            {
+                useCache: true,
+                clear: true,
+                ttl_s: ensureStrictPositive(3600 * 3),
+            },
         );
     }
 }
 
-class CommandTagInstance extends CommandInstance {
-    private tag!: TagTable;
+class CommandTagInstance extends CommandInstance<tagReplyElements> {
     private tagName!: string;
     private tagArgs?: string[];
 
@@ -40,41 +52,47 @@ class CommandTagInstance extends CommandInstance {
         this.tagName = this.arg<string>("tag-name");
         this.tagArgs = this.arg<string[]>("tag-args");
     }
-    protected async execute(): Promise<void> {
+    protected async execute(): Promise<tagReplyElements> {
         const tag = await this.tagService.findTag(this.tagName);
         if (!tag) {
             throw new TagNotFoundError(this.tagName);
         }
-        this.tag = tag;
+        return {
+            name: tag.name,
+            body: tag.body,
+            authorId_db: tag.author.id.toString(),
+            authorId_dc: tag.author.discordId,
+            authorName: tag.author.name ?? "unknown",
+        };
     }
     protected async reply(): Promise<void> {
         if (env.ENVIRONMENT === "production") {
-            await this.context.message.reply(this.tag.body);
+            await this.context.message.reply(this.content.body);
         } else {
-            await this.context.message.reply({ embeds: [this.debugEmbed] });
+            await this.context.message.reply({ embeds: [this.debugEmbed()] });
         }
     }
     protected logExecution(): void {
-        core.logger.debug(`Sent tag ${this.tag.name}`);
+        core.logger.debug(`Sent tag ${this.content.name}`);
     }
 
-    private get debugEmbed(): EmbedBuilder {
+    private debugEmbed(): EmbedBuilder {
         return new EmbedBuilder()
             .setTitle("Tag Run Info")
             .addFields(
                 {
                     name: "Name",
-                    value: this.tag.name,
+                    value: this.content.name,
                 },
                 {
                     name: "Content",
-                    value: this.tag.body,
+                    value: this.content.body,
                 },
                 {
                     name: "Owner Info",
-                    value: `id_db: ${this.tag.author.id}
-                discordId: ${this.tag.author.discordId}
-                name: ${this.tag.author.name}`,
+                    value: `id_db: ${this.content.authorId_db}
+                discordId: ${this.content.authorId_dc}
+                name: ${this.content.authorName}`,
                 },
             )
             .setFooter({

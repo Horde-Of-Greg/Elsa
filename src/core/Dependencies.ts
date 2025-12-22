@@ -1,3 +1,4 @@
+import { CacheContainer, type CacheResolver } from "./containers/Cache";
 import { DatabaseContainer, type DatabaseResolver } from "./containers/Database";
 import { DiscordContainer, type DiscordResolver } from "./containers/Discord";
 import { RepositoryContainer, type RepositoryResolver } from "./containers/Repository";
@@ -8,13 +9,16 @@ class Dependencies {
     readonly discord: DiscordResolver;
     readonly services: ServicesResolver;
     readonly repositories: RepositoryResolver;
+    readonly cache: CacheResolver;
 
     constructor(
+        cache: CacheResolver,
         database: DatabaseResolver,
         discord: DiscordResolver,
         services: ServicesResolver,
         repositories: RepositoryResolver,
     ) {
+        this.cache = cache;
         this.database = database;
         this.discord = discord;
         this.services = services;
@@ -22,6 +26,7 @@ class Dependencies {
     }
 
     resetAll(): void {
+        this.cache.reset();
         this.database.reset();
         this.discord.reset();
         this.services.reset();
@@ -30,6 +35,7 @@ class Dependencies {
 }
 
 export const dependencies = new Dependencies(
+    new CacheContainer(),
     new DatabaseContainer(),
     new DiscordContainer(),
     new ServicesContainer(),

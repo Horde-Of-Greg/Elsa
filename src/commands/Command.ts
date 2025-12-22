@@ -1,43 +1,42 @@
+import { Cache } from "../caching/Cache";
 import { appConfig } from "../config/config";
 import type { ServicesResolver } from "../core/containers/Services";
 import { core } from "../core/Core";
 import { AppError } from "../errors/AppError";
 import { MissingArgumentError } from "../errors/client/400";
-import { CooldownError } from "../errors/client/429";
 import { ArgNotDefinedError, NoArgsDefinedError } from "../errors/internal/commands";
 import { UnknownInternalError } from "../errors/internal/InternalError";
+import type { CooldownService } from "../services/CooldownService";
 import type { HostService } from "../services/HostService";
 import type { PermissionsService } from "../services/PermsService";
 import type { TagService } from "../services/TagService";
 import type { UserService } from "../services/UserService";
 import type {
+    CacheParams,
     CommandContext,
     CommandParams,
-    CooldownKeys,
     ParseResult,
     RequirableParseResult,
-    validCooldown,
 } from "../types/command";
-import type { AppDate } from "../types/time/time";
-import { getTimeNow } from "../utils/time";
 import { dependencies } from "./../core/Dependencies";
 
-//TODO: Use Redis for this.
-const channelCooldowns = new Map<string, AppDate>();
-const guildCooldowns = new Map<string, AppDate>();
-
-type CommandInstanceConstructor<TInstance extends CommandInstance> = new (
+type CommandInstanceConstructor<TReply, LInstance extends CommandInstance<TReply>> = new (
     context: CommandContext,
     parseResult: ParseResult,
+    cacheKey: string,
     params: CommandParams,
     services: ServicesResolver,
-) => TInstance;
+    cache: Cache<TReply> | undefined,
+    cacheParams: CacheParams,
+) => LInstance;
 
-export abstract class CommandDef<TInstance extends CommandInstance> {
+export abstract class CommandDef<TReply, LInstance extends CommandInstance<TReply>> {
     constructor(
         protected params: CommandParams,
-        private instanceConstructor: CommandInstanceConstructor<TInstance>,
+        private instanceConstructor: CommandInstanceConstructor<TReply, LInstance>,
+        private cacheParams: CacheParams,
         private services = dependencies.services,
+        private cacheProvider = dependencies.cache,
     ) {}
 
     /**
@@ -57,26 +56,48 @@ export abstract class CommandDef<TInstance extends CommandInstance> {
     /**
      * Create a new instance to execute this command.
      */
-    createInstance(context: CommandContext, parseResult: ParseResult): TInstance {
-        return new this.instanceConstructor(context, parseResult, this.params, this.services);
+    createInstance(context: CommandContext, parseResult: ParseResult, cacheKey: string): LInstance {
+        return new this.instanceConstructor(
+            context,
+            parseResult,
+            cacheKey,
+            this.params,
+            this.services,
+            this.cache,
+            this.cacheParams,
+        );
     }
+
+    cache: Cache<TReply> | undefined = this.cacheParams.useCache
+        ? new Cache(
+              `cmd-run:${this.params.name}`,
+              this.cacheParams.ttl_s,
+              this.cacheParams.clear,
+              this.cacheProvider,
+          )
+        : undefined;
 }
 
-export abstract class CommandInstance {
+export abstract class CommandInstance<TReply> {
+    protected cooldownService: CooldownService;
     protected permsService: PermissionsService;
     protected hostService: HostService;
     protected tagService: TagService;
     protected userService: UserService;
+    protected content: TReply;
 
     protected timerKey: string = this.makeTimerKey();
-    protected cooldownKeys: CooldownKeys = this.makeCooldownKey();
 
     constructor(
         protected context: CommandContext,
         protected parseResult: ParseResult,
+        protected cacheKey: string,
         protected params: CommandParams,
         protected readonly services: ServicesResolver,
+        protected cache: Cache<TReply> | undefined,
+        protected cacheParams: CacheParams,
     ) {
+        this.cooldownService = this.services.cooldownService;
         this.permsService = this.services.permsService;
         this.hostService = this.services.hostService;
         this.tagService = this.services.tagService;
@@ -88,26 +109,15 @@ export abstract class CommandInstance {
             core.startTimer(this.timerKey);
             await this.validateData();
             await this.validatePermissions();
-            this.checkCooldowns();
-            await this.execute();
+            await this.checkCooldown();
+            await this.getContent();
             await this.reply();
-            this.updateCooldown();
             this.logExecution();
         } catch (error: unknown) {
             await this.replyError(error instanceof Error ? error : new Error(String(error)));
         } finally {
             core.stopTimer(this.timerKey);
         }
-    }
-
-    private checkCooldowns(): void {
-        this.checkChannelCooldown();
-        this.checkGuildCooldown();
-    }
-
-    protected updateCooldown(): void {
-        channelCooldowns.set(this.cooldownKeys.channel, getTimeNow());
-        guildCooldowns.set(this.cooldownKeys.guild, getTimeNow());
     }
 
     /**
@@ -119,7 +129,7 @@ export abstract class CommandInstance {
     /**
      * Describe what the command should do.
      */
-    protected abstract execute(): Promise<void>;
+    protected abstract execute(): Promise<TReply>;
 
     /**
      * Describe how the command should reply to the user in discord.
@@ -130,6 +140,23 @@ export abstract class CommandInstance {
      * Describe what the command should log in the server logs. Can be left empty.
      */
     protected abstract logExecution(): void;
+
+    private async getContent(): Promise<void> {
+        if (!this.cache) {
+            await this.execute();
+            return;
+        }
+        let content = await this.cache.get(this.cacheKey);
+
+        if (!content) {
+            content = await this.execute();
+        } else {
+            core.logger.debug(`${this.params.name}: Cache Hit!`);
+        }
+
+        this.content = content;
+        await this.cache.set(this.cacheKey, this.content);
+    }
 
     /*
      * Inherited Helpers
@@ -164,6 +191,11 @@ export abstract class CommandInstance {
     /*
      * Local Helpers
      */
+
+    private async checkCooldown(): Promise<void> {
+        await this.cooldownService.assertCooldownOk(this.context.author, this.context.guild, this.params);
+        await this.cooldownService.assertCooldownOk(this.context.author, this.context.channel, this.params);
+    }
 
     private makeTimerKey() {
         return `cmd:${this.context.message.id}`;
@@ -201,32 +233,5 @@ export abstract class CommandInstance {
 
         error.log();
         await this.context.message.reply(error.reply);
-    }
-
-    private makeCooldownKey(): CooldownKeys {
-        return {
-            channel: `${this.params.name}:${this.context.author.id}:${this.context.channel.id}`,
-            guild: `${this.params.name}:${this.context.author.id}:${this.context.guild.id}`,
-        };
-    }
-
-    private checkCooldown(cd_s: validCooldown, lastRan: AppDate | undefined): void {
-        if (cd_s === "disabled") return;
-        if (!lastRan) return;
-
-        const timeSinceLastCommand_ms = getTimeNow().getTime() - lastRan.getTime();
-        const timeSinceLastCommand_s = timeSinceLastCommand_ms / 1000;
-        const diff = cd_s - timeSinceLastCommand_s;
-        if (diff > 0) {
-            throw new CooldownError(diff, this.context.author, this.params);
-        }
-    }
-
-    private checkChannelCooldown(): void {
-        this.checkCooldown(this.params.cooldowns.channel, channelCooldowns.get(this.cooldownKeys.channel));
-    }
-
-    private checkGuildCooldown(): void {
-        this.checkCooldown(this.params.cooldowns.guild, guildCooldowns.get(this.cooldownKeys.guild));
     }
 }

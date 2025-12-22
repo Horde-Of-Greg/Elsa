@@ -33,8 +33,11 @@ class Commands {
         return (this._setRank ??= new CommandSetRankDef());
     }
 
-    getAll(): CommandDef<CommandInstance>[] {
-        return [this.add, this.help, this.tag, this.setRank];
+    getAll(): CommandDef<unknown, CommandInstance<unknown>>[] {
+        return [this.add, this.help, this.tag, this.setRank] as CommandDef<
+            unknown,
+            CommandInstance<unknown>
+        >[];
     }
 }
 

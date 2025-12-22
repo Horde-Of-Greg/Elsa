@@ -23,10 +23,13 @@ export async function gracefulShutdown(signal: string): Promise<void> {
     }, 10000);
 
     try {
-        console.log("Disconnecting Discord...");
+        console.log("Closing DB...");
         await dependencies.database.dataSource.destroy();
 
-        console.log("Closing DB...");
+        console.log("Disconnecting Redis...");
+        await dependencies.cache.client.shutdown();
+
+        console.log("Disconnecting Discord...");
         await dependencies.discord.bot.client.destroy();
 
         console.log("Flushing logs...");

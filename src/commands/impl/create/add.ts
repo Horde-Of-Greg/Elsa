@@ -3,10 +3,10 @@ import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { TagBodyExistsError, TagExistsError } from "../../../errors/client/409";
 import type { SHA256Hash } from "../../../types/crypto";
-import { ensurePositive } from "../../../utils/numbers/positive";
+import { ensureStrictPositive } from "../../../utils/numbers/positive";
 import { CommandDef, CommandInstance } from "../../Command";
 
-export class CommandAddDef extends CommandDef<CommandAddInstance> {
+export class CommandAddDef extends CommandDef<void, CommandAddInstance> {
     constructor() {
         super(
             {
@@ -14,8 +14,8 @@ export class CommandAddDef extends CommandDef<CommandAddInstance> {
                 aliases: ["a"],
                 permLevelRequired: PermLevel.DEFAULT,
                 cooldowns: {
-                    channel: ensurePositive(5),
-                    guild: ensurePositive(5),
+                    channel: ensureStrictPositive(5),
+                    guild: ensureStrictPositive(5),
                 },
                 info: {
                     description: "Adds a new command to the database",
@@ -26,11 +26,14 @@ export class CommandAddDef extends CommandDef<CommandAddInstance> {
                 },
             },
             CommandAddInstance,
+            {
+                useCache: false,
+            },
         );
     }
 }
 
-class CommandAddInstance extends CommandInstance {
+class CommandAddInstance extends CommandInstance<void> {
     private tagName!: string;
     private tagBody!: string;
     private tagBodyHash!: SHA256Hash;

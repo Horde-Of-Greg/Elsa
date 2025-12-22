@@ -9,9 +9,9 @@ export class RedisClient {
     private client: ReturnType<typeof createClient>;
 
     constructor(readonly options: RedisClientOptions = RedisClient.defaultOptions) {
+        this.client = createClient(this.options);
         this.client.on("error", (err) => core.logger.error("Redis error:", err));
         this.client.on("connect", () => core.logger.info("Redis connected"));
-        this.client = createClient(this.options);
     }
 
     async init() {

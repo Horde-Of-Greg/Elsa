@@ -1,14 +1,9 @@
 import { Emojis } from "../../../assets/emojis";
 import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
-<<<<<<< HEAD
 import { TagBodyExistsError, TagExistsError } from "../../../errors/client/409";
 import type { SHA256Hash } from "../../../types/crypto";
-import { ensurePositive } from "../../../utils/numbers/positive";
-=======
-import type { SHA256Hash } from "../../../utils/crypto/sha256Hash";
 import { ensureStrictPositive } from "../../../utils/numbers/positive";
->>>>>>> e2fd50f (add docs cause there's a ton of keys)
 import { CommandDef, CommandInstance } from "../../Command";
 
 export class CommandAddDef extends CommandDef<void, CommandAddInstance> {

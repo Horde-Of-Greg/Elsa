@@ -2,10 +2,10 @@ import { type Channel, Guild, type User } from "discord.js";
 
 import { type CooldownKey, redisKeys } from "../caching/keys";
 import type { RedisClient } from "../caching/RedisClient";
-import type { CommandParams } from "../commands/types";
 import type { CacheResolver } from "../core/containers/Cache";
 import { dependencies } from "../core/Dependencies";
-import { CooldownError } from "../core/errors/client/429";
+import { CooldownError } from "../errors/client/429";
+import type { CommandParams } from "../types/command";
 import { ensurePositive } from "../utils/numbers/positive";
 
 export class CooldownService {

@@ -2,7 +2,7 @@ import { createClient, type RedisArgument, type RedisClientOptions, type SetOpti
 
 import { env } from "../config/env";
 import { core } from "../core/Core";
-import type { PositiveNumber } from "../utils/numbers/positive";
+import type { PositiveNumber } from "../types/numbers";
 import type { RedisKey } from "./keys";
 
 export class RedisClient {

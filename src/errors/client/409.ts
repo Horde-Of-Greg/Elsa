@@ -37,9 +37,10 @@ export class TagBodyExistsError extends AppError {
         readonly tagName: string,
         readonly tagBody: string,
         readonly existingTag: TagTable,
+        readonly type: "edit"|"add"
     ) {
         super(
-            `Tag \`${existingTag.name}\` already has the same body. We don't allow duplicate tags for now.`,
+            type === "edit" ? `Tag ${existingTag.name} already contains this same body` : `Tag \`${existingTag.name}\` already has the same body. We don't allow duplicate tags for now.`,
             { tagBody },
         );
     }
@@ -51,7 +52,7 @@ export class TagBodyExistsError extends AppError {
                     .setTitle("Tag body duplicate")
                     .setColor(EmbedColors.YELLOW)
                     .setDescription(
-                        `Cannot add tag ${this.tagName} as it contains the same body as tag: ${this.existingTag.name}. Please use !alias instead.`,
+                        this.type === "edit" ? `Cannot edit tag ${this.tagName} as it already contains the same body.` : `Cannot add tag ${this.tagName} as it contains the same body as tag: ${this.existingTag.name}. Please use !alias instead.`,
                     ),
             ],
         };

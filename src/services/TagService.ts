@@ -5,6 +5,7 @@ import type { ServicesResolver } from "../core/containers/Services";
 import { dependencies } from "../core/Dependencies";
 import type { TagTable } from "../db/entities/Tag";
 import type { TagRepository } from "../db/repositories/TagRepository";
+import { TagNotFoundError } from "../errors/client/404";
 import type { SHA256Hash } from "../types/crypto";
 import type { TagElements, TagHostElements } from "../types/db/repositories";
 import { computeSHA256 } from "../utils/crypto/sha256Hash";
@@ -46,6 +47,16 @@ export class TagService {
         };
 
         return this.tagRepo.createAndSaveTag(elements, hostStatus);
+    }
+
+    async updateTag(context: { tagName: string; tagBody: string; tagBodyHash: SHA256Hash }) {
+        const tag = await this.tagRepo.findByNameOrAlias(context.tagName);
+        if (!tag) {
+            throw new TagNotFoundError(context.tagName);
+        }
+        tag.body = context.tagBody;
+        tag.bodyHash = context.tagBodyHash;
+        return this.tagRepo.forceUpdateOne(tag);
     }
 
     async tagExists(name: string): Promise<boolean> {

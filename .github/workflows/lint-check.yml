@@ -24,7 +24,7 @@ on:
 
 concurrency:
     group: lint-check-${{ github.ref }}
-    cancel-in-progress: true
+    cancel-in-progress: false
 
 jobs:
     lint:

@@ -1,6 +1,7 @@
 import type { CommandDef, CommandInstance } from "./Command";
 import { CommandAddDef } from "./impl/create/add";
 import { CommandHelpDef } from "./impl/read/help";
+import { CommandPingDef } from "./impl/read/ping";
 import { CommandTagDef } from "./impl/read/tag";
 import { CommandEditDef } from "./impl/update/edit";
 import { CommandSetRankDef } from "./impl/update/setrank";
@@ -13,6 +14,7 @@ class Commands {
 
     // Read
     private _list?: CommandHelpDef;
+    private _ping?: CommandPingDef;
     private _tag?: CommandTagDef;
 
     // Update
@@ -25,6 +27,10 @@ class Commands {
 
     get help(): CommandHelpDef {
         return (this._list ??= new CommandHelpDef());
+    }
+
+    get ping(): CommandPingDef {
+        return (this._ping ??= new CommandPingDef());
     }
 
     get tag(): CommandTagDef {
@@ -40,7 +46,7 @@ class Commands {
     }
 
     getAll(): CommandDef<unknown, CommandInstance<unknown>>[] {
-        return [this.add, this.help, this.tag, this.edit, this.setRank] as CommandDef<
+        return [this.add, this.help, this.ping, this.tag, this.edit, this.setRank] as CommandDef<
             unknown,
             CommandInstance<unknown>
         >[];

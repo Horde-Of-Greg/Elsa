@@ -1,7 +1,7 @@
 {
     "name": "elsa",
     "version": "0.2.0",
-    "main": "dist/index.js",
+    "main": "dist/main.js",
     "scripts": {
         "build": "tsc",
         "start": "node dist/main.js",
@@ -21,7 +21,9 @@
         "actions:lint-pr": "ts-node tools/versioning/pr-lint.ts",
         "actions:lint-commit": "ts-node tools/versioning/commit-lint.ts",
         "tools:search-error": "ts-node tools/errors/search-error.ts",
-        "tools:update-configs": "ts-node tools/updating/update-configs.ts"
+        "production:update-configs": "ts-node tools/updating/update-configs.ts",
+        "production:pull": "./tools/production/pull.sh",
+        "production:start": "./tools/production/start.sh"
     },
     "dependencies": {
         "@actions/core": "^2.0.1",

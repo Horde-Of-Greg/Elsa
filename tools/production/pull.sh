@@ -8,11 +8,11 @@ git fetch origin
 git checkout main
 echo "WARNING: Resetting to origin/main, local changes will be lost. Ctrl + C to cancel."
 echo "Resetting in 3..."
-sleep(1000)
+sleep 1
 echo "2..."
-sleep(1000)
+sleep 1
 echo "1..."
-sleep(1000)
+sleep 1
 git reset --hard origin/main
 
 echo "Installing dependencies..."

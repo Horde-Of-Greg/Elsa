@@ -1,9 +1,7 @@
-const hereVersion = process.version;
-const thereVersion = fetchLatestRemoteTag();
-
+/* eslint-disable no-console */
 async function check() {
     const hereVersion = process.version;
-    const thereVersion = await fetchLatestRemoteTag();
+    const thereVersion = (await fetchLatestRemoteTag()).replace(/^v/, "");
     if (hereVersion === thereVersion) {
         process.exit(0);
     }
@@ -15,3 +13,8 @@ async function fetchLatestRemoteTag(): Promise<string> {
     const tags = await response.json();
     return tags[0].name;
 }
+
+check().catch((err) => {
+    console.error("Failed to check version:", err);
+    process.exit(2); // Different exit code for errors vs "needs update"
+});

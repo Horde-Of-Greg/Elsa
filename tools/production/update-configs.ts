@@ -5,6 +5,7 @@ import fs from "fs";
 import path from "path";
 
 const ROOT_DIR = process.cwd();
+let missingKeys = false;
 dotenv.config();
 
 function recursiveScan(dir: string) {
@@ -12,20 +13,12 @@ function recursiveScan(dir: string) {
         const child_path = path.join(dir, dir_child);
         const child_stats = fs.statSync(child_path);
         if (child_stats.isDirectory()) {
-            switch (child_path) {
-                case "src":
-                case "docs":
-                case "logs":
-                case "tools":
-                case ".github":
-                case "node_modules":
-                case ".git":
-                    continue;
-
-                default:
-                    recursiveScan(child_path);
-                    break;
+            const skipDirs = ["src", "docs", "logs", "tools", ".github", "node_modules", ".git"];
+            if (skipDirs.includes(dir_child)) {
+                continue;
             }
+
+            recursiveScan(child_path);
         }
         const match = dir_child.match(/^(?:\w+)?.(\w+).template$/);
         if (!match) continue;
@@ -56,7 +49,8 @@ function scanEnv(templateFileName: string) {
         if (!match) continue;
         const lineKey = match[1];
         if (productionEnv[lineKey] === undefined) {
-            console.warn(`Please set the value of ${lineKey} in .env`);
+            console.error(`Please set the value of ${lineKey} in .env`);
+            missingKeys = true;
         }
     }
 }
@@ -106,3 +100,6 @@ function scanJsonRecursive(production: Record<string, unknown>, template: object
 }
 
 recursiveScan(ROOT_DIR);
+if (missingKeys) {
+    process.exit(1);
+}

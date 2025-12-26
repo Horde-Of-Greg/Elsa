@@ -24,6 +24,10 @@ export class Cache<T = string> {
         });
     }
 
+    async delete(key: string): Promise<void> {
+        await this.resolver.client.delete([makeRedisKey(`${this.prefix}:${key}`)]);
+    }
+
     async clear(): Promise<void> {
         const keys = await this.resolver.client.getKeys(makeRedisKey(`${this.prefix}:*`));
 

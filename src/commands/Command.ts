@@ -76,6 +76,11 @@ export abstract class CommandDef<TReply, LInstance extends CommandInstance<TRepl
               this.cacheProvider,
           )
         : undefined;
+
+    async invalidateCache() {
+        if (!this.cache) return;
+        await this.cache.clear();
+    }
 }
 
 export abstract class CommandInstance<TReply> {

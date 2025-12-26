@@ -22,6 +22,9 @@ export async function gracefulShutdown(signal: string): Promise<void> {
     }, 10000);
 
     try {
+        console.log("Clearing caches...");
+        await dependencies.cache.registry.clearAll();
+
         console.log("Closing DB...");
         await dependencies.database.dataSource.destroy();
 

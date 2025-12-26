@@ -1,11 +1,8 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
-import { requireActionsEnv } from "../../src/utils/github/actions";
 import { getCommitMessage } from "../../src/utils/github/octokit";
 import { type AcceptedBump, type AcceptedType, typesRegex } from "./types";
-
-requireActionsEnv();
 
 const outputName = "bump-type";
 

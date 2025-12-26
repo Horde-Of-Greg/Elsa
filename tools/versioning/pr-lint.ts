@@ -1,10 +1,7 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
-import { requireActionsEnv } from "../../src/utils/github/actions";
 import { typesRegex } from "./types";
-
-requireActionsEnv();
 
 async function main() {
     try {

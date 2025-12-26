@@ -13,7 +13,7 @@ export class CommandHelpDef extends CommandDef<MessageReplyOptions, CommandHelpI
         super(
             {
                 name: "help",
-                aliases: ["h", "help", "info"],
+                aliases: ["h", "info"],
                 permLevelRequired: PermLevel.DEFAULT,
                 cooldowns: {
                     channel: -1,

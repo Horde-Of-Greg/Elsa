@@ -73,7 +73,7 @@ export class CommandRouter {
 
     private static pattern = [
         "^",
-        appConfig.PREFIX,
+        `\\${appConfig.PREFIX}`,
         "([a-z0-9]+)",
         "(?:-([a-z0-9]*))?",
         "(?:\\s(\\w+))?",

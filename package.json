@@ -22,7 +22,10 @@
         "actions:lint-commit": "ts-node tools/versioning/commit-lint.ts",
         "tools:search-error": "ts-node tools/errors/search-error.ts",
         "production:update-configs": "ts-node tools/production/update-configs.ts",
-        "production:pull": "./tools/production/pull.sh"
+        "production:pull": "./tools/production/pull.sh",
+        "migration:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate InitialSchema -d src/db/dataSource.ts",
+        "migration:run": "typeorm migration:run -d dist/db/dataSource.js",
+        "migration:revert": "typeorm migration:revert -d dist/db/dataSource.js"
     },
     "dependencies": {
         "@actions/core": "^2.0.1",

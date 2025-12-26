@@ -1,10 +1,11 @@
 import { execSync } from "child_process";
 
+import { env } from "../../src/config/env";
 import { core } from "../../src/core/Core";
 
-const user = process.env.POSTGRES_USER;
-const host = process.env.POSTGRES_HOST;
-const db = process.env.POSTGRES_DB;
+const user = env.POSTGRES_USER;
+const host = env.POSTGRES_HOST;
+const db = env.POSTGRES_DB;
 
 core.logger.info(`Connecting to database: ${db}`);
 

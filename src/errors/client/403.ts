@@ -2,6 +2,7 @@ import { EmbedBuilder, type MessageReplyOptions } from "discord.js";
 
 import { EmbedColors } from "../../assets/colors/colors";
 import { core } from "../../core/Core";
+import type { TagTable } from "../../db/entities/Tag";
 import type { UserTable } from "../../db/entities/User";
 import { PermLevel } from "../../db/entities/UserHost";
 import { AppError } from "../AppError";
@@ -45,5 +46,45 @@ export class PermissionDeniedError extends AppError {
                 PermLevel[this.requiredLevel]
             } action with ${PermLevel[this.userLevel]} perms.`,
         );
+    }
+}
+
+export class NotOwnerError extends AppError {
+    readonly code = "NOT_OWNER";
+    readonly httpStatus = 403;
+
+    constructor(
+        readonly owner: UserTable,
+        readonly user: UserTable,
+        readonly tag: TagTable,
+    ) {
+        super(`You do not own this tag. This tag belongs to ${owner.id}`, {
+            owner,
+            user,
+            tag,
+        });
+    }
+
+    get reply(): MessageReplyOptions {
+        return {
+            embeds: [
+                new EmbedBuilder()
+                    .setTitle("Not Owner")
+                    .setColor(EmbedColors.RED)
+                    .setDescription("You do not own this tag. You can only edit the tags you own.")
+                    .setFooter({
+                        //prettier-ignore
+                        text: `tag owner: <@${this.owner.discordId}>`,
+                    }),
+            ],
+        };
+    }
+
+    log(): void {
+        core.logger.warn(
+            `User ${this.user.name !== null ? this.user.name : "Unknown"} tried to edit tag ${this.tag.name}, but it did not belong to them.`,
+        );
+        core.logger.debug("owner id:", this.owner.id);
+        core.logger.debug("user id:", this.user.id);
     }
 }

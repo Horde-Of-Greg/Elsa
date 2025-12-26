@@ -1,6 +1,8 @@
 import { Emojis } from "../../../assets/emojis";
 import { core } from "../../../core/Core";
+import type { TagTable } from "../../../db/entities/Tag";
 import { PermLevel } from "../../../db/entities/UserHost";
+import { NotOwnerError } from "../../../errors/client/403";
 import { TagNotFoundError } from "../../../errors/client/404";
 import { TagBodyExistsError } from "../../../errors/client/409";
 import type { SHA256Hash } from "../../../types/crypto";
@@ -39,6 +41,7 @@ export class CommandEditInstance extends CommandInstance<void> {
     private tagName!: string;
     private newTagBody!: string;
     private tagBodyHash!: SHA256Hash;
+    private tag!: TagTable;
 
     protected async validateData(): Promise<void> {
         this.tagName = this.arg<string>("tag-name");
@@ -48,6 +51,7 @@ export class CommandEditInstance extends CommandInstance<void> {
 
         await this.ensureTagNameExists();
         await this.ensureUniqueBody();
+        await this.ensureOwner();
     }
 
     protected async execute(): Promise<void> {
@@ -72,10 +76,11 @@ export class CommandEditInstance extends CommandInstance<void> {
      */
 
     private async ensureTagNameExists() {
-        const candidate = await this.tagService.findTag(this.tagName);
-        if (!candidate) {
+        const tag = await this.tagService.findTag(this.tagName);
+        if (!tag) {
             throw new TagNotFoundError(this.tagName);
         }
+        this.tag = tag;
     }
 
     private async ensureUniqueBody() {
@@ -88,6 +93,13 @@ export class CommandEditInstance extends CommandInstance<void> {
             throw new TagBodyExistsError(this.tagName, this.newTagBody, hashContext.tagWithBody, "add");
         }
         this.tagBodyHash = hashContext.hash;
+    }
+
+    private async ensureOwner() {
+        const user = await this.userService.findOrCreateUser(this.context.author);
+        if (this.tag.author.discordId !== this.context.author.id) {
+            throw new NotOwnerError(this.tag.author, user, this.tag);
+        }
     }
 
     private async invalidateCache() {

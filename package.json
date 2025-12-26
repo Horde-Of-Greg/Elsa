@@ -21,7 +21,7 @@
         "actions:lint-pr": "ts-node tools/versioning/pr-lint.ts",
         "actions:lint-commit": "ts-node tools/versioning/commit-lint.ts",
         "tools:search-error": "ts-node tools/errors/search-error.ts",
-        "production:update-configs": "ts-node tools/updating/update-configs.ts",
+        "production:update-configs": "ts-node tools/production/update-configs.ts",
         "production:pull": "./tools/production/pull.sh"
     },
     "dependencies": {

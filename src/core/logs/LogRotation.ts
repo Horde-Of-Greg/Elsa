@@ -2,7 +2,6 @@ import fs from "fs";
 import path from "path";
 
 import { appConfig } from "../../config/config";
-import { env } from "../../config/env";
 import { ReaddirError } from "../../errors/internal/schedules";
 import { core } from "../Core";
 import { consoleContainer } from "./ConsoleContainer";
@@ -15,7 +14,7 @@ export class LogRotation {
     private readonly maxTotalSizeBytes = 25 * 1024 * 1024;
 
     async main(): Promise<void> {
-        if (env.ENVIRONMENT !== "production") return;
+        if (process.env.NODE_ENV !== "production") return;
         try {
             this.files = await fs.promises.readdir(this.dir);
             for (const file of this.files) {

@@ -9,3 +9,6 @@ config/*.json
 
 # Logs
 /logs/
+
+# pm2 configs (to allow overriding)
+ecosystem.config.js

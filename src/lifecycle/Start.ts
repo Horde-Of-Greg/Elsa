@@ -18,20 +18,20 @@ export const Start = {
     },
 
     async initDb() {
-        if (env.ENVIRONMENT === "actions") return;
+        if (process.env.NODE_ENV === "actions") return;
         await dependencies.database.dataSource.initialize();
         core.logger.info("Database initialized");
     },
 
     async initBot() {
-        if (env.ENVIRONMENT === "actions") return;
+        if (process.env.NODE_ENV === "actions") return;
         await dependencies.discord.bot.login(env.DISCORD_TOKEN);
 
         core.logger.info("Bot initialized");
     },
 
     async seed() {
-        if (env.ENVIRONMENT === "production" || env.ENVIRONMENT === "actions") return;
+        if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "actions") return;
         const seeder = new Seeder(seederConfig);
         await seeder.seed();
     },

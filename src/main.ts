@@ -3,14 +3,13 @@
 
 import "./index";
 
-import { env } from "./config/env";
 import { core } from "./core/Core";
 import { gracefulShutdown } from "./lifecycle/shutdown";
 import { Start } from "./lifecycle/Start";
 
 async function main() {
     Start.initCore();
-    core.logger.info(`Environment: ${env.ENVIRONMENT}`);
+    core.logger.info(`Environment: ${process.env.NODE_ENV}`);
     await Start.initCache();
     await Start.initDb();
     await Start.initBot();

@@ -4,7 +4,6 @@ import { isDiscordToken } from "./tests";
 
 export const EnvSchema = z
     .object({
-        ENVIRONMENT: z.enum(["development", "test", "production", "actions"]).default("development"),
         DISCORD_TOKEN: z.string().refine(isDiscordToken, "Invalid DISCORD_TOKEN"),
         POSTGRES_HOST: z.string().default("localhost"),
         POSTGRES_PORT: z.coerce.number().int().positive().default(5432),
@@ -18,7 +17,7 @@ export const EnvSchema = z
     })
     .refine(
         (data) => {
-            if (data.ENVIRONMENT !== "actions") {
+            if (process.env.NODE_ENV !== "actions") {
                 return Boolean(
                     data.POSTGRES_DB !== undefined &&
                     data.POSTGRES_USER !== undefined &&
@@ -34,7 +33,7 @@ export const EnvSchema = z
     )
     .refine(
         (data) => {
-            if (data.ENVIRONMENT !== "actions") {
+            if (process.env.NODE_ENV !== "actions") {
                 return Boolean(data.REDIS_PASSWORD !== undefined);
             }
             return true;

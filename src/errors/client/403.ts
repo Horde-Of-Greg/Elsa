@@ -84,5 +84,7 @@ export class NotOwnerError extends AppError {
         core.logger.warn(
             `User ${this.user.name !== null ? this.user.name : "Unknown"} tried to edit tag ${this.tag.name}, but it did not belong to them.`,
         );
+        core.logger.debug("owner id:", this.owner.id);
+        core.logger.debug("user id:", this.user.id);
     }
 }

@@ -97,7 +97,7 @@ export class CommandEditInstance extends CommandInstance<void> {
 
     private async ensureOwner() {
         const user = await this.userService.findOrCreateUser(this.context.author);
-        if (this.tag.authorId.toString() !== this.context.author.id) {
+        if (this.tag.author.discordId !== this.context.author.id) {
             throw new NotOwnerError(this.tag.author, user, this.tag);
         }
     }

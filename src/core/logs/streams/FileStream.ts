@@ -2,7 +2,6 @@ import fs from "fs";
 import path from "path";
 
 import { appConfig } from "../../../config/config";
-import { env } from "../../../config/env";
 import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream";
 
 export interface FileStreamConfig extends StreamConfig {
@@ -34,7 +33,7 @@ export class FileStream extends BaseWritableStream {
     }
 
     protected processChunk(data: string): void {
-        if (env.ENVIRONMENT === "actions") return;
+        if (process.env.NODE_ENV === "actions") return;
         if (!this.fileHandle) {
             throw new Error(`FileStream "${this.name}" is not open`);
         }

@@ -6,7 +6,7 @@ import { core } from "../../src/core/Core";
 const user = process.env.POSTGRES_USER;
 const host = process.env.POSTGRES_HOST;
 const db = process.env.POSTGRES_DB;
-const environment = process.env.ENVIRONMENT;
+const environment = process.env.NODE_ENV;
 
 if (environment !== "development") {
     process.exit(1);

@@ -1,13 +1,12 @@
 /* eslint-disable no-console */
 // Reasoning: This is the shutdown script, the logger won't, or may not be active.
-import { env } from "../config/env";
 import { core } from "../core/Core";
 import { dependencies } from "../core/Dependencies";
 
 let isShuttingDown = false;
 
 export async function gracefulShutdown(signal: string): Promise<void> {
-    if (env.ENVIRONMENT === "actions") process.exit(0);
+    if (process.env.NODE_ENV === "actions") process.exit(0);
 
     if (isShuttingDown) {
         console.warn(`Tried to shut down twice. Signal: ${signal} `);

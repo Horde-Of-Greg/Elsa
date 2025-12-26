@@ -1,6 +1,5 @@
 import { EmbedBuilder } from "discord.js";
 
-import { env } from "../../../config/env";
 import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { TagNotFoundError } from "../../../errors/client/404";
@@ -66,7 +65,7 @@ class CommandTagInstance extends CommandInstance<tagReplyElements> {
         };
     }
     protected async reply(): Promise<void> {
-        if (env.ENVIRONMENT === "production") {
+        if (process.env.NODE_ENV === "production") {
             await this.context.message.reply(this.content.body);
         } else {
             await this.context.message.reply({ embeds: [this.debugEmbed()] });

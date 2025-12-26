@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 
 import { appConfig } from "../../config/config";
-import { env } from "../../config/env";
 import type { StreamsContainer } from "../../types/logs";
 import { compressWithZstd } from "../../utils/compression/zstd";
 import { FileStream } from "./streams/FileStream";
@@ -128,7 +127,7 @@ class ConsoleContainer {
             ...Object.values(this._errStreams ?? {}),
         ];
 
-        if (env.ENVIRONMENT === "production") {
+        if (process.env.NODE_ENV === "production") {
             await this.archiveLogs();
         }
 

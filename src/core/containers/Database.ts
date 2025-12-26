@@ -11,7 +11,7 @@ export class DatabaseContainer {
     private _dataSource?: DataSource;
 
     get dataSource(): DataSource {
-        return (this._dataSource ??= dataSourceappConfig());
+        return (this._dataSource ??= dataSourceappConfig);
     }
 
     reset(): void {

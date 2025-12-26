@@ -7,9 +7,11 @@ interface UnitConfig {
 }
 
 export class Timer {
-    startTime: number;
+    private startDate: Date;
+    private startTime: number;
 
     constructor() {
+        this.startDate = new Date();
         this.startTime = performance.now();
     }
 
@@ -34,6 +36,10 @@ export class Timer {
         const formatted = `${adjusted.toFixed(precision)}${appConfig.label}`;
 
         return { raw, adjusted, formatted };
+    }
+
+    getStartDate() {
+        return this.startDate;
     }
 
     private static readonly UNITS: Record<TimeUnit, UnitConfig> = {

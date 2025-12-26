@@ -6,6 +6,7 @@ import { TagBodyExistsError } from "../../../errors/client/409";
 import type { SHA256Hash } from "../../../types/crypto";
 import { ensureStrictPositive } from "../../../utils/numbers/positive";
 import { CommandDef, CommandInstance } from "../../Command";
+import { commands } from "../../Commands";
 
 export class CommandEditDef extends CommandDef<void, CommandEditInstance> {
     constructor() {
@@ -55,6 +56,7 @@ export class CommandEditInstance extends CommandInstance<void> {
             tagBody: this.newTagBody,
             tagBodyHash: this.tagBodyHash,
         });
+        await this.invalidateCache();
     }
 
     protected async reply(): Promise<void> {
@@ -86,5 +88,9 @@ export class CommandEditInstance extends CommandInstance<void> {
             throw new TagBodyExistsError(this.tagName, this.newTagBody, hashContext.tagWithBody, "add");
         }
         this.tagBodyHash = hashContext.hash;
+    }
+
+    private async invalidateCache() {
+        await commands.tag.invalidateCache();
     }
 }

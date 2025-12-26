@@ -13,8 +13,6 @@ export const Start = {
     async initCache() {
         await dependencies.cache.client.init();
         core.logger.info("Cache Layer initialized");
-        await dependencies.cache.registry.clearAll();
-        core.logger.info("Cleared Caches");
     },
 
     async initDb() {

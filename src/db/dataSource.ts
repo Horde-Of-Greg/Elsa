@@ -12,7 +12,15 @@ export function dataSourceappConfig() {
         database: env.POSTGRES_DB,
 
         synchronize: process.env.NODE_ENV === "development", // Auto-create tables in development
-        migrations: ["src/db/migrations/*.ts"],
-        entities: ["src/db/entities/*.ts"],
+
+        migrations: [
+            process.env.NODE_ENV === "production"
+                ? "dist/db/migrations/**/*.js"
+                : "src/db/migrations/**/*.ts",
+        ],
+
+        entities: [
+            process.env.NODE_ENV === "production" ? "dist/db/entities/**/*.js" : "src/db/entities/**/*.ts",
+        ],
     });
 }

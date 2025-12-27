@@ -33,7 +33,7 @@ export class CommandHelpDef extends CommandDef<MessageReplyOptions, CommandHelpI
     }
 }
 
-class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
+export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
     private commandDefs = commands.getAll();
     private message: APIEmbedField[] = [];
 

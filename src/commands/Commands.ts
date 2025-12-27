@@ -1,6 +1,7 @@
 import type { CommandDef, CommandInstance } from "./Command";
 import { CommandAddDef } from "./impl/create/add";
 import { CommandHelpDef } from "./impl/read/help";
+import { CommandOwnerDef } from "./impl/read/owner";
 import { CommandPingDef } from "./impl/read/ping";
 import { CommandTagDef } from "./impl/read/tag";
 import { CommandUptimeDef } from "./impl/read/uptime";
@@ -8,18 +9,12 @@ import { CommandEditDef } from "./impl/update/edit";
 import { CommandSetRankDef } from "./impl/update/setrank";
 
 class Commands {
-    // Create
     private _add?: CommandAddDef;
-
-    // Delete
-
-    // Read
     private _list?: CommandHelpDef;
+    private _owner?: CommandOwnerDef;
     private _ping?: CommandPingDef;
     private _tag?: CommandTagDef;
     private _uptime?: CommandUptimeDef;
-
-    // Update
     private _edit?: CommandEditDef;
     private _setRank?: CommandSetRankDef;
 
@@ -29,6 +24,10 @@ class Commands {
 
     get help(): CommandHelpDef {
         return (this._list ??= new CommandHelpDef());
+    }
+
+    get owner(): CommandOwnerDef {
+        return (this._owner ??= new CommandOwnerDef());
     }
 
     get ping(): CommandPingDef {
@@ -52,10 +51,16 @@ class Commands {
     }
 
     getAll(): CommandDef<unknown, CommandInstance<unknown>>[] {
-        return [this.add, this.help, this.ping, this.tag, this.uptime, this.edit, this.setRank] as CommandDef<
-            unknown,
-            CommandInstance<unknown>
-        >[];
+        return [
+            this.add,
+            this.help,
+            this.owner,
+            this.ping,
+            this.tag,
+            this.uptime,
+            this.edit,
+            this.setRank,
+        ] as CommandDef<unknown, CommandInstance<unknown>>[];
     }
 }
 

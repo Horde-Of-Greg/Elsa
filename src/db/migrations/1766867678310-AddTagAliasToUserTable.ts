@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import type { MigrationInterface, QueryRunner } from "typeorm";
 
 export class AddTagAliasToUserTable1766867678310 implements MigrationInterface {
     name = 'AddTagAliasToUserTable1766867678310'

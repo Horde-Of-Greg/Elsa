@@ -2,11 +2,12 @@
 // Reasoning: This is the shutdown script, the logger won't, or may not be active.
 import { core } from "../core/Core";
 import { dependencies } from "../core/Dependencies";
+import { isActionsEnvironment } from "../utils/environment";
 
 let isShuttingDown = false;
 
 export async function gracefulShutdown(signal: string): Promise<void> {
-    if (process.env.NODE_ENV === "actions") process.exit(0);
+    if (isActionsEnvironment()) process.exit(0);
 
     if (isShuttingDown) {
         console.warn(`Tried to shut down twice. Signal: ${signal} `);

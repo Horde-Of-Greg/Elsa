@@ -3,6 +3,7 @@ import { env } from "../config/env";
 import { core } from "../core/Core";
 import { dependencies } from "../core/Dependencies";
 import { Seeder } from "../db/seeding/Seeder";
+import { isActionsEnvironment, isProductionEnvironment } from "../utils/environment";
 
 export const Start = {
     initCore() {
@@ -16,20 +17,20 @@ export const Start = {
     },
 
     async initDb() {
-        if (process.env.NODE_ENV === "actions") return;
+        if (isActionsEnvironment()) return;
         await dependencies.database.dataSource.initialize();
         core.logger.info("Database initialized");
     },
 
     async initBot() {
-        if (process.env.NODE_ENV === "actions") return;
+        if (isActionsEnvironment()) return;
         await dependencies.discord.bot.login(env.DISCORD_TOKEN);
 
         core.logger.info("Bot initialized");
     },
 
     async seed() {
-        if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "actions") return;
+        if (isProductionEnvironment() || isActionsEnvironment()) return;
         const seeder = new Seeder(seederConfig);
         await seeder.seed();
     },

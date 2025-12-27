@@ -2,6 +2,7 @@ import { Console } from "console";
 
 import { AnsiFg, AnsiFgBright, AnsiStyle } from "../../assets/colors/ansi";
 import { LogLevel } from "../../types/logs";
+import { isActionsEnvironment } from "../../utils/environment";
 import { getTimestampNow } from "../../utils/time";
 import { consoleContainer } from "./ConsoleContainer";
 
@@ -33,7 +34,7 @@ export class Logger {
     }
 
     trace(message: string, ...args: unknown[]): void {
-        if (process.env.NODE_ENV !== "production") {
+        if (!isActionsEnvironment()) {
             this.debugConsole.trace(this.format(LogLevel.TRACE, message, logConfigs.TRACE), ...args);
             return;
         }
@@ -41,7 +42,7 @@ export class Logger {
     }
 
     debug(message: string, ...args: unknown[]): void {
-        if (process.env.NODE_ENV !== "production") {
+        if (!isActionsEnvironment()) {
             this.debugConsole.debug(this.format(LogLevel.DEBUG, message, logConfigs.DEBUG), ...args);
             return;
         }

@@ -5,6 +5,7 @@ import { dependencies } from "../core/Dependencies";
 import { isActionsEnvironment } from "../utils/environment";
 
 let isShuttingDown = false;
+const SHUTDOWN_TIMEOUT_MS = 10000;
 
 export async function gracefulShutdown(signal: string): Promise<void> {
     if (isActionsEnvironment()) process.exit(0);
@@ -20,7 +21,7 @@ export async function gracefulShutdown(signal: string): Promise<void> {
     const timeout = setTimeout(() => {
         console.error("Shutdown timeout - forcing exit");
         process.exit(1);
-    }, 10000);
+    }, SHUTDOWN_TIMEOUT_MS);
 
     try {
         console.log("Clearing caches...");

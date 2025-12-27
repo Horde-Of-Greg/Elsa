@@ -59,7 +59,6 @@ function askCrudType(): Promise<string> {
 }
 
 async function write() {
-    const CmdName = capitalizeWithDashes(cmdName);
     const text = (CmdName: string, cmd_name: string) => `import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { CommandDef, CommandInstance } from "../../Command";

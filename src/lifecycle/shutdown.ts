@@ -15,7 +15,7 @@ export async function gracefulShutdown(signal: string): Promise<void> {
     }
     isShuttingDown = true;
 
-    core.logger.info(`Received ${signal}, shutting down gracefully...\n`);
+    console.info(`Received ${signal}, shutting down gracefully...\n`);
 
     const timeout = setTimeout(() => {
         console.error("Shutdown timeout - forcing exit");

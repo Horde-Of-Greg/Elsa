@@ -100,6 +100,14 @@ export class TagRepository extends BaseRepository<TagTable> {
         return tags;
     }
 
+    async createAlias(aliasName: string, tagToAlias: TagTable, aliasAuthor: UserTable) {
+        await this.createAndSaveOnOtherTable(TagAliasTable, {
+            name: aliasName,
+            tagId: tagToAlias.id,
+            authorId: aliasAuthor.id,
+        });
+    }
+
     /*
      * Read
      */
@@ -170,7 +178,7 @@ export class TagRepository extends BaseRepository<TagTable> {
 
     async findByNameOrAlias(nameOrAlias: string): Promise<TagTable | null> {
         let tag = await this.findByName(nameOrAlias);
-        if (!tag) tag = await this.findByAlias(nameOrAlias);
+        if (tag === null) tag = await this.findByAlias(nameOrAlias);
         return tag;
     }
 
@@ -226,4 +234,8 @@ export class TagRepository extends BaseRepository<TagTable> {
     /*
      * Delete
      */
+
+    async deleteTag(tag: TagTable) {
+        await this.delete(tag);
+    }
 }

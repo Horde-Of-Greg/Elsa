@@ -21,4 +21,7 @@ npm ci || { echo "npm ci failed"; exit 1; }
 echo "Building..."
 npm run build || { echo "Build failed"; exit 1; }
 
+echo "Migrating..."
+npm run migration:run || { echo "Migrations failed"; exit 1; }
+
 npm run production:update-configs

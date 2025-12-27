@@ -7,7 +7,10 @@ export class TagNotFoundError extends AppError {
     readonly code = "TAG_NOT_FOUND";
     readonly httpStatus = 404;
 
-    constructor(public readonly tagName: string) {
+    constructor(
+        public readonly tagName: string,
+        readonly strict: boolean,
+    ) {
         super(`Tag "${tagName}" not found`, { tagName });
     }
 
@@ -17,7 +20,9 @@ export class TagNotFoundError extends AppError {
                 new EmbedBuilder()
                     .setTitle("Could not Find Tag")
                     .setColor(EmbedColors.MAGENTA)
-                    .setDescription(`Could not find tag \`${this.tagName}\` by name or alias.`),
+                    .setDescription(
+                        `Could not find tag \`${this.tagName}\` by name${this.strict ? "" : " or alias"}.`,
+                    ),
             ],
         };
     }

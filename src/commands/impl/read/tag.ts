@@ -54,7 +54,7 @@ class CommandTagInstance extends CommandInstance<tagReplyElements> {
     protected async execute(): Promise<tagReplyElements> {
         const tag = await this.tagService.findTag(this.tagName);
         if (!tag) {
-            throw new TagNotFoundError(this.tagName);
+            throw new TagNotFoundError(this.tagName, false);
         }
         return {
             name: tag.name,

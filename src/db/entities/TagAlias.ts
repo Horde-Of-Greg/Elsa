@@ -1,6 +1,7 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 import { TagTable } from "./Tag";
+import { UserTable } from "./User";
 
 @Entity({ name: "tag_aliases" })
 @Index(["name"], { unique: true })
@@ -16,4 +17,10 @@ export class TagAliasTable {
     @ManyToOne(() => TagTable, (t) => t.aliases, { onDelete: "CASCADE" })
     @JoinColumn({ name: "tagId" })
     tag: TagTable;
+
+    @Column()
+    authorId: number;
+    @ManyToOne(() => UserTable, (t) => t.aliases)
+    @JoinColumn({ name: "authorId" })
+    author: UserTable;
 }

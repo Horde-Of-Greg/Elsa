@@ -19,6 +19,7 @@ echo "Installing dependencies..."
 npm ci || { echo "npm ci failed"; exit 1; }
 
 echo "Building..."
+rm -rf ./dist/
 npm run build || { echo "Build failed"; exit 1; }
 
 echo "Migrating..."

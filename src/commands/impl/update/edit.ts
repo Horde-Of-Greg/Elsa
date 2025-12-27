@@ -76,9 +76,9 @@ export class CommandEditInstance extends CommandInstance<void> {
      */
 
     private async ensureTagNameExists() {
-        const tag = await this.tagService.findTag(this.tagName);
+        const tag = await this.tagService.findTagStrict(this.tagName);
         if (!tag) {
-            throw new TagNotFoundError(this.tagName);
+            throw new TagNotFoundError(this.tagName, true);
         }
         this.tag = tag;
     }

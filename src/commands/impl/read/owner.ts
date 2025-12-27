@@ -41,7 +41,7 @@ export class CommandOwnerInstance extends CommandInstance<UserTable> {
     protected async execute(): Promise<UserTable> {
         const tag = await this.tagService.findTag(this.tagName);
         if (!tag) {
-            throw new TagNotFoundError(this.tagName);
+            throw new TagNotFoundError(this.tagName, true);
         }
         return tag.author;
     }

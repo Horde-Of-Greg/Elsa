@@ -1,5 +1,7 @@
 import type { CommandDef, CommandInstance } from "./Command";
 import { CommandAddDef } from "./impl/create/add";
+import { CommandAliasDef } from "./impl/create/alias";
+import { CommandDeleteDef } from "./impl/delete/delete";
 import { CommandHelpDef } from "./impl/read/help";
 import { CommandOwnerDef } from "./impl/read/owner";
 import { CommandPingDef } from "./impl/read/ping";
@@ -17,6 +19,8 @@ class Commands {
     private _uptime?: CommandUptimeDef;
     private _edit?: CommandEditDef;
     private _setRank?: CommandSetRankDef;
+    private _delete?: CommandDeleteDef;
+    private _alias?: CommandAliasDef;
 
     get add(): CommandAddDef {
         return (this._add ??= new CommandAddDef());
@@ -50,7 +54,17 @@ class Commands {
         return (this._setRank ??= new CommandSetRankDef());
     }
 
-    getAll(): CommandDef<unknown, CommandInstance<unknown>>[] {
+    
+    get delete(): CommandDeleteDef {
+        return (this._delete ??= new CommandDeleteDef());
+    }
+
+
+    get alias(): CommandAliasDef {
+        return (this._alias ??= new CommandAliasDef());
+    }
+
+getAll(): CommandDef<unknown, CommandInstance<unknown>>[] {
         return [
             this.add,
             this.help,
@@ -60,6 +74,8 @@ class Commands {
             this.uptime,
             this.edit,
             this.setRank,
+            this.delete,
+            this.alias,
         ] as CommandDef<unknown, CommandInstance<unknown>>[];
     }
 }

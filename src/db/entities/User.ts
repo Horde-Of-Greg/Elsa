@@ -1,6 +1,7 @@
 import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 import { TagTable } from "./Tag";
+import { TagAliasTable } from "./TagAlias";
 import { TagOverridesTable } from "./TagOverrides";
 import { UserHostTable } from "./UserHost";
 
@@ -24,4 +25,7 @@ export class UserTable {
 
     @OneToMany(() => TagOverridesTable, (to) => to.authorOverride)
     tagOverrides: TagOverridesTable[];
+
+    @OneToMany(() => TagAliasTable, (t) => t.author)
+    aliases: TagAliasTable[];
 }

@@ -33,7 +33,6 @@ export class PermissionDeniedError extends AppError {
                     .setColor(EmbedColors.RED)
                     .setDescription("You do not have the permissions required to execute this action.")
                     .setFooter({
-                        //prettier-ignore
                         text: `Required: \`${PermLevel[this.requiredLevel]}\` | Yours: \`${PermLevel[this.userLevel]}\``,
                     }),
             ],

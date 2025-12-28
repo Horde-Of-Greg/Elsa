@@ -1,7 +1,7 @@
+import type { _ns, AdjustedTime } from "./time";
+
 export type TimerResult = {
-    raw: number;
-    adjusted: number;
+    raw: _ns;
+    adjusted: AdjustedTime;
     formatted: string;
 };
-
-export type TimeUnit = "micro" | "ms" | "s" | "m";

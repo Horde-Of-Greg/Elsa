@@ -1,6 +1,6 @@
 import type { CacheResolver } from "../core/containers/Cache";
 import { dependencies } from "../core/Dependencies";
-import type { StrictPositiveNumber } from "../utils/numbers/positive";
+import type { StrictPositiveNumber } from "../types/numbers";
 import { makeRedisKey } from "./keys";
 
 export class Cache<T = string> {

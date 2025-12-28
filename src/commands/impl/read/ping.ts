@@ -1,5 +1,6 @@
 import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
+import type { _ms } from "../../../types/time/time";
 import { CommandDef, CommandInstance } from "../../Command";
 
 export class CommandPingDef extends CommandDef<void, CommandPingInstance> {
@@ -34,13 +35,13 @@ export class CommandPingInstance extends CommandInstance<void> {
         const serverLatency = core.queryTimer(this.timerKey).getTime("ms");
         const sent = await this.context.message.reply("🏓 Pinging...");
 
-        const roundTripLatency = sent.createdTimestamp - this.context.message.createdTimestamp;
+        const roundTripLatency: _ms = (sent.createdTimestamp - this.context.message.createdTimestamp) as _ms;
 
         await sent.edit(
             `🏓 Pong!\n` +
                 `**Round-trip latency:** \`${roundTripLatency}ms\`\n` +
                 `**Server latency:** \`${serverLatency.formatted}\`\n` +
-                `**Total Latency:** \`${(roundTripLatency + serverLatency.adjusted).toFixed(2)}ms\``,
+                `**Total Latency:** \`${(roundTripLatency + serverLatency.raw / 1e6).toFixed(2)}ms\``,
         );
     }
     protected logExecution(): void {}

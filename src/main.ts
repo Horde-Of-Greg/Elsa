@@ -14,7 +14,7 @@ async function main() {
     await Start.initDb();
     await Start.initBot();
     await Start.seed();
-    core.logger.info("App Ready!");
+    core.logger.info(`App Ready in ${core.queryTimer("main").getTime().formatted}!`);
 }
 
 main().catch((e) => {

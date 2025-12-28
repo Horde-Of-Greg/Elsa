@@ -1,7 +1,7 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
-import { getCommitMessage } from "../../src/utils/github/octokit";
+import { getCommitMessage } from "../../src/utils/github/commits";
 import { type AcceptedBump, type AcceptedType, typesRegex } from "./types";
 
 const outputName = "bump-type";

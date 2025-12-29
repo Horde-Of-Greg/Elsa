@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 
 import { appConfig } from "../../../config/config";
-import { isActionsEnvironment } from "../../../utils/environment";
+import { isActionsEnvironment } from "../../../utils/node/environment";
 import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream";
 
 export interface FileStreamConfig extends StreamConfig {

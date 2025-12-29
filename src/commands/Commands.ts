@@ -7,6 +7,7 @@ import { CommandOwnerDef } from "./impl/read/owner";
 import { CommandPingDef } from "./impl/read/ping";
 import { CommandTagDef } from "./impl/read/tag";
 import { CommandUptimeDef } from "./impl/read/uptime";
+import { CommandVersionDef } from "./impl/read/version";
 import { CommandEditDef } from "./impl/update/edit";
 import { CommandSetRankDef } from "./impl/update/setrank";
 
@@ -21,6 +22,7 @@ class Commands {
     private _setRank?: CommandSetRankDef;
     private _delete?: CommandDeleteDef;
     private _alias?: CommandAliasDef;
+    private _version?: CommandVersionDef;
 
     get add(): CommandAddDef {
         return (this._add ??= new CommandAddDef());
@@ -64,6 +66,11 @@ class Commands {
         return (this._alias ??= new CommandAliasDef());
     }
 
+
+    get version(): CommandVersionDef {
+        return (this._version ??= new CommandVersionDef());
+    }
+
 getAll(): CommandDef<unknown, CommandInstance<unknown>>[] {
         return [
             this.add,
@@ -76,6 +83,7 @@ getAll(): CommandDef<unknown, CommandInstance<unknown>>[] {
             this.setRank,
             this.delete,
             this.alias,
+            this.version,
         ] as CommandDef<unknown, CommandInstance<unknown>>[];
     }
 }

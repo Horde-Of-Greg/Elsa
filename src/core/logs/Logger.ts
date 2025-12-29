@@ -2,7 +2,7 @@ import { Console } from "console";
 
 import { AnsiFg, AnsiFgBright, AnsiStyle } from "../../assets/colors/ansi";
 import { LogLevel } from "../../types/logs";
-import { isProductionEnvironment } from "../../utils/environment";
+import { isProductionEnvironment } from "../../utils/node/environment";
 import { getTimestampNow } from "../../utils/time";
 import { consoleContainer } from "./ConsoleContainer";
 

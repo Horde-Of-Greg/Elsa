@@ -3,7 +3,7 @@ import { env } from "../config/env";
 import { core } from "../core/Core";
 import { dependencies } from "../core/Dependencies";
 import { Seeder } from "../db/seeding/Seeder";
-import { isActionsEnvironment, isProductionEnvironment } from "../utils/environment";
+import { isActionsEnvironment, isProductionEnvironment } from "../utils/node/environment";
 
 export const Start = {
     initCore() {

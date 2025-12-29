@@ -1,4 +1,5 @@
 import { core } from "../core/Core";
+import type { PositiveNumber } from "../types/numbers";
 import type { _day, _h, _min, _ms, _ns, _s, _µs, AdjustedTime, AppDate, TimeUnit } from "../types/time/time";
 import { ensurePositive } from "./numbers/positive";
 
@@ -31,7 +32,7 @@ export function adjustTime(time_ns: _ns, unitToStopAt?: TimeUnit): AdjustedTime 
     let s = ensurePositive(0 as _s);
     let ms = ensurePositive(0 as _ms);
     let micro = ensurePositive(0 as _µs);
-    let nano = ensurePositive(0 as _ns);
+    let nano: _ns & PositiveNumber;
 
     if (time_ns < 1000 || unitToStopAt === "nano") {
         nano = ensurePositive(time_ns);

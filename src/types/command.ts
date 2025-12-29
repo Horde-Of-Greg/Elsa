@@ -27,6 +27,7 @@ export type CommandParams = {
         arguments?: ArgumentDefinition[];
         examples?: string[];
     };
+    hideFromHelp?: boolean;
 };
 
 export type CacheParams =
@@ -47,4 +48,9 @@ export type ArgumentDefinition = {
     name: string;
     required: boolean;
     parseResultKey: RequirableParseResult;
+};
+
+export type Versions = {
+    local: string;
+    remote: string;
 };

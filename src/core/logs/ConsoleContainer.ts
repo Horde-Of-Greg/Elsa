@@ -5,7 +5,7 @@ import path from "path";
 import { appConfig } from "../../config/config";
 import type { StreamsContainer } from "../../types/logs";
 import { compressWithZstd } from "../../utils/compression/zstd";
-import { isProductionEnvironment } from "../../utils/environment";
+import { isProductionEnvironment } from "../../utils/node/environment";
 import { FileStream } from "./streams/FileStream";
 import { MultiStream } from "./streams/MultiStream";
 import { TerminalStream } from "./streams/TerminalStream";

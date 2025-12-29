@@ -2,7 +2,7 @@
 // Reasoning: This is the shutdown script, the logger won't, or may not be active.
 import { core } from "../core/Core";
 import { dependencies } from "../core/Dependencies";
-import { isActionsEnvironment } from "../utils/environment";
+import { isActionsEnvironment } from "../utils/node/environment";
 
 let isShuttingDown = false;
 const SHUTDOWN_TIMEOUT_MS = 10000;

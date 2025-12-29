@@ -42,6 +42,7 @@ export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
     protected async execute(): Promise<MessageReplyOptions> {
         for (const commandDef of this.commandDefs) {
             const params = commandDef.getParams();
+            if (params.permLevelRequired > PermLevel.TRUSTED || (params.hideFromHelp ?? false)) continue;
 
             const args: string[] = [];
             params.info.arguments?.forEach((argument) => {
@@ -52,7 +53,8 @@ export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
                 name: `\`${params.name}\``,
                 // prettier-ignore
                 value: `Usage: \`${appConfig.PREFIX}${[params.name].concat(params.aliases).join('|')} ${args.join(" ")}\`
-                Description: ${params.info.description}`,
+Description: ${params.info.description}
+Perm Level Required: ${PermLevel[params.permLevelRequired]}`,
             });
         }
 

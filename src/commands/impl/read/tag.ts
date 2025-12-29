@@ -3,7 +3,7 @@ import { EmbedBuilder } from "discord.js";
 import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { TagNotFoundError } from "../../../errors/client/404";
-import { isProductionEnvironment } from "../../../utils/environment";
+import { isProductionEnvironment } from "../../../utils/node/environment";
 import { ensureStrictPositive } from "../../../utils/numbers/positive";
 import { CommandDef, CommandInstance } from "../../Command";
 

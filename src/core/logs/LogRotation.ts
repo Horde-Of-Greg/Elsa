@@ -3,7 +3,7 @@ import path from "path";
 
 import { appConfig } from "../../config/config";
 import { ReaddirError } from "../../errors/internal/schedules";
-import { isProductionEnvironment } from "../../utils/environment";
+import { isProductionEnvironment } from "../../utils/node/environment";
 import { core } from "../Core";
 import { consoleContainer } from "./ConsoleContainer";
 

@@ -1,6 +1,7 @@
 import { DataSource } from "typeorm";
 
 import { env } from "../config/env";
+import { isProductionEnvironment } from "../utils/environment";
 
 export const dataSourceappConfig = new DataSource({
     type: "postgres",
@@ -10,13 +11,9 @@ export const dataSourceappConfig = new DataSource({
     password: env.POSTGRES_PASSWORD,
     database: env.POSTGRES_DB,
 
-    synchronize: true, // process.env.NODE_ENV === "development", // Auto-create tables in development
+    synchronize: true, // isDevelopmentEnvironment(), // Auto-create tables in development
 
-    migrations: [
-        process.env.NODE_ENV === "production" ? "dist/db/migrations/**/*.js" : "src/db/migrations/**/*.ts",
-    ],
+    migrations: [isProductionEnvironment() ? "dist/db/migrations/**/*.js" : "src/db/migrations/**/*.ts"],
 
-    entities: [
-        process.env.NODE_ENV === "production" ? "dist/db/entities/**/*.js" : "src/db/entities/**/*.ts",
-    ],
+    entities: [isProductionEnvironment() ? "dist/db/entities/**/*.js" : "src/db/entities/**/*.ts"],
 });

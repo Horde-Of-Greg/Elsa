@@ -7,9 +7,12 @@ import { core } from "../../src/core/Core";
 const user = env.POSTGRES_USER;
 const host = env.POSTGRES_HOST;
 const db = env.POSTGRES_DB;
-const environment = process.env.NODE_ENV;
+export const environment = process.env.NODE_ENV;
 
 if (environment !== "development") {
+    core.logger.error(
+        `Database reset can only be run in the development environment. Current NODE_ENV is: ${environment ?? "undefined"}`,
+    );
     process.exit(1);
 }
 

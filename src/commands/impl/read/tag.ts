@@ -3,6 +3,7 @@ import { EmbedBuilder } from "discord.js";
 import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { TagNotFoundError } from "../../../errors/client/404";
+import { isProductionEnvironment } from "../../../utils/environment";
 import { ensureStrictPositive } from "../../../utils/numbers/positive";
 import { CommandDef, CommandInstance } from "../../Command";
 
@@ -65,7 +66,7 @@ class CommandTagInstance extends CommandInstance<tagReplyElements> {
         };
     }
     protected async reply(): Promise<void> {
-        if (process.env.NODE_ENV === "production") {
+        if (isProductionEnvironment()) {
             await this.context.message.reply(this.content.body);
         } else {
             await this.context.message.reply({ embeds: [this.debugEmbed()] });

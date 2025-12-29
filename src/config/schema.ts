@@ -1,5 +1,6 @@
 import z from "zod";
 
+import { isActionsEnvironment } from "../utils/environment";
 import { isDiscordToken } from "./tests";
 
 export const EnvSchema = z
@@ -17,7 +18,7 @@ export const EnvSchema = z
     })
     .refine(
         (data) => {
-            if (process.env.NODE_ENV !== "actions") {
+            if (!isActionsEnvironment()) {
                 return Boolean(
                     data.POSTGRES_DB !== undefined &&
                     data.POSTGRES_USER !== undefined &&
@@ -33,7 +34,7 @@ export const EnvSchema = z
     )
     .refine(
         (data) => {
-            if (process.env.NODE_ENV !== "actions") {
+            if (!isActionsEnvironment()) {
                 return Boolean(data.REDIS_PASSWORD !== undefined);
             }
             return true;

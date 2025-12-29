@@ -2,7 +2,8 @@
 set -euo pipefail
 
 script_directory="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-cd -- "$script_directory/../.."
+project_root="${script_directory}/../.."
+cd -- "$project_root"
 
 git fetch origin
 git checkout main
@@ -19,10 +20,10 @@ echo "Installing dependencies..."
 npm ci || { echo "npm ci failed"; exit 1; }
 
 echo "Building..."
-rm -rf ./dist/
+rm -rf "${project_root}/dist/"
 npm run build || { echo "Build failed"; exit 1; }
 
 echo "Migrating..."
 npm run migration:run || { echo "Migrations failed"; exit 1; }
 
-npm run production:update-configs
+npm run production:update-configs || { echo "Update configs failed"; exit 1; }

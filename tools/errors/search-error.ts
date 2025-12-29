@@ -2,8 +2,9 @@ import fs from "fs";
 import path from "path";
 
 import { core } from "../../src/core/Core";
+import { isDevelopmentEnvironment } from "../../src/utils/environment";
 
-if (process.env.NODE_ENV !== "development") process.exit(1);
+if (isDevelopmentEnvironment()) process.exit(1);
 const ARG: string | undefined = process.argv[2];
 if (!ARG) {
     core.logger.error(

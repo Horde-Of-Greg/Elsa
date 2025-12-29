@@ -5,6 +5,7 @@ import path from "path";
 import { appConfig } from "../../config/config";
 import type { StreamsContainer } from "../../types/logs";
 import { compressWithZstd } from "../../utils/compression/zstd";
+import { isProductionEnvironment } from "../../utils/environment";
 import { FileStream } from "./streams/FileStream";
 import { MultiStream } from "./streams/MultiStream";
 import { TerminalStream } from "./streams/TerminalStream";
@@ -127,7 +128,7 @@ class ConsoleContainer {
             ...Object.values(this._errStreams ?? {}),
         ];
 
-        if (process.env.NODE_ENV === "production") {
+        if (isProductionEnvironment()) {
             await this.archiveLogs();
         }
 

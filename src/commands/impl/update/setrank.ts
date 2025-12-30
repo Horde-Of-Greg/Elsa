@@ -1,4 +1,10 @@
+import type { User } from "discord.js";
+
+import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
+import { BadArgumentError } from "../../../errors/client/400";
+import { DiscordUserNotFound } from "../../../errors/client/404";
+import { getUserById } from "../../../utils/discord/users";
 import { CommandDef, CommandInstance } from "../../Command";
 
 export class CommandSetRankDef extends CommandDef<void, CommandSetRankInstance> {
@@ -14,7 +20,10 @@ export class CommandSetRankDef extends CommandDef<void, CommandSetRankInstance> 
                 },
                 info: {
                     description: "Edits the rank of someone",
-                    //TODO: Impl
+                    arguments: [
+                        { name: "user-id", required: true, parseResultKey: "subcommand" },
+                        { name: "new-rank", required: true, parseResultKey: "args" },
+                    ],
                 },
             },
             CommandSetRankInstance,
@@ -26,14 +35,39 @@ export class CommandSetRankDef extends CommandDef<void, CommandSetRankInstance> 
 }
 
 class CommandSetRankInstance extends CommandInstance<void> {
+    private userId!: string;
+    private newRank!: PermLevel;
+    private user!: User;
+
     protected async validateData(): Promise<void> {
-        throw new Error("Method not implemented.");
+        this.userId = this.arg<string>("user-id");
+        const newRank = this.arg<string[]>("new-rank")[0].toUpperCase();
+
+        await this.ensureUserExists();
+
+        if (!(newRank in PermLevel)) {
+            const validRanks = Object.keys(PermLevel).filter((k) => isNaN(Number(k)));
+            throw new BadArgumentError("New Rank", validRanks, newRank, false);
+        }
+
+        this.newRank = PermLevel[newRank as keyof typeof PermLevel];
+        await this.permsService.requirePermLevel(this.context.author, this.context.guild, this.newRank);
     }
-    protected execute(): Promise<void> {
-        throw new Error("Method not implemented.");
+    protected async execute(): Promise<void> {
+        await this.userService.createUserWithPerms(this.user, this.context.guild, this.newRank);
     }
-    protected reply(): Promise<void> {
-        throw new Error("Method not implemented.");
+    protected async reply(): Promise<void> {
+        await this.context.message.reply(`Successfully updated <@${this.user.id}>'s rank to ${this.newRank}`);
     }
-    protected logExecution(): void {}
+    protected logExecution(): void {
+        core.logger.warnUser(`Successfully updated ${this.user.username}'s rank to ${this.newRank}`);
+    }
+
+    private async ensureUserExists() {
+        const user_dc = await getUserById(this.userId);
+        if (!user_dc) {
+            throw new DiscordUserNotFound({ type: "user id", value: this.userId });
+        }
+        return user_dc;
+    }
 }

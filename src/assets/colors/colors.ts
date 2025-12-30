@@ -4,4 +4,5 @@ export enum EmbedColors {
     MAGENTA = 0xdd11bb,
     PURPLE = 0x7711bb,
     YELLOW = 0xffdd22,
+    ORANGE = 0xdd6600,
 }

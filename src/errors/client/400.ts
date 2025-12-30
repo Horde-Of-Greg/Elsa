@@ -21,3 +21,39 @@ export class MissingArgumentError extends AppError {
 
     log(): void {}
 }
+
+export class BadArgumentError extends AppError {
+    readonly code = "BAD_ARGUMENT";
+    readonly httpStatus: 400;
+
+    constructor(
+        readonly argName: string,
+        readonly expectedValues: string[],
+        readonly value: string,
+        readonly isCaseSensitive: boolean,
+    ) {
+        super(`Argument ${argName} expected to be <${expectedValues.join("|")}>. Got ${value} instead.>`, {
+            value,
+        });
+    }
+
+    get reply(): MessageReplyOptions {
+        return {
+            embeds: [
+                new EmbedBuilder()
+                    .setTitle("Malformed Argument")
+                    .setDescription(
+                        `The bot successfully received the argument for ${this.argName}, but deemed it invalid.`,
+                    )
+                    .setFields([
+                        { name: "Expected values", value: this.expectedValues.join("|") },
+                        { name: "Value received", value: this.value },
+                    ])
+                    .setFooter({ text: `Is case sensitive? ${this.isCaseSensitive ? "Yes" : "No"}` })
+                    .setColor(EmbedColors.ORANGE),
+            ],
+        };
+    }
+
+    log(): void {}
+}

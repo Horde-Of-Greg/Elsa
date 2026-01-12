@@ -57,9 +57,9 @@ export class CommandRouter {
          */
         return {
             command: parsed[1],
-            server: parsed[3],
-            subcommand: parsed[4],
-            args: parsed[5] ? parsed[5].split(/\s+/) : undefined,
+            server: parsed[2],
+            subcommand: parsed[3],
+            args: parsed[4] ? parsed[4].split(/\s+/) : undefined,
         };
     }
 

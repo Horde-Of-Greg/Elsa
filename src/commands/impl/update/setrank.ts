@@ -57,10 +57,14 @@ class CommandSetRankInstance extends CommandInstance<void> {
         await this.userService.createUserWithPerms(this.user, this.context.guild, this.newRank);
     }
     protected async reply(): Promise<void> {
-        await this.context.message.reply(`Successfully updated <@${this.user.id}>'s rank to ${this.newRank}`);
+        await this.context.message.reply(
+            `Successfully updated <@${this.user.id}>'s rank to ${PermLevel[this.newRank]}`,
+        );
     }
     protected logExecution(): void {
-        core.logger.warnUser(`Successfully updated ${this.user.username}'s rank to ${this.newRank}`);
+        core.logger.warnUser(
+            `Successfully updated ${this.user.username}'s rank to ${PermLevel[this.newRank]}`,
+        );
     }
 
     private async ensureUserExists() {
@@ -68,6 +72,6 @@ class CommandSetRankInstance extends CommandInstance<void> {
         if (!user_dc) {
             throw new DiscordUserNotFound({ type: "user id", value: this.userId });
         }
-        return user_dc;
+        this.user = user_dc;
     }
 }

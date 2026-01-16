@@ -1,4 +1,4 @@
-import { Emojis } from "../../../assets/emojis";
+import { emojis } from "../../../config/config";
 import { core } from "../../../core/Core";
 import type { TagTable } from "../../../db/entities/Tag";
 import { PermLevel } from "../../../db/entities/UserHost";
@@ -64,7 +64,7 @@ export class CommandEditInstance extends CommandInstance<void> {
     }
 
     protected async reply(): Promise<void> {
-        await this.context.message.reply(`${Emojis.CHECKMARK} Tag \`${this.tagName}\` edited successfully!`);
+        await this.context.message.reply(`Tag \`${this.tagName}\` edited successfully! ${emojis.CHECKMARK}`);
     }
 
     protected logExecution(): void {

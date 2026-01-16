@@ -1,6 +1,7 @@
 import { EmbedBuilder, type MessageReplyOptions } from "discord.js";
 
 import { EmbedColors } from "../../assets/colors/colors";
+import { emojis } from "../../config/config";
 import { AppError } from "../AppError";
 
 export class MissingArgumentError extends AppError {
@@ -13,7 +14,7 @@ export class MissingArgumentError extends AppError {
                 new EmbedBuilder()
                     .setTitle("Missing arguments")
                     .setColor(EmbedColors.YELLOW)
-                    .setDescription(this.message),
+                    .setDescription(this.message + emojis.QUESTION_MARK),
             ],
         };
     }

@@ -1,6 +1,7 @@
 import { EmbedBuilder, type MessageReplyOptions } from "discord.js";
 
 import { EmbedColors } from "../../assets/colors/colors";
+import { emojis } from "../../config/config";
 import { core } from "../../core/Core";
 import type { TagTable } from "../../db/entities/Tag";
 import type { UserTable } from "../../db/entities/User";
@@ -31,7 +32,9 @@ export class PermissionDeniedError extends AppError {
                 new EmbedBuilder()
                     .setTitle("Insufficient permissions")
                     .setColor(EmbedColors.RED)
-                    .setDescription("You do not have the permissions required to execute this action.")
+                    .setDescription(
+                        `You do not have the permissions required to execute this action. ${emojis.X_MARK}`,
+                    )
                     .setFooter({
                         text: `Required: \`${PermLevel[this.requiredLevel]}\` | Yours: \`${PermLevel[this.userLevel]}\``,
                     }),
@@ -71,7 +74,7 @@ export class NotOwnerError extends AppError {
                     .setTitle("Not Owner")
                     .setColor(EmbedColors.RED)
                     .setDescription(
-                        `You do not own this tag. You can only edit the tags you own.\ntag owner: <@${this.owner.discordId}>`,
+                        `You do not own this tag ${emojis.EXCLAMATION_MARK}. You can only edit the tags you own.\ntag owner: <@${this.owner.discordId}>`,
                     ),
             ],
         };

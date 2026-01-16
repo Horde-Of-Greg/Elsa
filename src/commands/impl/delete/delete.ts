@@ -1,4 +1,4 @@
-import { Emojis } from "../../../assets/emojis";
+import { emojis } from "../../../config/config";
 import { core } from "../../../core/Core";
 import type { TagTable } from "../../../db/entities/Tag";
 import { PermLevel } from "../../../db/entities/UserHost";
@@ -47,7 +47,7 @@ export class CommandDeleteInstance extends CommandInstance<void> {
 
     protected async reply(): Promise<void> {
         //TODO: add a way to revert a delete
-        await this.context.message.reply(`${Emojis.CHECKMARK} Tag **${this.tagName}** deleted successfully!`);
+        await this.context.message.reply(`Tag **${this.tagName}** deleted successfully! ${emojis.CHECKMARK}`);
     }
 
     protected logExecution(): void {

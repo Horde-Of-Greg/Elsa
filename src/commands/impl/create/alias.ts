@@ -1,4 +1,4 @@
-import { Emojis } from "../../../assets/emojis";
+import { emojis } from "../../../config/config";
 import { core } from "../../../core/Core";
 import type { TagTable } from "../../../db/entities/Tag";
 import { PermLevel } from "../../../db/entities/UserHost";
@@ -53,7 +53,7 @@ export class CommandAliasInstance extends CommandInstance<void> {
 
     protected async reply(): Promise<void> {
         await this.context.message.reply(
-            `${Emojis.CHECKMARK} Aliased \`${this.tagName}\` as \`${this.aliasName}\``,
+            `Aliased \`${this.tagName}\` as \`${this.aliasName}\` ${emojis.CHECKMARK}`,
         );
     }
 

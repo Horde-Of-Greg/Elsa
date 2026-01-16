@@ -2,6 +2,7 @@ import { EmbedBuilder } from "@discordjs/builders";
 import type { MessageReplyOptions } from "discord.js";
 
 import { EmbedColors } from "../../assets/colors/colors";
+import { emojis } from "../../config/config";
 import type { TagTable } from "../../db/entities/Tag";
 import { AppError } from "../AppError";
 
@@ -20,7 +21,7 @@ export class TagExistsError extends AppError {
                     .setTitle("Tag already exists")
                     .setColor(EmbedColors.YELLOW)
                     .setDescription(
-                        `Cannot add tag ${this.tag.name} as it already exists, and is owned by <@${this.tag.author.discordId}>`,
+                        `Cannot add tag ${this.tag.name} as it already exists, and is owned by <@${this.tag.author.discordId}> ${emojis.EXCLAMATION_MARK}`,
                     ),
             ],
         };
@@ -37,10 +38,12 @@ export class TagBodyExistsError extends AppError {
         readonly tagName: string,
         readonly tagBody: string,
         readonly existingTag: TagTable,
-        readonly type: "edit"|"add"
+        readonly type: "edit" | "add",
     ) {
         super(
-            type === "edit" ? `Tag ${existingTag.name} already contains this same body` : `Tag \`${existingTag.name}\` already has the same body. We don't allow duplicate tags for now.`,
+            type === "edit"
+                ? `Tag ${existingTag.name} already contains this same body`
+                : `Tag \`${existingTag.name}\` already has the same body. We don't allow duplicate tags for now.`,
             { tagBody },
         );
     }
@@ -52,7 +55,9 @@ export class TagBodyExistsError extends AppError {
                     .setTitle("Tag body duplicate")
                     .setColor(EmbedColors.YELLOW)
                     .setDescription(
-                        this.type === "edit" ? `Cannot edit tag ${this.tagName} as it already contains the same body.` : `Cannot add tag ${this.tagName} as it contains the same body as tag: ${this.existingTag.name}. Please use !alias instead.`,
+                        this.type === "edit"
+                            ? `Cannot edit tag ${this.tagName} as it already contains the same body. ${emojis.EXCLAMATION_MARK}`
+                            : `Cannot add tag ${this.tagName} as it contains the same body as tag: ${this.existingTag.name} ${emojis.WORRIED}. Please use !alias instead.`,
                     ),
             ],
         };

@@ -68,7 +68,7 @@ export const appConfigSchema = z
         },
     );
 
-export const SeederappConfigSchema = z.object({
+export const SeederConfigSchema = z.object({
     DEPTH: z.number().int().min(1).max(100000),
     DROP_DB: z.boolean(),
     WAIT_TO_DROP_DB: z.boolean().default(true),
@@ -79,6 +79,16 @@ export const SeederappConfigSchema = z.object({
     }),
 });
 
+export const EmojiConfigSchema = z.object({
+    CHECKMARK: z.string().default(":white_check_mark:"),
+    X_MARK: z.string().default(":x:"),
+    QUESTION_MARK: z.string().default(":question:"),
+    EXCLAMATION_MARK: z.string().default(":exclamation:"),
+    WORRIED: z.string().default(":sweat:"),
+    PING_PONG: z.string().default(":ping_pong:"),
+});
+
 export type Env = z.infer<typeof EnvSchema>;
 export type AppConfig = z.infer<typeof appConfigSchema>;
-export type SeederConfig = z.infer<typeof SeederappConfigSchema>;
+export type SeederConfig = z.infer<typeof SeederConfigSchema>;
+export type EmojiConfig = z.infer<typeof EmojiConfigSchema>;

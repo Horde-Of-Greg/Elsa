@@ -1,3 +1,4 @@
+import { emojis } from "../../../config/config";
 import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
 import type { _ms } from "../../../types/time/time";
@@ -33,15 +34,14 @@ export class CommandPingInstance extends CommandInstance<void> {
 
     protected async reply(): Promise<void> {
         const serverLatency = core.queryTimer(this.timerKey).getTime("ms");
-        const sent = await this.context.message.reply("🏓 Pinging...");
+        const sent = await this.context.message.reply(`${emojis.PING_PONG} Pinging...`);
 
         const roundTripLatency: _ms = (sent.createdTimestamp - this.context.message.createdTimestamp) as _ms;
 
         await sent.edit(
-            `🏓 Pong!\n` +
-                `**Round-trip latency:** \`${roundTripLatency}ms\`\n` +
-                `**Server latency:** \`${serverLatency.formatted}\`\n` +
-                `**Total Latency:** \`${(roundTripLatency + serverLatency.raw / 1e6).toFixed(2)}ms\``,
+            `${emojis.PING_PONG} Pong!\n` +
+                `**Total latency:** \`${roundTripLatency}ms\` ${roundTripLatency > 1000 ? emojis.WORRIED : ""}\n` +
+                `**Server latency:** \`${serverLatency.formatted}\` ${serverLatency.raw > 1e8 ? emojis.WORRIED : ""}\n`,
         );
     }
     protected logExecution(): void {}

@@ -2,6 +2,7 @@ import { EmbedBuilder } from "@discordjs/builders";
 import type { MessageReplyOptions } from "discord.js";
 
 import { EmbedColors } from "../../assets/colors/colors";
+import { emojis } from "../../config/config";
 import { core } from "../../core/Core";
 import { AppError } from "../AppError";
 
@@ -14,7 +15,7 @@ export abstract class InternalError extends AppError {
             embeds: [
                 new EmbedBuilder()
                     .setTitle("Internal Error Occurred")
-                    .setDescription("This is not your fault. It is ours. Oopsies.")
+                    .setDescription(`This is not your fault. It is ours. ${emojis.WORRIED}`)
                     .setColor(EmbedColors.RED)
                     .addFields(
                         {

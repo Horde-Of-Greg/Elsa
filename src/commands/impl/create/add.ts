@@ -1,4 +1,4 @@
-import { Emojis } from "../../../assets/emojis";
+import { emojis } from "../../../config/config";
 import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { TagBodyExistsError, TagExistsError } from "../../../errors/client/409";
@@ -59,7 +59,7 @@ class CommandAddInstance extends CommandInstance<void> {
     }
 
     protected async reply(): Promise<void> {
-        await this.context.message.reply(`${Emojis.CHECKMARK} Tag \`${this.tagName}\` created successfully!`);
+        await this.context.message.reply(`Tag \`${this.tagName}\` created successfully! ${emojis.CHECKMARK}`);
     }
 
     protected logExecution(): void {

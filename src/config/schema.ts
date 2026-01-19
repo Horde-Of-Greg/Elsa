@@ -85,6 +85,7 @@ export const EmojiConfigSchema = z.object({
     QUESTION_MARK: z.string().default(":question:"),
     EXCLAMATION_MARK: z.string().default(":exclamation:"),
     WORRIED: z.string().default(":sweat:"),
+    PING_PONG: z.string().default(":ping_pong:"),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

@@ -112,9 +112,13 @@ export abstract class BaseRepository<T extends ValidEntity> {
             );
         }
 
+        const thisColumnName = thisRelation.joinColumns[0]?.propertyName ?? `${thisRelation.propertyName}Id`;
+        const otherColumnName =
+            otherRelation.joinColumns[0]?.propertyName ?? `${otherRelation.propertyName}Id`;
+
         const where = {
-            [thisRelation.propertyName]: thisEntity.id,
-            [otherRelation.propertyName]: otherEntity.id,
+            [thisColumnName]: thisEntity.id,
+            [otherColumnName]: otherEntity.id,
         } as FindOptionsWhere<J>;
 
         return this.database.dataSource.getRepository(joinTable).findOne({ where });
@@ -152,8 +156,10 @@ export abstract class BaseRepository<T extends ValidEntity> {
             throw new Error(`Could not find relation in ${joinTable.name} for ${thatTable.name}`);
         }
 
+        const thatColumnName = thatRelation.joinColumns[0]?.propertyName ?? `${thatRelation.propertyName}Id`;
+
         const fullWhere = {
-            [thatRelation.propertyName]: thatEntity.id,
+            [thatColumnName]: thatEntity.id,
             ...where,
         } as FindOptionsWhere<J>;
 

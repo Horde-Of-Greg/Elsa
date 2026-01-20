@@ -18,6 +18,7 @@ export class CommandUptimeDef extends CommandDef<void, CommandUptimeInstance> {
                 info: {
                     description: "Check how long the bot has been up for.",
                 },
+                hideFromHelp: true,
             },
             CommandUptimeInstance,
             {

@@ -26,6 +26,6 @@ export class UserService {
     async createUserWithPerms(user_dc: User, server_dc: Guild, permLevel: PermLevel) {
         const user = await this.findOrCreateUser(user_dc);
         const host = await this.hostService.findOrCreateHost(server_dc.id, server_dc.name);
-        return this.userRepo.createPermLevel(user, host, permLevel);
+        return this.userRepo.updateOrCreatePermLevel(user, host, permLevel);
     }
 }

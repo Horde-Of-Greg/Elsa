@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 
 import { core } from "../../src/core/Core";
-import { isDevelopmentEnvironment } from "../../src/utils/environment";
+import { isDevelopmentEnvironment } from "../../src/utils/node/environment";
 
 if (isDevelopmentEnvironment()) process.exit(1);
 const ARG: string | undefined = process.argv[2];

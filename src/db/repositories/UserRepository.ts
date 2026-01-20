@@ -38,4 +38,15 @@ export class UserRepository extends BaseRepository<UserTable> {
             permLevel,
         });
     }
+
+    async updateOrCreatePermLevel(user: UserTable, host: HostTable, permLevel: PermLevel) {
+        const existingUserHost = await this.findOneByJoin(UserHostTable, user, host);
+
+        if (existingUserHost) {
+            existingUserHost.permLevel = permLevel;
+            await this.saveOnOtherTable(existingUserHost);
+        } else {
+            await this.createPermLevel(user, host, permLevel);
+        }
+    }
 }

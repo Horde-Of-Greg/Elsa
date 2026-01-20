@@ -1,5 +1,6 @@
 import type { User } from "discord.js";
 
+import { emojis } from "../../../config/config";
 import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { BadArgumentError } from "../../../errors/client/400";
@@ -58,7 +59,7 @@ class CommandSetRankInstance extends CommandInstance<void> {
     }
     protected async reply(): Promise<void> {
         await this.context.message.reply(
-            `Successfully updated <@${this.user.id}>'s rank to ${PermLevel[this.newRank]}`,
+            `Successfully updated <@${this.user.id}>'s rank to ${PermLevel[this.newRank]} ${emojis.CHECKMARK}`,
         );
     }
     protected logExecution(): void {

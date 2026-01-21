@@ -7,7 +7,7 @@ import { core } from "../../core/Core";
 import { AppError } from "../AppError";
 
 export abstract class InternalError extends AppError {
-    readonly httpStatus: 500;
+    readonly httpStatus = 500;
     abstract readonly code: string;
 
     get reply(): MessageReplyOptions {
@@ -39,12 +39,14 @@ export abstract class InternalError extends AppError {
     }
 
     get truncatedStack() {
+        const MAX_STACKTRACE_LENGTH = 1000;
+
         const stack = this.stack ?? "No stack trace available";
         const stackLines = stack.match(/^\s+at\s+(.+?)\s+\(/gm);
         const methodNames = stackLines
             ? stackLines.map((line) => line.match(/at\s+(.+?)\s+\(/)?.[1] ?? line)
             : [stack];
-        return methodNames.join("\n").slice(0, 1000);
+        return methodNames.join("\n").slice(0, MAX_STACKTRACE_LENGTH);
     }
 
     log(): void {
@@ -53,7 +55,7 @@ export abstract class InternalError extends AppError {
 }
 
 export class UnknownInternalError extends InternalError {
-    readonly code: "UNKNOWN_ERROR";
+    readonly code = "UNKNOWN_ERROR";
 
     constructor(message: string, stack?: string) {
         super(message, undefined, stack);

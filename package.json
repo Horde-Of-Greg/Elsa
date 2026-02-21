@@ -1,6 +1,6 @@
 {
     "name": "elsa",
-    "version": "0.7.3",
+    "version": "0.7.4",
     "main": "dist/main.js",
     "scripts": {
         "build": "tsc",

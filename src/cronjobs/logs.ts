@@ -1,7 +1,7 @@
 import nodeCron from "node-cron";
 
-import { core } from "../core/Core.js";
-import { LogRotation } from "../core/logs/LogRotation.js";
+import { core } from "../core/Core";
+import { LogRotation } from "../core/logs/LogRotation";
 
 // Every day at midnight
 nodeCron.schedule("0 0 * * *", async () => {

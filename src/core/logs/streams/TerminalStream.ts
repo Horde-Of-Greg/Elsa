@@ -1,4 +1,4 @@
-import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream.js";
+import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream";
 
 export interface TerminalStreamConfig extends StreamConfig {
     target: "stdout" | "stderr";

@@ -1,14 +1,14 @@
-import { emojis } from "../../../config/config.js";
-import { core } from "../../../core/Core.js";
-import type { TagTable } from "../../../db/entities/Tag.js";
-import { PermLevel } from "../../../db/entities/UserHost.js";
-import { NotOwnerError } from "../../../errors/client/403.js";
-import { TagNotFoundError } from "../../../errors/client/404.js";
-import { TagBodyExistsError } from "../../../errors/client/409.js";
-import type { SHA256Hash } from "../../../types/crypto.js";
-import { ensureStrictPositive } from "../../../utils/numbers/positive.js";
-import { CommandDef, CommandInstance } from "../../Command.js";
-import { commands } from "../../Commands.js";
+import { emojis } from "../../../config/config";
+import { core } from "../../../core/Core";
+import type { TagTable } from "../../../db/entities/Tag";
+import { PermLevel } from "../../../db/entities/UserHost";
+import { NotOwnerError } from "../../../errors/client/403";
+import { TagNotFoundError } from "../../../errors/client/404";
+import { TagBodyExistsError } from "../../../errors/client/409";
+import type { SHA256Hash } from "../../../types/crypto";
+import { ensureStrictPositive } from "../../../utils/numbers/positive";
+import { CommandDef, CommandInstance } from "../../Command";
+import { commands } from "../../Commands";
 
 export class CommandEditDef extends CommandDef<void, CommandEditInstance> {
     constructor() {

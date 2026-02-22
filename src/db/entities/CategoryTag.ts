@@ -1,7 +1,7 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { CategoryTable } from "./Category.js";
-import { TagTable } from "./Tag.js";
+import { CategoryTable } from "./Category";
+import { TagTable } from "./Tag";
 
 @Entity({ name: "category_tags" })
 @Index(["categoryId", "tagId"], { unique: true })

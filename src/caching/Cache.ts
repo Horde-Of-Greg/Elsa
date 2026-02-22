@@ -1,7 +1,7 @@
-import type { CacheResolver } from "../core/containers/Cache.js";
-import { dependencies } from "../core/Dependencies.js";
-import type { StrictPositiveNumber } from "../types/numbers.js";
-import { makeRedisKey } from "./keys.js";
+import type { CacheResolver } from "../core/containers/Cache";
+import { dependencies } from "../core/Dependencies";
+import type { StrictPositiveNumber } from "../types/numbers";
+import { makeRedisKey } from "./keys";
 
 export class Cache<T = string> {
     constructor(

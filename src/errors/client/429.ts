@@ -1,10 +1,10 @@
 import { EmbedBuilder, type MessageReplyOptions, type User } from "discord.js";
 
-import { EmbedColors } from "../../assets/colors/colors.js";
-import { emojis } from "../../config/config.js";
-import { core } from "../../core/Core.js";
-import { type CommandParams } from "../../types/command.js";
-import { AppError } from "../AppError.js";
+import { EmbedColors } from "../../assets/colors/colors";
+import { emojis } from "../../config/config";
+import { core } from "../../core/Core";
+import { type CommandParams } from "../../types/command";
+import { AppError } from "../AppError";
 
 export class CooldownError extends AppError {
     readonly code = "TAG_EXISTS";

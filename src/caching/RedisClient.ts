@@ -1,9 +1,9 @@
 import { createClient, type RedisArgument, type RedisClientOptions, type SetOptions } from "redis";
 
-import { env } from "../config/env.js";
-import { core } from "../core/Core.js";
-import type { PositiveNumber } from "../types/numbers.js";
-import type { RedisKey } from "./keys.js";
+import { env } from "../config/env";
+import { core } from "../core/Core";
+import type { PositiveNumber } from "../types/numbers";
+import type { RedisKey } from "./keys";
 
 export class RedisClient {
     private client: ReturnType<typeof createClient>;

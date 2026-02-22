@@ -1,12 +1,12 @@
 import { EmbedBuilder, type MessageReplyOptions } from "discord.js";
 
-import { EmbedColors } from "../../assets/colors/colors.js";
-import { emojis } from "../../config/config.js";
-import { core } from "../../core/Core.js";
-import type { TagTable } from "../../db/entities/Tag.js";
-import type { UserTable } from "../../db/entities/User.js";
-import { PermLevel } from "../../db/entities/UserHost.js";
-import { AppError } from "../AppError.js";
+import { EmbedColors } from "../../assets/colors/colors";
+import { emojis } from "../../config/config";
+import { core } from "../../core/Core";
+import type { TagTable } from "../../db/entities/Tag";
+import type { UserTable } from "../../db/entities/User";
+import { PermLevel } from "../../db/entities/UserHost";
+import { AppError } from "../AppError";
 
 export class PermissionDeniedError extends AppError {
     readonly code = "PERMISSION_DENIED";

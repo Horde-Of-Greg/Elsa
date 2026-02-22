@@ -1,9 +1,9 @@
-import { core } from "../../../core/Core.js";
-import type { UserTable } from "../../../db/entities/User.js";
-import { PermLevel } from "../../../db/entities/UserHost.js";
-import { TagNotFoundError } from "../../../errors/client/404.js";
-import { ensureStrictPositive } from "../../../utils/numbers/positive.js";
-import { CommandDef, CommandInstance } from "../../Command.js";
+import { core } from "../../../core/Core";
+import type { UserTable } from "../../../db/entities/User";
+import { PermLevel } from "../../../db/entities/UserHost";
+import { TagNotFoundError } from "../../../errors/client/404";
+import { ensureStrictPositive } from "../../../utils/numbers/positive";
+import { CommandDef, CommandInstance } from "../../Command";
 
 export class CommandOwnerDef extends CommandDef<UserTable, CommandOwnerInstance> {
     constructor() {

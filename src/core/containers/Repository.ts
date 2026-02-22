@@ -1,7 +1,7 @@
-import { HostRepository } from "../../db/repositories/HostRepository.js";
-import { TagOverridesRepository } from "../../db/repositories/TagOverridesRepository.js";
-import { TagRepository } from "../../db/repositories/TagRepository.js";
-import { UserRepository } from "../../db/repositories/UserRepository.js";
+import { HostRepository } from "../../db/repositories/HostRepository";
+import { TagOverridesRepository } from "../../db/repositories/TagOverridesRepository";
+import { TagRepository } from "../../db/repositories/TagRepository";
+import { UserRepository } from "../../db/repositories/UserRepository";
 
 export interface RepositoryResolver {
     get tagRepo(): TagRepository;

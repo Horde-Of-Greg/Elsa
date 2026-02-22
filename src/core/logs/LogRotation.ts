@@ -1,11 +1,11 @@
 import fs from "fs";
 import path from "path";
 
-import { appConfig } from "../../config/config.js";
-import { ReaddirError } from "../../errors/internal/schedules.js";
-import { isProductionEnvironment } from "../../utils/node/environment.js";
-import { core } from "../Core.js";
-import { consoleContainer } from "./ConsoleContainer.js";
+import { appConfig } from "../../config/config";
+import { ReaddirError } from "../../errors/internal/schedules";
+import { isProductionEnvironment } from "../../utils/node/environment";
+import { core } from "../Core";
+import { consoleContainer } from "./ConsoleContainer";
 
 export class LogRotation {
     private dirSize: number = 0;

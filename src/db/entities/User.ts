@@ -1,9 +1,9 @@
 import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-import { TagTable } from "./Tag.js";
-import { TagAliasTable } from "./TagAlias.js";
-import { TagOverridesTable } from "./TagOverrides.js";
-import { UserHostTable } from "./UserHost.js";
+import { TagTable } from "./Tag";
+import { TagAliasTable } from "./TagAlias";
+import { TagOverridesTable } from "./TagOverrides";
+import { UserHostTable } from "./UserHost";
 
 @Entity({ name: "users" })
 export class UserTable {

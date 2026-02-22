@@ -1,8 +1,8 @@
 import fs from "fs";
 import path from "path";
 
-import type { AppConfig, EmojiConfig, SeederConfig } from "./schema.js";
-import { validateAppConfigs, validateEmojiConfigs, validateSeederConfigs } from "./validate.js";
+import type { AppConfig, EmojiConfig, SeederConfig } from "./schema";
+import { validateAppConfigs, validateEmojiConfigs, validateSeederConfigs } from "./validate";
 
 const configsPath: string = "config";
 

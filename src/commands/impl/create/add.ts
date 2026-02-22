@@ -1,10 +1,10 @@
-import { emojis } from "../../../config/config.js";
-import { core } from "../../../core/Core.js";
-import { PermLevel } from "../../../db/entities/UserHost.js";
-import { TagBodyExistsError, TagExistsError } from "../../../errors/client/409.js";
-import type { SHA256Hash } from "../../../types/crypto.js";
-import { ensureStrictPositive } from "../../../utils/numbers/positive.js";
-import { CommandDef, CommandInstance } from "../../Command.js";
+import { emojis } from "../../../config/config";
+import { core } from "../../../core/Core";
+import { PermLevel } from "../../../db/entities/UserHost";
+import { TagBodyExistsError, TagExistsError } from "../../../errors/client/409";
+import type { SHA256Hash } from "../../../types/crypto";
+import { ensureStrictPositive } from "../../../utils/numbers/positive";
+import { CommandDef, CommandInstance } from "../../Command";
 
 export class CommandAddDef extends CommandDef<void, CommandAddInstance> {
     constructor() {

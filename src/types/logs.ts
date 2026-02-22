@@ -1,5 +1,5 @@
-import type { FileStream } from "../core/logs/streams/FileStream.js";
-import type { TerminalStream } from "../core/logs/streams/TerminalStream.js";
+import type { FileStream } from "../core/logs/streams/FileStream";
+import type { TerminalStream } from "../core/logs/streams/TerminalStream";
 
 export enum LogLevel {
     TRACE = 0,

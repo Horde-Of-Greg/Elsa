@@ -1,8 +1,8 @@
-import { appConfig } from "../../../config/config.js";
-import { core } from "../../../core/Core.js";
-import { PermLevel } from "../../../db/entities/UserHost.js";
-import type { TimerResult } from "../../../types/time/timer.js";
-import { CommandDef, CommandInstance } from "../../Command.js";
+import { appConfig } from "../../../config/config";
+import { core } from "../../../core/Core";
+import { PermLevel } from "../../../db/entities/UserHost";
+import type { TimerResult } from "../../../types/time/timer";
+import { CommandDef, CommandInstance } from "../../Command";
 
 export class CommandUptimeDef extends CommandDef<void, CommandUptimeInstance> {
     constructor() {

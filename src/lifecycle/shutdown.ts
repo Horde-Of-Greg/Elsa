@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 // Reasoning: This is the shutdown script, the logger won't, or may not be active.
-import { core } from "../core/Core.js";
-import { dependencies } from "../core/Dependencies.js";
-import { isActionsEnvironment } from "../utils/node/environment.js";
+import { core } from "../core/Core";
+import { dependencies } from "../core/Dependencies";
+import { isActionsEnvironment } from "../utils/node/environment";
 
 let isShuttingDown = false;
 const SHUTDOWN_TIMEOUT_MS = 10000;

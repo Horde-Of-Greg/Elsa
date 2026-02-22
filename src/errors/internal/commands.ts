@@ -1,6 +1,6 @@
 import type { Message } from "discord.js";
 
-import { InternalError } from "./InternalError.js";
+import { InternalError } from "./InternalError";
 
 export class NoContextError extends InternalError {
     readonly code: "COMMAND_NO_CONTEXT";

@@ -1,7 +1,7 @@
-import type { HostTable } from "../entities/Host.js";
-import type { TagTable } from "../entities/Tag.js";
-import { TagOverridesTable } from "../entities/TagOverrides.js";
-import { BaseRepository } from "./BaseRepository.js";
+import type { HostTable } from "../entities/Host";
+import type { TagTable } from "../entities/Tag";
+import { TagOverridesTable } from "../entities/TagOverrides";
+import { BaseRepository } from "./BaseRepository";
 
 export class TagOverridesRepository extends BaseRepository<TagOverridesTable> {
     constructor() {

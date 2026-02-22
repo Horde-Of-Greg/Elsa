@@ -1,8 +1,8 @@
 import { EmbedBuilder, type MessageReplyOptions } from "discord.js";
 
-import { EmbedColors } from "../../assets/colors/colors.js";
-import { emojis } from "../../config/config.js";
-import { AppError } from "../AppError.js";
+import { EmbedColors } from "../../assets/colors/colors";
+import { emojis } from "../../config/config";
+import { AppError } from "../AppError";
 
 export class MissingArgumentError extends AppError {
     readonly code = "MISSING_ARGUMENT";

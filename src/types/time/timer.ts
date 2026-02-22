@@ -1,4 +1,4 @@
-import type { _ns, AdjustedTime } from "./time.js";
+import type { _ns, AdjustedTime } from "./time";
 
 export type TimerResult = {
     raw: _ns;

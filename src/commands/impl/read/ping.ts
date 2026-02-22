@@ -1,8 +1,8 @@
-import { emojis } from "../../../config/config.js";
-import { core } from "../../../core/Core.js";
-import { PermLevel } from "../../../db/entities/UserHost.js";
-import type { _ms } from "../../../types/time/time.js";
-import { CommandDef, CommandInstance } from "../../Command.js";
+import { emojis } from "../../../config/config";
+import { core } from "../../../core/Core";
+import { PermLevel } from "../../../db/entities/UserHost";
+import type { _ms } from "../../../types/time/time";
+import { CommandDef, CommandInstance } from "../../Command";
 
 export class CommandPingDef extends CommandDef<void, CommandPingInstance> {
     constructor() {

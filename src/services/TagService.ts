@@ -1,17 +1,17 @@
 import type { Guild, User } from "discord.js";
 
-import type { RepositoryResolver } from "../core/containers/Repository.js";
-import type { ServicesResolver } from "../core/containers/Services.js";
-import { dependencies } from "../core/Dependencies.js";
-import type { TagTable } from "../db/entities/Tag.js";
-import type { UserTable } from "../db/entities/User.js";
-import type { TagRepository } from "../db/repositories/TagRepository.js";
-import { TagNotFoundError } from "../errors/client/404.js";
-import type { SHA256Hash } from "../types/crypto.js";
-import type { TagElements, TagHostElements } from "../types/db/repositories.js";
-import { computeSHA256 } from "../utils/crypto/sha256Hash.js";
-import type { HostService } from "./HostService.js";
-import type { UserService } from "./UserService.js";
+import type { RepositoryResolver } from "../core/containers/Repository";
+import type { ServicesResolver } from "../core/containers/Services";
+import { dependencies } from "../core/Dependencies";
+import type { TagTable } from "../db/entities/Tag";
+import type { UserTable } from "../db/entities/User";
+import type { TagRepository } from "../db/repositories/TagRepository";
+import { TagNotFoundError } from "../errors/client/404";
+import type { SHA256Hash } from "../types/crypto";
+import type { TagElements, TagHostElements } from "../types/db/repositories";
+import { computeSHA256 } from "../utils/crypto/sha256Hash";
+import type { HostService } from "./HostService";
+import type { UserService } from "./UserService";
 
 export class TagService {
     private readonly tagRepo: TagRepository;

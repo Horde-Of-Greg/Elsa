@@ -1,10 +1,10 @@
 import { Client, type ClientEvents, GatewayIntentBits } from "discord.js";
 
-import { CommandRouter } from "../commands/CommandRouter.js";
-import type { DiscordEventHandler } from "./DiscordEventHandler.js";
-import { ReadyHandler } from "./events/ClientReady.js";
-import { MessageCreateHandler } from "./events/MessageCreate.js";
-import { MessageEditHandler } from "./events/MessageEdit.js";
+import { CommandRouter } from "../commands/CommandRouter";
+import type { DiscordEventHandler } from "./DiscordEventHandler";
+import { ReadyHandler } from "./events/ClientReady";
+import { MessageCreateHandler } from "./events/MessageCreate";
+import { MessageEditHandler } from "./events/MessageEdit";
 
 const gatewayIntents = [
     GatewayIntentBits.Guilds,

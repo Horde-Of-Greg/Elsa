@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 
-import type { SHA256Hash } from "../../types/crypto.js";
+import type { SHA256Hash } from "../../types/crypto";
 
 /**
  * Compute SHA-256 hash from a string.

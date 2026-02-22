@@ -1,6 +1,6 @@
 import type { DataSource } from "typeorm";
 
-import { dataSourceappConfig } from "../../db/dataSource.js";
+import { dataSourceappConfig } from "../../db/dataSource";
 
 export interface DatabaseResolver {
     get dataSource(): DataSource;

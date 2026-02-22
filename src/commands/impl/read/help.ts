@@ -1,12 +1,12 @@
 import { type APIEmbedField, EmbedBuilder, type MessageReplyOptions } from "discord.js";
 
-import { EmbedColors } from "../../../assets/colors/colors.js";
-import { appConfig } from "../../../config/config.js";
-import { core } from "../../../core/Core.js";
-import { PermLevel } from "../../../db/entities/UserHost.js";
-import { ensureStrictPositive } from "../../../utils/numbers/positive.js";
-import { CommandDef, CommandInstance } from "../../Command.js";
-import { commands } from "../../Commands.js";
+import { EmbedColors } from "../../../assets/colors/colors";
+import { appConfig } from "../../../config/config";
+import { core } from "../../../core/Core";
+import { PermLevel } from "../../../db/entities/UserHost";
+import { ensureStrictPositive } from "../../../utils/numbers/positive";
+import { CommandDef, CommandInstance } from "../../Command";
+import { commands } from "../../Commands";
 
 export class CommandHelpDef extends CommandDef<MessageReplyOptions, CommandHelpInstance> {
     constructor() {

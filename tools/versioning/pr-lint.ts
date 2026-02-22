@@ -1,7 +1,7 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
-import { typesRegex } from "./types.js";
+import { typesRegex } from "./types";
 
 async function main() {
     try {

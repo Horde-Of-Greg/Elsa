@@ -1,7 +1,7 @@
 import z from "zod";
 
-import { isActionsEnvironment } from "../utils/node/environment.js";
-import { isDiscordToken } from "./tests.js";
+import { isActionsEnvironment } from "../utils/node/environment";
+import { isDiscordToken } from "./tests";
 
 export const EnvSchema = z
     .object({

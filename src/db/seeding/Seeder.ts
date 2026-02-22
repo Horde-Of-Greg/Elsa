@@ -1,11 +1,11 @@
-import { seederConfig } from "../../config/config.js";
-import type { SeederConfig } from "../../config/schema.js";
-import { core } from "../../core/Core.js";
-import { dependencies } from "../../core/Dependencies.js";
-import { getGuildById } from "../../utils/discord/guilds.js";
-import { getUserById } from "../../utils/discord/users.js";
-import { sleep } from "../../utils/time.js";
-import { PermLevel } from "../entities/UserHost.js";
+import { seederConfig } from "../../config/config";
+import type { SeederConfig } from "../../config/schema";
+import { core } from "../../core/Core";
+import { dependencies } from "../../core/Dependencies";
+import { getGuildById } from "../../utils/discord/guilds";
+import { getUserById } from "../../utils/discord/users";
+import { sleep } from "../../utils/time";
+import { PermLevel } from "../entities/UserHost";
 
 export class Seeder {
     constructor(private readonly appConfig: SeederConfig) {}

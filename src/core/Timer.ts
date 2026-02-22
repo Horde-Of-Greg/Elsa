@@ -1,6 +1,6 @@
-import type { _ns, TimeUnit } from "../types/time/time.js";
-import type { TimerResult } from "../types/time/timer.js";
-import { adjustTime, formatTime } from "../utils/time.js";
+import type { _ns, TimeUnit } from "../types/time/time";
+import type { TimerResult } from "../types/time/timer";
+import { adjustTime, formatTime } from "../utils/time";
 
 export class Timer {
     private startDate: Date;

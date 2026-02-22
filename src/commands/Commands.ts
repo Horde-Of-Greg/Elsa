@@ -1,15 +1,15 @@
-import type { CommandDef, CommandInstance } from "./Command.js";
-import { CommandAddDef } from "./impl/create/add.js";
-import { CommandAliasDef } from "./impl/create/alias.js";
-import { CommandDeleteDef } from "./impl/delete/delete.js";
-import { CommandHelpDef } from "./impl/read/help.js";
-import { CommandOwnerDef } from "./impl/read/owner.js";
-import { CommandPingDef } from "./impl/read/ping.js";
-import { CommandTagDef } from "./impl/read/tag.js";
-import { CommandUptimeDef } from "./impl/read/uptime.js";
-import { CommandVersionDef } from "./impl/read/version.js";
-import { CommandEditDef } from "./impl/update/edit.js";
-import { CommandSetRankDef } from "./impl/update/setrank.js";
+import type { CommandDef, CommandInstance } from "./Command";
+import { CommandAddDef } from "./impl/create/add";
+import { CommandAliasDef } from "./impl/create/alias";
+import { CommandDeleteDef } from "./impl/delete/delete";
+import { CommandHelpDef } from "./impl/read/help";
+import { CommandOwnerDef } from "./impl/read/owner";
+import { CommandPingDef } from "./impl/read/ping";
+import { CommandTagDef } from "./impl/read/tag";
+import { CommandUptimeDef } from "./impl/read/uptime";
+import { CommandVersionDef } from "./impl/read/version";
+import { CommandEditDef } from "./impl/update/edit";
+import { CommandSetRankDef } from "./impl/update/setrank";
 
 class Commands {
     private _add?: CommandAddDef;

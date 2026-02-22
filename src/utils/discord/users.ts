@@ -1,6 +1,6 @@
 import type { Snowflake, User } from "discord.js";
 
-import { dependencies } from "../../core/Dependencies.js";
+import { dependencies } from "../../core/Dependencies";
 
 /**
  * Fetch a Discord User object by their ID.

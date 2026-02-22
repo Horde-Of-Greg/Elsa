@@ -1,11 +1,11 @@
 import type { Guild, User } from "discord.js";
 
-import type { RepositoryResolver } from "../core/containers/Repository.js";
-import type { ServicesResolver } from "../core/containers/Services.js";
-import { dependencies } from "../core/Dependencies.js";
-import type { PermLevel } from "../db/entities/UserHost.js";
-import type { UserRepository } from "../db/repositories/UserRepository.js";
-import type { HostService } from "./HostService.js";
+import type { RepositoryResolver } from "../core/containers/Repository";
+import type { ServicesResolver } from "../core/containers/Services";
+import { dependencies } from "../core/Dependencies";
+import type { PermLevel } from "../db/entities/UserHost";
+import type { UserRepository } from "../db/repositories/UserRepository";
+import type { HostService } from "./HostService";
 
 export class UserService {
     private readonly userRepo: UserRepository;

@@ -1,6 +1,8 @@
 //config
-import "./config/config";
-import "./config/env";
+import "./config/config.js";
+import "./config/env.js";
+//db
+import "reflect-metadata";
 
 //schedules
-export * from "./cronjobs/logs.js";
+export * from "./cronjobs/logs";

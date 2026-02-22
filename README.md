@@ -1,3 +1,4 @@
+<p align="center"><img src="https://github.com/Horde-Of-Greg/Branding/blob/master/Elsa/elsa-main-square.png" alt="Elsa Avatar" height="256"></p>
 <h1 align="center">Elsa</h1>
 
 <p align="center"><b></b>Discord Bot to save and execute tags.</b></p>

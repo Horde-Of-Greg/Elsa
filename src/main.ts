@@ -3,9 +3,9 @@
 
 import "./index";
 
-import { core } from "./core/Core";
-import { gracefulShutdown } from "./lifecycle/shutdown";
-import { Start } from "./lifecycle/Start";
+import { core } from "./core/Core.js";
+import { gracefulShutdown } from "./lifecycle/shutdown.js";
+import { Start } from "./lifecycle/Start.js";
 
 async function main() {
     Start.initCore();
@@ -17,11 +17,13 @@ async function main() {
     core.logger.info(`App Ready in ${core.queryTimer("main").getTime().formatted}!`);
 }
 
-main().catch((e) => {
+try {
+    await main();
+} catch (e) {
     // eslint-disable-next-line no-console
     console.error(e);
     process.exit(1);
-});
+}
 
 process.on("SIGINT", () => void gracefulShutdown("SIGINT"));
 process.on("SIGTERM", () => void gracefulShutdown("SIGTERM"));

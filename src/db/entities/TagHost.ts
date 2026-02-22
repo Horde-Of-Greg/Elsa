@@ -1,8 +1,8 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { HostTable } from "./Host";
-import { TagTable } from "./Tag";
-import { TagOverridesTable } from "./TagOverrides";
+import { HostTable } from "./Host.js";
+import { TagTable } from "./Tag.js";
+import { TagOverridesTable } from "./TagOverrides.js";
 
 export enum TagHostStatus {
     ACCEPTED,

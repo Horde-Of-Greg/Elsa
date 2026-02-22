@@ -1,5 +1,5 @@
-import { Logger } from "./logs/Logger";
-import { Timer } from "./Timer";
+import { Logger } from "./logs/Logger.js";
+import { Timer } from "./Timer.js";
 
 class Core {
     private _logger?: Logger;

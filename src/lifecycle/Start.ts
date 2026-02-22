@@ -1,9 +1,9 @@
-import { seederConfig } from "../config/config";
-import { env } from "../config/env";
-import { core } from "../core/Core";
-import { dependencies } from "../core/Dependencies";
-import { Seeder } from "../db/seeding/Seeder";
-import { isActionsEnvironment, isProductionEnvironment } from "../utils/node/environment";
+import { seederConfig } from "../config/config.js";
+import { env } from "../config/env.js";
+import { core } from "../core/Core.js";
+import { dependencies } from "../core/Dependencies.js";
+import { Seeder } from "../db/seeding/Seeder.js";
+import { isActionsEnvironment, isProductionEnvironment } from "../utils/node/environment.js";
 
 export const Start = {
     initCore() {

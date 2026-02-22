@@ -1,7 +1,7 @@
 import { DataSource } from "typeorm";
 
-import { env } from "../config/env";
-import { isProductionEnvironment } from "../utils/node/environment";
+import { env } from "../config/env.js";
+import { isProductionEnvironment } from "../utils/node/environment.js";
 
 export const dataSourceappConfig = new DataSource({
     type: "postgres",

@@ -1,10 +1,10 @@
-import { emojis } from "../../../config/config";
-import { core } from "../../../core/Core";
-import type { TagTable } from "../../../db/entities/Tag";
-import { PermLevel } from "../../../db/entities/UserHost";
-import { NotOwnerError } from "../../../errors/client/403";
-import { TagNotFoundError } from "../../../errors/client/404";
-import { CommandDef, CommandInstance } from "../../Command";
+import { emojis } from "../../../config/config.js";
+import { core } from "../../../core/Core.js";
+import type { TagTable } from "../../../db/entities/Tag.js";
+import { PermLevel } from "../../../db/entities/UserHost.js";
+import { NotOwnerError } from "../../../errors/client/403.js";
+import { TagNotFoundError } from "../../../errors/client/404.js";
+import { CommandDef, CommandInstance } from "../../Command.js";
 
 export class CommandDeleteDef extends CommandDef<void, CommandDeleteInstance> {
     constructor() {

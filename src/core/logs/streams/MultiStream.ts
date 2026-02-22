@@ -1,4 +1,4 @@
-import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream";
+import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream.js";
 
 export interface MultiStreamConfig extends StreamConfig {
     streams: BaseWritableStream[];

@@ -1,6 +1,6 @@
 import type { Guild, Snowflake } from "discord.js";
 
-import { dependencies } from "../../core/Dependencies";
+import { dependencies } from "../../core/Dependencies.js";
 
 /**
  * Fetch a Discord Guild object by its ID.

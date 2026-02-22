@@ -1,6 +1,6 @@
-import type { RepositoryResolver } from "../core/containers/Repository";
-import { dependencies } from "../core/Dependencies";
-import type { HostRepository } from "../db/repositories/HostRepository";
+import type { RepositoryResolver } from "../core/containers/Repository.js";
+import { dependencies } from "../core/Dependencies.js";
+import type { HostRepository } from "../db/repositories/HostRepository.js";
 
 export class HostService {
     private hostRepo: HostRepository;

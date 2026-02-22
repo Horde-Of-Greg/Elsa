@@ -1,4 +1,4 @@
-import type { PositiveNumber } from "../numbers";
+import type { PositiveNumber } from "../numbers.js";
 export type AppDate = Date;
 
 export type AdjustedTime = {

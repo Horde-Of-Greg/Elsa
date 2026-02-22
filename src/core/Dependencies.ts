@@ -1,8 +1,8 @@
-import { CacheContainer, type CacheResolver } from "./containers/Cache";
-import { DatabaseContainer, type DatabaseResolver } from "./containers/Database";
-import { DiscordContainer, type DiscordResolver } from "./containers/Discord";
-import { RepositoryContainer, type RepositoryResolver } from "./containers/Repository";
-import { ServicesContainer, type ServicesResolver } from "./containers/Services";
+import { CacheContainer, type CacheResolver } from "./containers/Cache.js";
+import { DatabaseContainer, type DatabaseResolver } from "./containers/Database.js";
+import { DiscordContainer, type DiscordResolver } from "./containers/Discord.js";
+import { RepositoryContainer, type RepositoryResolver } from "./containers/Repository.js";
+import { ServicesContainer, type ServicesResolver } from "./containers/Services.js";
 
 class Dependencies {
     readonly database: DatabaseResolver;

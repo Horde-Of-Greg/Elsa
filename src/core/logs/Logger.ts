@@ -1,10 +1,10 @@
 import { Console } from "console";
 
-import { AnsiFg, AnsiFgBright, AnsiStyle } from "../../assets/colors/ansi";
-import { LogLevel } from "../../types/logs";
-import { isProductionEnvironment } from "../../utils/node/environment";
-import { getTimestampNow } from "../../utils/time";
-import { consoleContainer } from "./ConsoleContainer";
+import { AnsiFg, AnsiFgBright, AnsiStyle } from "../../assets/colors/ansi.js";
+import { LogLevel } from "../../types/logs.js";
+import { isProductionEnvironment } from "../../utils/node/environment.js";
+import { getTimestampNow } from "../../utils/time.js";
+import { consoleContainer } from "./ConsoleContainer.js";
 
 interface LogConfigs {
     trace: AnsiFgBright | AnsiFg;

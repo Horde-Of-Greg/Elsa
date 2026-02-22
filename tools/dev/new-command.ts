@@ -59,9 +59,9 @@ function askCrudType(): Promise<string> {
 }
 
 async function write() {
-    const text = (CmdName: string, cmd_name: string) => `import { core } from "../../../core/Core";
-import { PermLevel } from "../../../db/entities/UserHost";
-import { CommandDef, CommandInstance } from "../../Command";
+    const text = (CmdName: string, cmd_name: string) => `import { core } from "../../../core/Core.js";
+import { PermLevel } from "../../../db/entities/UserHost.js";
+import { CommandDef, CommandInstance } from "../../Command.js";
 
 export class Command${CmdName}Def extends CommandDef<void, Command${CmdName}Instance> {
     constructor() {

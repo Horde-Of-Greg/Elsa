@@ -1,8 +1,8 @@
 import fs from "fs";
 import path from "path";
 
-import { core } from "../../src/core/Core";
-import { isDevelopmentEnvironment } from "../../src/utils/node/environment";
+import { core } from "../../src/core/Core.js";
+import { isDevelopmentEnvironment } from "../../src/utils/node/environment.js";
 
 if (isDevelopmentEnvironment()) process.exit(1);
 const ARG: string | undefined = process.argv[2];

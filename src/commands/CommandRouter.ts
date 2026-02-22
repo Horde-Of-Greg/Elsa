@@ -1,10 +1,10 @@
 import type { Message } from "discord.js";
 
-import { appConfig } from "../config/config";
-import type { CommandContext, ParseResult } from "../types/command";
-import { computeSHA256 } from "../utils/crypto/sha256Hash";
-import type { CommandDef, CommandInstance } from "./Command";
-import { commands } from "./Commands";
+import { appConfig } from "../config/config.js";
+import type { CommandContext, ParseResult } from "../types/command.js";
+import { computeSHA256 } from "../utils/crypto/sha256Hash.js";
+import type { CommandDef, CommandInstance } from "./Command.js";
+import { commands } from "./Commands.js";
 
 export class CommandRouter {
     private readonly commandList: CommandDef<unknown, CommandInstance<unknown>>[];

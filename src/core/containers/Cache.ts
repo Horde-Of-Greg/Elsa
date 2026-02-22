@@ -1,5 +1,5 @@
-import { CacheRegistry } from "../../caching/CacheRegistry";
-import { RedisClient } from "../../caching/RedisClient";
+import { CacheRegistry } from "../../caching/CacheRegistry.js";
+import { RedisClient } from "../../caching/RedisClient.js";
 
 export interface CacheResolver {
     get client(): RedisClient;

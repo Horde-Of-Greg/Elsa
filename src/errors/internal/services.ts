@@ -1,4 +1,4 @@
-import { InternalError } from "./InternalError";
+import { InternalError } from "./InternalError.js";
 
 export class UserNotFoundError extends InternalError {
     readonly code = "SERVICES_USER_NOT_FOUND";

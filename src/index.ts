@@ -3,4 +3,4 @@ import "./config/config";
 import "./config/env";
 
 //schedules
-export * from "./cronjobs/logs";
+export * from "./cronjobs/logs.js";

@@ -1,4 +1,4 @@
-import { appConfig } from "../config/config";
+import { appConfig } from "../config/config.js";
 
 export type RedisKey = string & { brand: "redis" };
 export function makeRedisKey(keyProto: string): RedisKey {

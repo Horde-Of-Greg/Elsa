@@ -1,7 +1,7 @@
-import type { HostTable } from "../../db/entities/Host";
-import type { TagHostStatus } from "../../db/entities/TagHost";
-import type { UserTable } from "../../db/entities/User";
-import type { SHA256Hash } from "../crypto";
+import type { HostTable } from "../../db/entities/Host.js";
+import type { TagHostStatus } from "../../db/entities/TagHost.js";
+import type { UserTable } from "../../db/entities/User.js";
+import type { SHA256Hash } from "../crypto.js";
 
 export type TagElements = {
     name: string;

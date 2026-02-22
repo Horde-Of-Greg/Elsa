@@ -1,8 +1,8 @@
 import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-import { HostAliasTable } from "./HostAlias";
-import { TagHostTable } from "./TagHost";
-import { UserHostTable } from "./UserHost";
+import { HostAliasTable } from "./HostAlias.js";
+import { TagHostTable } from "./TagHost.js";
+import { UserHostTable } from "./UserHost.js";
 
 @Entity({ name: "hosts" })
 export class HostTable {

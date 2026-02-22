@@ -1,10 +1,10 @@
-import { emojis } from "../../../config/config";
-import { core } from "../../../core/Core";
-import type { TagTable } from "../../../db/entities/Tag";
-import { PermLevel } from "../../../db/entities/UserHost";
-import { TagNotFoundError } from "../../../errors/client/404";
-import { ensureStrictPositive } from "../../../utils/numbers/positive";
-import { CommandDef, CommandInstance } from "../../Command";
+import { emojis } from "../../../config/config.js";
+import { core } from "../../../core/Core.js";
+import type { TagTable } from "../../../db/entities/Tag.js";
+import { PermLevel } from "../../../db/entities/UserHost.js";
+import { TagNotFoundError } from "../../../errors/client/404.js";
+import { ensureStrictPositive } from "../../../utils/numbers/positive.js";
+import { CommandDef, CommandInstance } from "../../Command.js";
 
 export class CommandAliasDef extends CommandDef<void, CommandAliasInstance> {
     constructor() {

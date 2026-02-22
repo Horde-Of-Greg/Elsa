@@ -2,6 +2,7 @@
     "name": "elsa",
     "version": "0.7.4",
     "main": "dist/main.js",
+    "type": "module",
     "scripts": {
         "build": "tsc",
         "start": "node dist/main.js",

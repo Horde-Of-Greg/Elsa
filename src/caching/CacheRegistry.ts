@@ -1,4 +1,4 @@
-import type { Cache } from "./Cache";
+import type { Cache } from "./Cache.js";
 
 export class CacheRegistry {
     private caches: Cache<unknown>[] = [];

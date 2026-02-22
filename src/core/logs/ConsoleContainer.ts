@@ -2,13 +2,13 @@ import { Console } from "console";
 import fs from "fs";
 import path from "path";
 
-import { appConfig } from "../../config/config";
-import type { StreamsContainer } from "../../types/logs";
-import { compressWithZstd } from "../../utils/compression/zstd";
-import { isProductionEnvironment } from "../../utils/node/environment";
-import { FileStream } from "./streams/FileStream";
-import { MultiStream } from "./streams/MultiStream";
-import { TerminalStream } from "./streams/TerminalStream";
+import { appConfig } from "../../config/config.js";
+import type { StreamsContainer } from "../../types/logs.js";
+import { compressWithZstd } from "../../utils/compression/zstd.js";
+import { isProductionEnvironment } from "../../utils/node/environment.js";
+import { FileStream } from "./streams/FileStream.js";
+import { MultiStream } from "./streams/MultiStream.js";
+import { TerminalStream } from "./streams/TerminalStream.js";
 
 class ConsoleContainer {
     private _infoStreams?: StreamsContainer;

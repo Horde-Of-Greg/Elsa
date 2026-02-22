@@ -1,4 +1,4 @@
-import { InternalError } from "./InternalError";
+import { InternalError } from "./InternalError.js";
 
 export class NegativeNumberError extends InternalError {
     readonly code = "NEGATIVE_NUMBER";

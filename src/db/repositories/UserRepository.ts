@@ -1,9 +1,9 @@
 import type { Snowflake } from "discord.js";
 
-import type { HostTable } from "../entities/Host";
-import { UserTable } from "../entities/User";
-import { type PermLevel, UserHostTable } from "../entities/UserHost";
-import { BaseRepository } from "../repositories/BaseRepository";
+import type { HostTable } from "../entities/Host.js";
+import { UserTable } from "../entities/User.js";
+import { type PermLevel, UserHostTable } from "../entities/UserHost.js";
+import { BaseRepository } from "../repositories/BaseRepository.js";
 
 export class UserRepository extends BaseRepository<UserTable> {
     constructor() {

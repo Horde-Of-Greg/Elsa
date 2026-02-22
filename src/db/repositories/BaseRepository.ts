@@ -1,8 +1,8 @@
 import type { DeepPartial, FindOptionsRelations, FindOptionsWhere, Repository } from "typeorm";
 
-import type { DatabaseResolver } from "../../core/containers/Database";
-import { dependencies } from "../../core/Dependencies";
-import type { ValidEntity } from "../../types/db/entities";
+import type { DatabaseResolver } from "../../core/containers/Database.js";
+import { dependencies } from "../../core/Dependencies.js";
+import type { ValidEntity } from "../../types/db/entities.js";
 
 //TODO: Add Transaction support.
 

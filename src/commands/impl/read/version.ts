@@ -1,11 +1,11 @@
 import { EmbedBuilder } from "@discordjs/builders";
 
-import { PermLevel } from "../../../db/entities/UserHost";
-import type { Versions } from "../../../types/command";
-import { fetchLatestRemoteTag } from "../../../utils/github/tags";
-import { getSemVer } from "../../../utils/node/version";
-import { ensureStrictPositive } from "../../../utils/numbers/positive";
-import { CommandDef, CommandInstance } from "../../Command";
+import { PermLevel } from "../../../db/entities/UserHost.js";
+import type { Versions } from "../../../types/command.js";
+import { fetchLatestRemoteTag } from "../../../utils/github/tags.js";
+import { getSemVer } from "../../../utils/node/version.js";
+import { ensureStrictPositive } from "../../../utils/numbers/positive.js";
+import { CommandDef, CommandInstance } from "../../Command.js";
 
 export class CommandVersionDef extends CommandDef<Versions, CommandVersionInstance> {
     constructor() {

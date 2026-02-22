@@ -1,6 +1,6 @@
 import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-import { CategoryTagTable } from "./CategoryTag";
+import { CategoryTagTable } from "./CategoryTag.js";
 
 @Entity({ name: "categories" })
 export class CategoryTable {

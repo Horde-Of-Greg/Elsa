@@ -7,7 +7,7 @@ import {
     EnvSchema,
     type SeederConfig,
     SeederConfigSchema,
-} from "./schema";
+} from "./schema.js";
 
 //TODO: This is awful
 export function validateEnvs(): Env {

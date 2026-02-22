@@ -1,5 +1,5 @@
-import type { ValidEntity } from "../../types/db/entities";
-import { InternalError } from "./InternalError";
+import type { ValidEntity } from "../../types/db/entities.js";
+import { InternalError } from "./InternalError.js";
 
 abstract class DatabaseError extends InternalError {
     abstract readonly code: string;

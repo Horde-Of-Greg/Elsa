@@ -1,4 +1,4 @@
-import { DiscordBot } from "../../bot/DiscordBot";
+import { DiscordBot } from "../../bot/DiscordBot.js";
 
 export interface DiscordResolver {
     get bot(): DiscordBot;

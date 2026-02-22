@@ -1,24 +1,24 @@
-import { Cache } from "../caching/Cache";
-import { appConfig } from "../config/config";
-import type { ServicesResolver } from "../core/containers/Services";
-import { core } from "../core/Core";
-import { AppError } from "../errors/AppError";
-import { MissingArgumentError } from "../errors/client/400";
-import { ArgNotDefinedError, NoArgsDefinedError } from "../errors/internal/commands";
-import { UnknownInternalError } from "../errors/internal/InternalError";
-import type { CooldownService } from "../services/CooldownService";
-import type { HostService } from "../services/HostService";
-import type { PermissionsService } from "../services/PermsService";
-import type { TagService } from "../services/TagService";
-import type { UserService } from "../services/UserService";
+import { Cache } from "../caching/Cache.js";
+import { appConfig } from "../config/config.js";
+import type { ServicesResolver } from "../core/containers/Services.js";
+import { core } from "../core/Core.js";
+import { AppError } from "../errors/AppError.js";
+import { MissingArgumentError } from "../errors/client/400.js";
+import { ArgNotDefinedError, NoArgsDefinedError } from "../errors/internal/commands.js";
+import { UnknownInternalError } from "../errors/internal/InternalError.js";
+import type { CooldownService } from "../services/CooldownService.js";
+import type { HostService } from "../services/HostService.js";
+import type { PermissionsService } from "../services/PermsService.js";
+import type { TagService } from "../services/TagService.js";
+import type { UserService } from "../services/UserService.js";
 import type {
     CacheParams,
     CommandContext,
     CommandParams,
     ParseResult,
     RequirableParseResult,
-} from "../types/command";
-import { dependencies } from "./../core/Dependencies";
+} from "../types/command.js";
+import { dependencies } from "./../core/Dependencies.js";
 
 type CommandInstanceConstructor<TReply, LInstance extends CommandInstance<TReply>> = new (
     context: CommandContext,

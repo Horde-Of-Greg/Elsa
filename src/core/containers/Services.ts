@@ -1,8 +1,8 @@
-import { CooldownService } from "../../services/CooldownService";
-import { HostService } from "../../services/HostService";
-import { PermissionsService } from "../../services/PermsService";
-import { TagService } from "../../services/TagService";
-import { UserService } from "../../services/UserService";
+import { CooldownService } from "../../services/CooldownService.js";
+import { HostService } from "../../services/HostService.js";
+import { PermissionsService } from "../../services/PermsService.js";
+import { TagService } from "../../services/TagService.js";
+import { UserService } from "../../services/UserService.js";
 
 export interface ServicesResolver {
     get cooldownService(): CooldownService;

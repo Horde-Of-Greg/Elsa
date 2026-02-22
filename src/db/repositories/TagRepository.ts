@@ -1,13 +1,13 @@
-import type { SHA256Hash } from "../../types/crypto";
-import type { TagElements, TagHostElements } from "../../types/db/repositories";
-import { CategoryTable } from "../entities/Category";
-import { CategoryTagTable } from "../entities/CategoryTag";
-import { HostTable } from "../entities/Host";
-import { TagTable } from "../entities/Tag";
-import { TagAliasTable } from "../entities/TagAlias";
-import { TagHostStatus, TagHostTable } from "../entities/TagHost";
-import { UserTable } from "../entities/User";
-import { BaseRepository } from "./BaseRepository";
+import type { SHA256Hash } from "../../types/crypto.js";
+import type { TagElements, TagHostElements } from "../../types/db/repositories.js";
+import { CategoryTable } from "../entities/Category.js";
+import { CategoryTagTable } from "../entities/CategoryTag.js";
+import { HostTable } from "../entities/Host.js";
+import { TagTable } from "../entities/Tag.js";
+import { TagAliasTable } from "../entities/TagAlias.js";
+import { TagHostStatus, TagHostTable } from "../entities/TagHost.js";
+import { UserTable } from "../entities/User.js";
+import { BaseRepository } from "./BaseRepository.js";
 
 export class TagRepository extends BaseRepository<TagTable> {
     constructor() {

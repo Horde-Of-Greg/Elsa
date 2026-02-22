@@ -1,10 +1,10 @@
 import { EmbedBuilder } from "@discordjs/builders";
 import type { MessageReplyOptions } from "discord.js";
 
-import { EmbedColors } from "../../assets/colors/colors";
-import { emojis } from "../../config/config";
-import { core } from "../../core/Core";
-import { AppError } from "../AppError";
+import { EmbedColors } from "../../assets/colors/colors.js";
+import { emojis } from "../../config/config.js";
+import { core } from "../../core/Core.js";
+import { AppError } from "../AppError.js";
 
 export abstract class InternalError extends AppError {
     readonly httpStatus = 500;

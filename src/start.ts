@@ -1,6 +1,6 @@
-import { execSync } from "child_process";
+import { execSync } from "node:child_process";
 
-import { isProductionEnvironment } from "./utils/node/environment";
+import { isProductionEnvironment } from "./utils/node/environment.js";
 
 if (!isProductionEnvironment()) {
     throw new Error("start is only meant for production.");

@@ -1,12 +1,12 @@
 import type { User } from "discord.js";
 
-import { emojis } from "../../../config/config";
-import { core } from "../../../core/Core";
-import { PermLevel } from "../../../db/entities/UserHost";
-import { BadArgumentError } from "../../../errors/client/400";
-import { DiscordUserNotFound } from "../../../errors/client/404";
-import { getUserById } from "../../../utils/discord/users";
-import { CommandDef, CommandInstance } from "../../Command";
+import { emojis } from "../../../config/config.js";
+import { core } from "../../../core/Core.js";
+import { PermLevel } from "../../../db/entities/UserHost.js";
+import { BadArgumentError } from "../../../errors/client/400.js";
+import { DiscordUserNotFound } from "../../../errors/client/404.js";
+import { getUserById } from "../../../utils/discord/users.js";
+import { CommandDef, CommandInstance } from "../../Command.js";
 
 export class CommandSetRankDef extends CommandDef<void, CommandSetRankInstance> {
     constructor() {

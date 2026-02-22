@@ -1,6 +1,6 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { HostTable } from "./Host";
+import { HostTable } from "./Host.js";
 
 @Entity({ name: "host_aliases" })
 @Index(["name", "hostId"], { unique: true })

@@ -1,7 +1,18 @@
-import { core } from "../core/Core";
-import type { PositiveNumber } from "../types/numbers";
-import type { _day, _h, _min, _ms, _ns, _s, _µs, AdjustedTime, AppDate, TimeUnit } from "../types/time/time";
-import { ensurePositive } from "./numbers/positive";
+import { core } from "../core/Core.js";
+import type { PositiveNumber } from "../types/numbers.js";
+import type {
+    _day,
+    _h,
+    _min,
+    _ms,
+    _ns,
+    _s,
+    _µs,
+    AdjustedTime,
+    AppDate,
+    TimeUnit,
+} from "../types/time/time.js";
+import { ensurePositive } from "./numbers/positive.js";
 
 /**
  * Get the timestamp using the Date class.

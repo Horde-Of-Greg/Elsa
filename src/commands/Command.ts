@@ -31,13 +31,17 @@ type CommandInstanceConstructor<TReply, LInstance extends CommandInstance<TReply
 ) => LInstance;
 
 export abstract class CommandDef<TReply, LInstance extends CommandInstance<TReply>> {
+    cache: Cache<TReply> | undefined;
+
     constructor(
         protected params: CommandParams,
         private instanceConstructor: CommandInstanceConstructor<TReply, LInstance>,
         private cacheParams: CacheParams,
         private services = dependencies.services,
         private cacheProvider = dependencies.cache,
-    ) {}
+    ) {
+        this.buildCache();
+    }
 
     /**
      * Get all command identifiers (name + aliases).
@@ -68,14 +72,16 @@ export abstract class CommandDef<TReply, LInstance extends CommandInstance<TRepl
         );
     }
 
-    cache: Cache<TReply> | undefined = this.cacheParams.useCache
-        ? new Cache(
-              `cmd-run:${this.params.name}`,
-              this.cacheParams.ttl_s,
-              this.cacheParams.clear,
-              this.cacheProvider,
-          )
-        : undefined;
+    private buildCache() {
+        this.cache = this.cacheParams.useCache
+            ? new Cache(
+                  `cmd-run:${this.params.name}`,
+                  this.cacheParams.ttl_s,
+                  this.cacheParams.clear,
+                  this.cacheProvider,
+              )
+            : undefined;
+    }
 
     async invalidateCache() {
         if (!this.cache) return;

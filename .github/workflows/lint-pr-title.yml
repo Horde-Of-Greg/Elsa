@@ -1,7 +1,7 @@
 name: PR Title Lint
 on:
     pull_request:
-        types: [opened, edited, reopened]
+        types: [opened, edited, synchronize, reopened]
 
 concurrency:
     group: lint-pr-title-${{ github.ref }}
@@ -25,8 +25,8 @@ jobs:
               with:
                   node-version: 22
 
-            - name: Install dependencies
-              run: npm ci
+            - name: Install limited dependencies
+              run: npm install --no-save --no-audit --fund=false @actions/core @actions/github
 
             - name: Lint PR Title
               run: npm run actions:lint-pr

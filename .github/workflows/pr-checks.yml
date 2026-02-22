@@ -31,7 +31,8 @@ jobs:
             pull-requests: none
 
         steps:
-            - uses: actions/checkout@v4
+            - name: Checkout repository
+              uses: actions/checkout@v4
 
             - name: Set up Node
               uses: actions/setup-node@v4

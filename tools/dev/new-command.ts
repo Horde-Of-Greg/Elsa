@@ -113,7 +113,7 @@ function capitalizeWithDashes(input: string) {
 
 async function updateCommandsRegistry() {
     const CmdName = capitalizeWithDashes(cmdName);
-    const cmdNameNoHyphen = cmdName.replace(/-/g, "");
+    const cmdNameNoHyphen = cmdName.replaceAll(/-/, "");
 
     const commandsFile = await fs.promises.readFile(commandRegistryPath, "utf-8");
 

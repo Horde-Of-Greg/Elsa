@@ -35,10 +35,10 @@ export abstract class CommandDef<TReply, LInstance extends CommandInstance<TRepl
 
     constructor(
         protected params: CommandParams,
-        private instanceConstructor: CommandInstanceConstructor<TReply, LInstance>,
-        private cacheParams: CacheParams,
-        private services = dependencies.services,
-        private cacheProvider = dependencies.cache,
+        private readonly instanceConstructor: CommandInstanceConstructor<TReply, LInstance>,
+        private readonly cacheParams: CacheParams,
+        private readonly services = dependencies.services,
+        private readonly cacheProvider = dependencies.cache,
     ) {
         this.buildCache();
     }
@@ -159,12 +159,11 @@ export abstract class CommandInstance<TReply> {
         }
         let content = await this.cache.get(this.cacheKey);
 
-        if (!content) {
-            content = await this.execute();
-        } else {
+        if (content) {
             core.logger.debug(`${this.params.name}: Cache Hit!`);
         }
 
+        content = await this.execute();
         this.content = content;
         await this.cache.set(this.cacheKey, this.content);
     }
@@ -236,11 +235,11 @@ export abstract class CommandInstance<TReply> {
     private async replyError(e: Error): Promise<void> {
         let error: AppError;
 
-        if (!(e instanceof AppError)) {
-            error = new UnknownInternalError(e.message, e.stack);
-        } else {
+        if (e instanceof AppError) {
             error = e;
         }
+
+        error = new UnknownInternalError(e.message, e.stack);
 
         error.log();
         await this.context.message.reply(error.reply);

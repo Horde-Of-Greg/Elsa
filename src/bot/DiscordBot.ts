@@ -20,10 +20,10 @@ type AnyDiscordEventHandler = {
 export class DiscordBot {
     name: string;
     client: Client;
-    private router: CommandRouter;
-    private handlers: AnyDiscordEventHandler[];
+    private readonly router: CommandRouter;
+    private readonly handlers: AnyDiscordEventHandler[];
     private readyResolver?: () => void;
-    private readyPromise: Promise<void>;
+    private readonly readyPromise: Promise<void>;
 
     constructor() {
         this.client = new Client({ intents: gatewayIntents });

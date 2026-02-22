@@ -2,21 +2,19 @@ name: TypeScript Compilation Check
 
 on:
     pull_request:
-        paths-ignore:
-            - ".gitignore"
-            - ".github/**"
-            - "README.md"
-            - "LICENSE"
-            - ".vscode/**"
+        paths:
+            - "src"
+            - "tools"
+            - "package.json"
+            - "package-lock.json"
     push:
         branches:
             - "main"
         paths-ignore:
-            - ".gitignore"
-            - ".github/**"
-            - "README.md"
-            - "LICENSE"
-            - ".vscode/**"
+            - "src"
+            - "tools"
+            - "package.json"
+            - "package-lock.json"
 
 jobs:
     ts-check:

@@ -3,24 +3,18 @@ name: Lint Check
 on:
     pull_request:
         paths-ignore:
-            - ".gitignore"
-            - ".github/**"
-            - "README.md"
-            - "LICENSE"
-            - ".prettierrc"
-            - ".prettierignore"
-            - ".vscode/**"
+            - "src"
+            - "tools"
+            - "package.json"
+            - "package-lock.json"
     push:
         branches:
             - "main"
         paths-ignore:
-            - ".gitignore"
-            - ".github/**"
-            - "README.md"
-            - "LICENSE"
-            - ".prettierrc"
-            - ".prettierignore"
-            - ".vscode/**"
+            - "src"
+            - "tools"
+            - "package.json"
+            - "package-lock.json"
 
 concurrency:
     group: lint-check-${{ github.ref }}

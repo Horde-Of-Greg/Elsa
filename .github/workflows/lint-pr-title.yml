@@ -17,14 +17,19 @@ jobs:
             issues: none
             pull-requests: read
         steps:
-            - uses: actions/checkout@v4
-            - uses: actions/setup-node@v4
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup up Node.js
+              uses: actions/setup-node@v4
               with:
-                  node-version: "20"
-            - run: npm ci
+                  node-version: 22
+
+            - name: Install limited dependencies
+              run: npm install --no-save --no-audit --fund=false @actions/core @actions/github
 
             - name: Lint PR Title
               run: npm run actions:lint-pr
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
+                  ENVIRONMENT: ${{ vars.NODE_ENV }}

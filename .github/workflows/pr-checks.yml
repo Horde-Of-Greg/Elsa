@@ -1,4 +1,4 @@
-name: Lint Check
+name: PR Checks
 
 on:
     pull_request:
@@ -17,11 +17,11 @@ on:
             - "package-lock.json"
 
 concurrency:
-    group: lint-check-${{ github.ref }}
+    group: pr-checks-${{ github.ref }}
     cancel-in-progress: false
 
 jobs:
-    lint:
+    pr-checks:
         runs-on: ubuntu-latest
         permissions:
             actions: none
@@ -44,6 +44,9 @@ jobs:
 
             - name: Install dependencies
               run: npm ci
+
+            - name: Compilation Check
+              run: npm run tscheck
 
             - name: Run ESLint with JSON report
               run: npm run lint:report

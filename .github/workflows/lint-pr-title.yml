@@ -1,7 +1,7 @@
 name: PR Title Lint
 on:
     pull_request:
-        types: [opened, edited, synchronize, reopened]
+        types: [opened, edited, reopened]
 
 concurrency:
     group: lint-pr-title-${{ github.ref }}

@@ -60,7 +60,6 @@ export default defineConfig(
             "importsort/exports": "error",
             "prefer-const": "error",
             "@typescript-eslint/prefer-readonly": "error",
-            "@typescript-eslint/prefer-readonly-parameter-types": "warn",
         },
     },
 );

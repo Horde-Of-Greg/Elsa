@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
+import fs from "node:fs";
+import path from "node:path";
+
 import { execSync } from "child_process";
-import fs from "fs";
-import path from "path";
 import readline from "readline";
 
 const rl = readline.createInterface({

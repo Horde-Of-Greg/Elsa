@@ -58,6 +58,9 @@ export default defineConfig(
             "no-warning-comments": ["warn", { terms: ["todo", "fixme"], location: "start" }],
             "importsort/imports": "error",
             "importsort/exports": "error",
+            "prefer-const": "error",
+            "@typescript-eslint/prefer-readonly": "error",
+            "@typescript-eslint/prefer-readonly-parameter-types": "warn",
         },
     },
 );

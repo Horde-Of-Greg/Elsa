@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 
+import fs from "node:fs";
+import path from "node:path";
+
 import dotenv from "dotenv";
-import fs from "fs";
-import path from "path";
 
 const ROOT_DIR = process.cwd();
 let missingKeys = false;

@@ -1,4 +1,4 @@
-import { Console } from "console";
+import { Console } from "node:console";
 
 import { AnsiFg, AnsiFgBright, AnsiStyle } from "../../assets/colors/ansi";
 import { LogLevel } from "../../types/logs";

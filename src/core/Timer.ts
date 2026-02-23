@@ -3,8 +3,8 @@ import type { TimerResult } from "../types/time/timer";
 import { adjustTime, formatTime } from "../utils/time";
 
 export class Timer {
-    private startDate: Date;
-    private startTime: _ns;
+    private readonly startDate: Date;
+    private readonly startTime: _ns;
 
     constructor() {
         this.startDate = new Date();

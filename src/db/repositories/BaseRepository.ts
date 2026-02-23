@@ -17,7 +17,7 @@ export abstract class BaseRepository<T extends ValidEntity> {
 
     constructor(
         entityClass: new () => T,
-        private database: DatabaseResolver = dependencies.database,
+        private readonly database: DatabaseResolver = dependencies.database,
     ) {
         this.repo = this.database.dataSource.getRepository(entityClass);
     }

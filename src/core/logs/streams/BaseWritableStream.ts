@@ -1,4 +1,4 @@
-import { Writable, type WritableOptions } from "stream";
+import { Writable, type WritableOptions } from "node:stream";
 
 export interface StreamConfig {
     name: string;

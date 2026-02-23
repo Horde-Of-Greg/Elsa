@@ -1,6 +1,6 @@
-import { Console } from "console";
-import fs from "fs";
-import path from "path";
+import { Console } from "node:console";
+import fs from "node:fs";
+import path from "node:path";
 
 import { appConfig } from "../../config/config";
 import type { StreamsContainer } from "../../types/logs";

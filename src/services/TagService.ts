@@ -14,9 +14,9 @@ import type { HostService } from "./HostService";
 import type { UserService } from "./UserService";
 
 export class TagService {
-    private tagRepo: TagRepository;
-    private userService: UserService;
-    private hostService: HostService;
+    private readonly tagRepo: TagRepository;
+    private readonly userService: UserService;
+    private readonly hostService: HostService;
 
     constructor(
         repositories: RepositoryResolver = dependencies.repositories,
@@ -71,7 +71,7 @@ export class TagService {
 
     async updateTag(context: { tagName: string; tagBody: string; tagBodyHash: SHA256Hash }) {
         const tag = await this.tagRepo.findByName(context.tagName);
-        if (!tag) {
+        if (tag === null) {
             throw new TagNotFoundError(context.tagName, true);
         }
         tag.body = context.tagBody;
@@ -104,7 +104,7 @@ export class TagService {
         const hash: SHA256Hash = computeSHA256(body);
         const tagWithBody = await this.tagRepo.findByHash(hash);
 
-        if (!tagWithBody) return { exists: false, hash };
+        if (tagWithBody === null) return { exists: false, hash };
         return { exists: true, tagWithBody };
     }
 

@@ -3,7 +3,7 @@ import { dependencies } from "../core/Dependencies";
 import type { HostRepository } from "../db/repositories/HostRepository";
 
 export class HostService {
-    private hostRepo: HostRepository;
+    private readonly hostRepo: HostRepository;
 
     constructor(repositories: RepositoryResolver = dependencies.repositories) {
         this.hostRepo = repositories.hostRepo;

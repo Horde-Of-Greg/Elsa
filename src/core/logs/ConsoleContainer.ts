@@ -1,6 +1,6 @@
-import { Console } from "console";
-import fs from "fs";
-import path from "path";
+import { Console } from "node:console";
+import fs from "node:fs";
+import path from "node:path";
 
 import { appConfig } from "../../config/config";
 import type { StreamsContainer } from "../../types/logs";
@@ -147,7 +147,7 @@ class ConsoleContainer {
     }
 
     async archiveLogs(): Promise<void> {
-        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+        const timestamp = new Date().toISOString().replaceAll(/[:.]/, "-");
         const logDir = appConfig.LOGS.OUTPUT_PATH;
         const archiveDir = path.join(logDir, "archive");
 

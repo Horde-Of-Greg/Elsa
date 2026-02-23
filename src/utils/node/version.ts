@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 export async function getSemVer(): Promise<string> {
     const packagePath = path.join(process.cwd(), "package.json");

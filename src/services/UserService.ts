@@ -8,8 +8,8 @@ import type { UserRepository } from "../db/repositories/UserRepository";
 import type { HostService } from "./HostService";
 
 export class UserService {
-    private userRepo: UserRepository;
-    private hostService: HostService;
+    private readonly userRepo: UserRepository;
+    private readonly hostService: HostService;
 
     constructor(
         repositories: RepositoryResolver = dependencies.repositories,

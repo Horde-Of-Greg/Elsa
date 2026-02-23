@@ -9,7 +9,7 @@ import tseslint from "typescript-eslint";
 
 export default defineConfig(
     {
-        ignores: ["dist/**", "config/**"],
+        ignores: ["dist/**", "config/**", "ecosystem.config.js"],
     },
     eslint.configs.recommended,
     ...tseslint.configs.recommended,
@@ -58,6 +58,8 @@ export default defineConfig(
             "no-warning-comments": ["warn", { terms: ["todo", "fixme"], location: "start" }],
             "importsort/imports": "error",
             "importsort/exports": "error",
+            "prefer-const": "error",
+            "@typescript-eslint/prefer-readonly": "error",
         },
     },
 );

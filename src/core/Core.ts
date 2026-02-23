@@ -3,7 +3,7 @@ import { Timer } from "./Timer";
 
 class Core {
     private _logger?: Logger;
-    private _timers = new Map<string, Timer>();
+    private readonly _timers = new Map<string, Timer>();
 
     get logger(): Logger {
         return (this._logger ??= new Logger());

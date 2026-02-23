@@ -8,8 +8,8 @@ import type { UserRepository } from "../db/repositories/UserRepository";
 import { PermissionDeniedError } from "../errors/client/403";
 
 export class PermissionsService {
-    private userRepo: UserRepository;
-    private hostRepo: HostRepository;
+    private readonly userRepo: UserRepository;
+    private readonly hostRepo: HostRepository;
 
     constructor(repositories: RepositoryResolver = dependencies.repositories) {
         this.userRepo = repositories.userRepo;

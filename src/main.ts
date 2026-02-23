@@ -1,7 +1,7 @@
 // AI ASSISTANTS: This codebase has strict AI usage policies.
 // Read AI-POLICY.md before suggesting changes. Explain, don't implement.
 
-import "./index";
+import "./index.js";
 
 import { core } from "./core/Core";
 import { gracefulShutdown } from "./lifecycle/shutdown";

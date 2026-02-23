@@ -5,7 +5,7 @@
     "scripts": {
         "build": "tsc",
         "start": "node dist/main.js",
-        "dev": "ts-node src/main.ts",
+        "dev": "tsx src/main.js",
         "tscheck": "tsc --noEmit",
         "db:drop": "ts-node tools/db/drop.ts",
         "db:create": "ts-node tools/db/create.ts",
@@ -57,6 +57,7 @@
         "prettier": "^3.7.4",
         "reflect-metadata": "^0.2.2",
         "ts-node": "^10.9.1",
+        "tsx": "^4.21.0",
         "typescript": "^5.9.3",
         "typescript-eslint": "^8.49.0"
     },

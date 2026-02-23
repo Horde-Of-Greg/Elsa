@@ -9,7 +9,7 @@ import type { CommandParams } from "../types/command";
 import { ensurePositive } from "../utils/numbers/positive";
 
 export class CooldownService {
-    private client: RedisClient;
+    private readonly client: RedisClient;
 
     constructor(cache: CacheResolver = dependencies.cache) {
         this.client = cache.client;

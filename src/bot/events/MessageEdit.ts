@@ -13,7 +13,7 @@ export class MessageEditHandler extends DiscordEventHandler<"messageUpdate"> {
         core.logger.debug("Received Edited Message");
 
         const context: CommandContext = {
-            message: newMessage as Message,
+            message: newMessage,
             author: newMessage.author,
             guild: newMessage.guild,
             channel: newMessage.channel,

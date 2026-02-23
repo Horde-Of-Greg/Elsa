@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
+import fs from "node:fs";
+import path from "node:path";
+
 import { execSync } from "child_process";
-import fs from "fs";
-import path from "path";
 import readline from "readline";
 
 const rl = readline.createInterface({
@@ -113,7 +114,7 @@ function capitalizeWithDashes(input: string) {
 
 async function updateCommandsRegistry() {
     const CmdName = capitalizeWithDashes(cmdName);
-    const cmdNameNoHyphen = cmdName.replace(/-/g, "");
+    const cmdNameNoHyphen = cmdName.replaceAll(/-/, "");
 
     const commandsFile = await fs.promises.readFile(commandRegistryPath, "utf-8");
 

@@ -1,7 +1,7 @@
 import type { Cache } from "./Cache";
 
 export class CacheRegistry {
-    private caches: Cache<unknown>[] = [];
+    private readonly caches: Cache<unknown>[] = [];
 
     register(cache: Cache<unknown>): void {
         this.caches.push(cache);

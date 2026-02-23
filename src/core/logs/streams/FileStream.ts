@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import { appConfig } from "../../../config/config";
 import { isActionsEnvironment } from "../../../utils/node/environment";
@@ -39,7 +39,7 @@ export class FileStream extends BaseWritableStream {
             throw new Error(`FileStream "${this.name}" is not open`);
         }
         // eslint-disable-next-line no-control-regex
-        const clean = data.replace(/\x1b\[[0-9;]*m/g, "");
+        const clean = data.replaceAll(/\x1b\[[0-9;]*m/, "");
         this.fileHandle.write(clean);
     }
 

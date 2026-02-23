@@ -31,13 +31,17 @@ type CommandInstanceConstructor<TReply, LInstance extends CommandInstance<TReply
 ) => LInstance;
 
 export abstract class CommandDef<TReply, LInstance extends CommandInstance<TReply>> {
+    cache: Cache<TReply> | undefined;
+
     constructor(
         protected params: CommandParams,
-        private instanceConstructor: CommandInstanceConstructor<TReply, LInstance>,
-        private cacheParams: CacheParams,
-        private services = dependencies.services,
-        private cacheProvider = dependencies.cache,
-    ) {}
+        private readonly instanceConstructor: CommandInstanceConstructor<TReply, LInstance>,
+        private readonly cacheParams: CacheParams,
+        private readonly services = dependencies.services,
+        private readonly cacheProvider = dependencies.cache,
+    ) {
+        this.buildCache();
+    }
 
     /**
      * Get all command identifiers (name + aliases).
@@ -68,14 +72,16 @@ export abstract class CommandDef<TReply, LInstance extends CommandInstance<TRepl
         );
     }
 
-    cache: Cache<TReply> | undefined = this.cacheParams.useCache
-        ? new Cache(
-              `cmd-run:${this.params.name}`,
-              this.cacheParams.ttl_s,
-              this.cacheParams.clear,
-              this.cacheProvider,
-          )
-        : undefined;
+    private buildCache() {
+        this.cache = this.cacheParams.useCache
+            ? new Cache(
+                  `cmd-run:${this.params.name}`,
+                  this.cacheParams.ttl_s,
+                  this.cacheParams.clear,
+                  this.cacheProvider,
+              )
+            : undefined;
+    }
 
     async invalidateCache() {
         if (!this.cache) return;
@@ -153,12 +159,11 @@ export abstract class CommandInstance<TReply> {
         }
         let content = await this.cache.get(this.cacheKey);
 
-        if (!content) {
-            content = await this.execute();
-        } else {
+        if (content) {
             core.logger.debug(`${this.params.name}: Cache Hit!`);
         }
 
+        content = await this.execute();
         this.content = content;
         await this.cache.set(this.cacheKey, this.content);
     }
@@ -230,11 +235,11 @@ export abstract class CommandInstance<TReply> {
     private async replyError(e: Error): Promise<void> {
         let error: AppError;
 
-        if (!(e instanceof AppError)) {
-            error = new UnknownInternalError(e.message, e.stack);
-        } else {
+        if (e instanceof AppError) {
             error = e;
         }
+
+        error = new UnknownInternalError(e.message, e.stack);
 
         error.log();
         await this.context.message.reply(error.reply);

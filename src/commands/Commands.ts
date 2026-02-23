@@ -56,22 +56,19 @@ class Commands {
         return (this._setRank ??= new CommandSetRankDef());
     }
 
-    
     get delete(): CommandDeleteDef {
         return (this._delete ??= new CommandDeleteDef());
     }
-
 
     get alias(): CommandAliasDef {
         return (this._alias ??= new CommandAliasDef());
     }
 
-
     get version(): CommandVersionDef {
         return (this._version ??= new CommandVersionDef());
     }
 
-getAll(): CommandDef<unknown, CommandInstance<unknown>>[] {
+    getAll(): CommandDef<unknown, CommandInstance<unknown>>[] {
         return [
             this.add,
             this.help,

@@ -7,8 +7,8 @@ import type { CommandDef, CommandInstance } from "./Command";
 import { commands } from "./Commands";
 
 export class CommandRouter {
-    private commandList: CommandDef<unknown, CommandInstance<unknown>>[];
-    private hashMap: Map<string, CommandDef<unknown, CommandInstance<unknown>>>;
+    private readonly commandList: CommandDef<unknown, CommandInstance<unknown>>[];
+    private readonly hashMap: Map<string, CommandDef<unknown, CommandInstance<unknown>>>;
     private _matcher?: RegExp;
 
     constructor() {
@@ -40,7 +40,7 @@ export class CommandRouter {
     }
 
     private parse(message: Message): ParseResult | null {
-        const parsed = message.content.match(this.matcher);
+        const parsed = new RegExp(this.matcher).exec(message.content);
 
         if (!parsed) return null;
 
@@ -68,16 +68,17 @@ export class CommandRouter {
     }
 
     private get matcher() {
-        return (this._matcher ??= new RegExp(CommandRouter.pattern, "i"));
+        const matcher = (this._matcher ??= new RegExp(this.pattern, "i"));
+        return matcher;
     }
 
-    private static pattern = [
+    private readonly pattern = [
         "^",
         `\\${appConfig.PREFIX}`,
         "([a-z0-9]+)",
         "(?:-([a-z0-9]*))?",
-        "(?:\\s(\\w+))?",
-        "(?:\\s(.+))?",
+        String.raw`(?:\s(\w+))?`,
+        String.raw`(?:\s(.+))?`,
         "$",
     ].join("");
 }

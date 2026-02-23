@@ -90,5 +90,5 @@ export class NotOwnerError extends AppError {
 }
 
 function getUserName(user: UserTable): string {
-    return user.name !== null ? user.name : "Unknown";
+    return user.name ?? "Unknown";
 }

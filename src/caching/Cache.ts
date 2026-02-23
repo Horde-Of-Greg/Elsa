@@ -5,17 +5,19 @@ import { makeRedisKey } from "./keys";
 
 export class Cache<T = string> {
     constructor(
-        private prefix: string,
-        private ttl_s: StrictPositiveNumber,
+        private readonly prefix: string,
+        private readonly ttl_s: StrictPositiveNumber,
         readonly clearOnRestart: boolean,
-        private resolver: CacheResolver = dependencies.cache,
+        private readonly resolver: CacheResolver = dependencies.cache,
     ) {
         this.resolver.registry.register(this);
     }
 
     async get(key: string): Promise<T | null> {
         const raw = await this.resolver.client.retrieve(makeRedisKey(`${this.prefix}:${key}`));
-        return raw !== null ? JSON.parse(raw) : null;
+
+        if (raw === null) return null;
+        return JSON.parse(raw);
     }
 
     async set(key: string, value: T): Promise<void> {

@@ -34,8 +34,8 @@ export class CommandHelpDef extends CommandDef<MessageReplyOptions, CommandHelpI
 }
 
 export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
-    private commandDefs = commands.getAll();
-    private message: APIEmbedField[] = [];
+    private readonly commandDefs = commands.getAll();
+    private readonly message: APIEmbedField[] = [];
 
     protected async validateData(): Promise<void> {}
 

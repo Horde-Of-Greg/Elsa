@@ -8,8 +8,7 @@ export class MessageDeleteHandler extends DiscordEventHandler<"messageDelete"> {
     readonly once = false;
 
     async handle(message: OmitPartialGroupDMChannel<Message | PartialMessage>): Promise<void> {
-        if (!message.author) return;
-        if (message.author.bot) return;
+        if (message.author !== null && message.author.bot) return;
         core.logger.debug("Received Deleted Message");
 
         await this.services.messageLinkService.deleteLinkedMessage(message);

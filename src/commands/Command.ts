@@ -1,3 +1,5 @@
+import type { Message } from "discord.js";
+
 import { Cache } from "../caching/Cache";
 import { appConfig } from "../config/config";
 import type { ServicesResolver } from "../core/containers/Services";
@@ -96,8 +98,7 @@ export abstract class CommandInstance<TReply> {
     protected tagService: TagService;
     protected userService: UserService;
     protected content: TReply;
-
-    protected timerKey: string = this.makeTimerKey();
+    protected timerKey: string;
 
     constructor(
         protected context: CommandContext,
@@ -117,12 +118,15 @@ export abstract class CommandInstance<TReply> {
 
     async run(): Promise<void> {
         try {
+            this.timerKey = this.makeTimerKey();
             core.startTimer(this.timerKey);
             await this.validateData();
             await this.validatePermissions();
             await this.checkCooldown();
             await this.getContent();
-            await this.reply();
+            const sentMessage = await this.reply();
+            await this.postReply(sentMessage);
+            await this.linkMessage(sentMessage);
             this.logExecution();
         } catch (error: unknown) {
             await this.replyError(error instanceof Error ? error : new Error(String(error)));
@@ -145,7 +149,12 @@ export abstract class CommandInstance<TReply> {
     /**
      * Describe how the command should reply to the user in discord.
      */
-    protected abstract reply(): Promise<void>;
+    protected abstract reply(): Promise<Message>;
+
+    /**
+     * Describe what to do after the bot replied (left empty in most cases)
+     */
+    protected abstract postReply(sentMessage: Message): Promise<void>;
 
     /**
      * Describe what the command should log in the server logs. Can be left empty.
@@ -166,6 +175,10 @@ export abstract class CommandInstance<TReply> {
         content = await this.execute();
         this.content = content;
         await this.cache.set(this.cacheKey, this.content);
+    }
+
+    private async linkMessage(sentMessage: Message): Promise<void> {
+        await this.services.messageLinkService.linkNewMessage(this.context.message, sentMessage);
     }
 
     /*

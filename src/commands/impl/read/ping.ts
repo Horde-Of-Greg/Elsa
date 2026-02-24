@@ -1,7 +1,10 @@
+import type { Message } from "discord.js";
+
 import { emojis } from "../../../config/config";
 import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
 import type { _ms } from "../../../types/time/time";
+import type { TimerResult } from "../../../types/time/timer";
 import { CommandDef, CommandInstance } from "../../Command";
 
 export class CommandPingDef extends CommandDef<void, CommandPingInstance> {
@@ -28,21 +31,27 @@ export class CommandPingDef extends CommandDef<void, CommandPingInstance> {
 }
 
 export class CommandPingInstance extends CommandInstance<void> {
+    private serverLatency: TimerResult;
+
     protected async validateData(): Promise<void> {}
 
     protected async execute(): Promise<void> {}
 
-    protected async reply(): Promise<void> {
-        const serverLatency = core.queryTimer(this.timerKey).getTime("ms");
-        const sent = await this.context.message.reply(`${emojis.PING_PONG} Pinging...`);
+    protected async reply(): Promise<Message> {
+        this.serverLatency = core.queryTimer(this.timerKey).getTime("ms");
+        return this.context.message.reply(`${emojis.PING_PONG} Pinging...`);
+    }
 
-        const roundTripLatency: _ms = (sent.createdTimestamp - this.context.message.createdTimestamp) as _ms;
+    protected async postReply(sentMessage: Message): Promise<void> {
+        const roundTripLatency: _ms = (sentMessage.createdTimestamp -
+            this.context.message.createdTimestamp) as _ms;
 
-        await sent.edit(
+        await sentMessage.edit(
             `${emojis.PING_PONG} Pong!\n` +
                 `**Total latency:** \`${roundTripLatency}ms\` ${roundTripLatency > 1000 ? emojis.WORRIED : ""}\n` +
-                `**Server latency:** \`${serverLatency.formatted}\` ${serverLatency.raw > 1e8 ? emojis.WORRIED : ""}\n`,
+                `**Server latency:** \`${this.serverLatency.formatted}\` ${this.serverLatency.raw > 1e8 ? emojis.WORRIED : ""}\n`,
         );
     }
+
     protected logExecution(): void {}
 }

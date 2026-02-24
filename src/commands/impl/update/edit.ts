@@ -1,3 +1,5 @@
+import type { Message } from "discord.js";
+
 import { emojis } from "../../../config/config";
 import { core } from "../../../core/Core";
 import type { TagTable } from "../../../db/entities/Tag";
@@ -63,9 +65,11 @@ export class CommandEditInstance extends CommandInstance<void> {
         await this.invalidateCache();
     }
 
-    protected async reply(): Promise<void> {
-        await this.context.message.reply(`Tag \`${this.tagName}\` edited successfully! ${emojis.CHECKMARK}`);
+    protected async reply(): Promise<Message> {
+        return this.context.message.reply(`Tag \`${this.tagName}\` edited successfully! ${emojis.CHECKMARK}`);
     }
+
+    protected async postReply(sentMessage: Message): Promise<void> {}
 
     protected logExecution(): void {
         core.logger.info(`User ${this.context.author.tag} edited tag: ${this.tagName}`);

@@ -1,3 +1,5 @@
+import type { Message } from "discord.js";
+
 import { appConfig } from "../../../config/config";
 import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
@@ -40,12 +42,15 @@ export class CommandUptimeInstance extends CommandInstance<void> {
         this.startDate = timer.getStartDate();
     }
 
-    protected async reply(): Promise<void> {
+    protected async reply(): Promise<Message> {
         const unixTimestamp = Math.floor(this.startDate.getTime() / 1000);
 
-        await this.context.message.reply(
+        return this.context.message.reply(
             `**${appConfig.NAME}** has been up for \`${this.uptime.formatted}\` (Since <t:${unixTimestamp}:F>)`,
         );
     }
+
+    protected async postReply(sentMessage: Message): Promise<void> {}
+
     protected logExecution(): void {}
 }

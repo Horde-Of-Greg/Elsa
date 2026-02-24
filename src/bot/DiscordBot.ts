@@ -4,9 +4,10 @@ import { CommandRouter } from "../commands/CommandRouter";
 import type { DiscordEventHandler } from "./DiscordEventHandler";
 import { ReadyHandler } from "./events/ClientReady";
 import { MessageCreateHandler } from "./events/MessageCreate";
+import { MessageDeleteHandler } from "./events/MessageDelete";
 import { MessageEditHandler } from "./events/MessageEdit";
 
-const gatewayIntents = [
+export const gatewayIntents = [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
@@ -33,7 +34,12 @@ export class DiscordBot {
             this.readyResolver = resolve;
         });
 
-        this.handlers = [new ReadyHandler(), new MessageCreateHandler(), new MessageEditHandler()];
+        this.handlers = [
+            new ReadyHandler(),
+            new MessageCreateHandler(),
+            new MessageEditHandler(),
+            new MessageDeleteHandler(),
+        ];
 
         this.registerEventHandlers();
     }

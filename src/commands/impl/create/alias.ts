@@ -1,3 +1,5 @@
+import type { Message } from "discord.js";
+
 import { emojis } from "../../../config/config";
 import { core } from "../../../core/Core";
 import type { TagTable } from "../../../db/entities/Tag";
@@ -51,11 +53,13 @@ export class CommandAliasInstance extends CommandInstance<void> {
         await this.tagService.createAlias(this.aliasName, { tagToAlias: this.tag, type: "object" }, author);
     }
 
-    protected async reply(): Promise<void> {
-        await this.context.message.reply(
+    protected async reply(): Promise<Message> {
+        return this.context.message.reply(
             `Aliased \`${this.tagName}\` as \`${this.aliasName}\` ${emojis.CHECKMARK}`,
         );
     }
+
+    protected async postReply(sentMessage: Message): Promise<void> {}
 
     protected logExecution(): void {
         core.logger.info(

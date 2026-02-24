@@ -1,3 +1,5 @@
+import type { Message } from "discord.js";
+
 import { core } from "../../../core/Core";
 import type { UserTable } from "../../../db/entities/User";
 import { PermLevel } from "../../../db/entities/UserHost";
@@ -46,9 +48,11 @@ export class CommandOwnerInstance extends CommandInstance<UserTable> {
         return tag.author;
     }
 
-    protected async reply(): Promise<void> {
-        await this.context.message.reply(`Tag **${this.tagName}** is owned by <@${this.content.discordId}>`);
+    protected async reply(): Promise<Message> {
+        return this.context.message.reply(`Tag **${this.tagName}** is owned by <@${this.content.discordId}>`);
     }
+
+    protected async postReply(sentMessage: Message): Promise<void> {}
 
     protected logExecution(): void {
         core.logger.debug(`You forgot to change the default values of ${this.params.name}`);

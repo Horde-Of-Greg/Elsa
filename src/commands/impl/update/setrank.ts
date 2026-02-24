@@ -1,4 +1,4 @@
-import type { User } from "discord.js";
+import type { Message, User } from "discord.js";
 
 import { emojis } from "../../../config/config";
 import { core } from "../../../core/Core";
@@ -54,14 +54,19 @@ class CommandSetRankInstance extends CommandInstance<void> {
         this.newRank = PermLevel[newRank as keyof typeof PermLevel];
         await this.permsService.requirePermLevel(this.context.author, this.context.guild, this.newRank);
     }
+
     protected async execute(): Promise<void> {
         await this.userService.createUserWithPerms(this.user, this.context.guild, this.newRank);
     }
-    protected async reply(): Promise<void> {
-        await this.context.message.reply(
+
+    protected async reply(): Promise<Message> {
+        return this.context.message.reply(
             `Successfully updated <@${this.user.id}>'s rank to ${PermLevel[this.newRank]} ${emojis.CHECKMARK}`,
         );
     }
+
+    protected async postReply(sentMessage: Message): Promise<void> {}
+
     protected logExecution(): void {
         core.logger.warnUser(
             `Successfully updated ${this.user.username}'s rank to ${PermLevel[this.newRank]}`,

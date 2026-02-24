@@ -39,7 +39,7 @@ export class FileStream extends BaseWritableStream {
             throw new Error(`FileStream "${this.name}" is not open`);
         }
         // eslint-disable-next-line no-control-regex
-        const clean = data.replaceAll(/\x1b\[[0-9;]*m/, "");
+        const clean = data.replaceAll(/\x1b\[[0-9;]*m/g, "");
         this.fileHandle.write(clean);
     }
 

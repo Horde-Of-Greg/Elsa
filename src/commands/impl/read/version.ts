@@ -1,4 +1,5 @@
 import { EmbedBuilder } from "@discordjs/builders";
+import type { Message } from "discord.js";
 
 import { PermLevel } from "../../../db/entities/UserHost";
 import type { Versions } from "../../../types/command";
@@ -43,8 +44,8 @@ export class CommandVersionInstance extends CommandInstance<Versions> {
         };
     }
 
-    protected async reply(): Promise<void> {
-        await this.context.message.reply({
+    protected async reply(): Promise<Message> {
+        return this.context.message.reply({
             embeds: [
                 new EmbedBuilder()
                     .setTitle("Version Information")
@@ -55,6 +56,8 @@ export class CommandVersionInstance extends CommandInstance<Versions> {
             ],
         });
     }
+
+    protected async postReply(sentMessage: Message): Promise<void> {}
 
     protected logExecution(): void {}
 }

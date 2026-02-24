@@ -1,3 +1,5 @@
+import type { Message } from "discord.js";
+
 import { emojis } from "../../../config/config";
 import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
@@ -58,9 +60,13 @@ class CommandAddInstance extends CommandInstance<void> {
         });
     }
 
-    protected async reply(): Promise<void> {
-        await this.context.message.reply(`Tag \`${this.tagName}\` created successfully! ${emojis.CHECKMARK}`);
+    protected async reply(): Promise<Message> {
+        return this.context.message.reply(
+            `Tag \`${this.tagName}\` created successfully! ${emojis.CHECKMARK}`,
+        );
     }
+
+    protected async postReply(sentMessage: Message): Promise<void> {}
 
     protected logExecution(): void {
         core.logger.info(`User ${this.context.author.tag} created tag: ${this.tagName}`);

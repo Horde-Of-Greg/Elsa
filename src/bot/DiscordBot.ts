@@ -1,12 +1,13 @@
-import { Client, type ClientEvents, GatewayIntentBits } from "discord.js";
+import { Client, type ClientEvents, GatewayIntentBits, Partials } from "discord.js";
 
 import { CommandRouter } from "../commands/CommandRouter";
 import type { DiscordEventHandler } from "./DiscordEventHandler";
 import { ReadyHandler } from "./events/ClientReady";
 import { MessageCreateHandler } from "./events/MessageCreate";
+import { MessageDeleteHandler } from "./events/MessageDelete";
 import { MessageEditHandler } from "./events/MessageEdit";
 
-const gatewayIntents = [
+export const gatewayIntents = [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
@@ -26,14 +27,19 @@ export class DiscordBot {
     private readonly readyPromise: Promise<void>;
 
     constructor() {
-        this.client = new Client({ intents: gatewayIntents });
+        this.client = new Client({ intents: gatewayIntents, partials: [Partials.Message, Partials.Channel] });
         this.router = new CommandRouter();
 
         this.readyPromise = new Promise<void>((resolve) => {
             this.readyResolver = resolve;
         });
 
-        this.handlers = [new ReadyHandler(), new MessageCreateHandler(), new MessageEditHandler()];
+        this.handlers = [
+            new ReadyHandler(),
+            new MessageCreateHandler(),
+            new MessageEditHandler(),
+            new MessageDeleteHandler(),
+        ];
 
         this.registerEventHandlers();
     }

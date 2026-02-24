@@ -147,7 +147,7 @@ class ConsoleContainer {
     }
 
     async archiveLogs(): Promise<void> {
-        const timestamp = new Date().toISOString().replaceAll(/[:.]/, "-");
+        const timestamp = new Date().toISOString().replaceAll(/[:.]/g, "-");
         const logDir = appConfig.LOGS.OUTPUT_PATH;
         const archiveDir = path.join(logDir, "archive");
 

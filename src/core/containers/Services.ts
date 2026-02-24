@@ -1,5 +1,6 @@
 import { CooldownService } from "../../services/CooldownService";
 import { HostService } from "../../services/HostService";
+import { MessageLinkService } from "../../services/MessageLinkService";
 import { PermissionsService } from "../../services/PermsService";
 import { TagService } from "../../services/TagService";
 import { UserService } from "../../services/UserService";
@@ -10,6 +11,7 @@ export interface ServicesResolver {
     get permsService(): PermissionsService;
     get tagService(): TagService;
     get userService(): UserService;
+    get messageLinkService(): MessageLinkService;
     reset(): void;
 }
 
@@ -19,6 +21,7 @@ export class ServicesContainer {
     private _permsService?: PermissionsService;
     private _tagService?: TagService;
     private _userService?: UserService;
+    private _messageLinkService?: MessageLinkService;
 
     get cooldownService(): CooldownService {
         return (this._cooldownService ??= new CooldownService());
@@ -38,6 +41,10 @@ export class ServicesContainer {
 
     get userService(): UserService {
         return (this._userService ??= new UserService());
+    }
+
+    get messageLinkService(): MessageLinkService {
+        return (this._messageLinkService ??= new MessageLinkService());
     }
 
     reset(): void {

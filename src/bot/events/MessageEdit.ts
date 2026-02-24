@@ -12,6 +12,8 @@ export class MessageEditHandler extends DiscordEventHandler<"messageUpdate"> {
         if (newMessage.partial || !newMessage.guild) return;
         core.logger.debug("Received Edited Message");
 
+        await this.services.messageLinkService.deleteLinkedMessage(oldMessage);
+
         const context: CommandContext = {
             message: newMessage,
             author: newMessage.author,

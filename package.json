@@ -5,7 +5,7 @@
     "scripts": {
         "build": "tsc",
         "start": "node dist/main.js",
-        "dev": "tsx src/main.js",
+        "dev": "ts-node src/main.ts",
         "tscheck": "tsc --noEmit",
         "db:drop": "ts-node tools/db/drop.ts",
         "db:create": "ts-node tools/db/create.ts",

@@ -1,4 +1,4 @@
-import { EmbedBuilder } from "discord.js";
+import { EmbedBuilder, type Message } from "discord.js";
 
 import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
@@ -65,13 +65,16 @@ class CommandTagInstance extends CommandInstance<tagReplyElements> {
             authorName: tag.author.name ?? "unknown",
         };
     }
-    protected async reply(): Promise<void> {
+    protected async reply(): Promise<Message> {
         if (isProductionEnvironment()) {
-            await this.context.message.reply(this.content.body);
+            return this.context.message.reply(this.content.body);
         } else {
-            await this.context.message.reply({ embeds: [this.debugEmbed()] });
+            return this.context.message.reply({ embeds: [this.debugEmbed()] });
         }
     }
+
+    protected async postReply(sentMessage: Message): Promise<void> {}
+
     protected logExecution(): void {
         core.logger.debug(`Sent tag ${this.content.name}`);
     }

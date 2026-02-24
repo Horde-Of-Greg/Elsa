@@ -1,6 +1,6 @@
 //config
-import "./config/config.js";
-import "./config/env.js";
+import "./config/config";
+import "./config/env";
 //db
 import "reflect-metadata";
 

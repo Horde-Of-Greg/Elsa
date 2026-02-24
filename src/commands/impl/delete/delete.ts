@@ -1,3 +1,5 @@
+import type { Message } from "discord.js";
+
 import { emojis } from "../../../config/config";
 import { core } from "../../../core/Core";
 import type { TagTable } from "../../../db/entities/Tag";
@@ -45,10 +47,14 @@ export class CommandDeleteInstance extends CommandInstance<void> {
         await this.tagService.deleteTag(undefined, this.tag);
     }
 
-    protected async reply(): Promise<void> {
+    protected async reply(): Promise<Message> {
         //TODO: add a way to revert a delete
-        await this.context.message.reply(`Tag **${this.tagName}** deleted successfully! ${emojis.CHECKMARK}`);
+        return this.context.message.reply(
+            `Tag **${this.tagName}** deleted successfully! ${emojis.CHECKMARK}`,
+        );
     }
+
+    protected async postReply(sentMessage: Message): Promise<void> {}
 
     protected logExecution(): void {
         core.logger.debug(`User ${this.context.author.username} deleted tag ${this.tagName}`);

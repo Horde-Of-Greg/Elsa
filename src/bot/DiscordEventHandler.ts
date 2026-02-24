@@ -1,8 +1,11 @@
 import type { Client, ClientEvents } from "discord.js";
 
 import type { CommandRouter } from "../commands/CommandRouter";
+import { dependencies } from "../core/Dependencies";
 
 export abstract class DiscordEventHandler<K extends keyof ClientEvents> {
+    constructor(protected readonly services = dependencies.services) {}
+
     abstract readonly eventName: K;
     abstract readonly once: boolean;
 

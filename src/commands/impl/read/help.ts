@@ -1,4 +1,4 @@
-import { type APIEmbedField, EmbedBuilder, type MessageReplyOptions } from "discord.js";
+import { type APIEmbedField, EmbedBuilder, type Message, type MessageReplyOptions } from "discord.js";
 
 import { EmbedColors } from "../../../assets/colors/colors";
 import { appConfig } from "../../../config/config";
@@ -65,9 +65,13 @@ Perm Level Required: ${PermLevel[params.permLevelRequired]}`,
 
         return { embeds: [embed] };
     }
-    protected async reply(): Promise<void> {
-        await this.context.message.reply(this.content);
+
+    protected async reply(): Promise<Message> {
+        return this.context.message.reply(this.content);
     }
+
+    protected async postReply(sentMessage: Message): Promise<void> {}
+
     protected logExecution(): void {
         core.logger.debug(`Sent command ${this.params.name}`);
     }

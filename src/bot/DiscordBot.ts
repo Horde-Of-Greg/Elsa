@@ -1,4 +1,4 @@
-import { Client, type ClientEvents, GatewayIntentBits } from "discord.js";
+import { Client, type ClientEvents, GatewayIntentBits, Partials } from "discord.js";
 
 import { CommandRouter } from "../commands/CommandRouter";
 import type { DiscordEventHandler } from "./DiscordEventHandler";
@@ -27,7 +27,7 @@ export class DiscordBot {
     private readonly readyPromise: Promise<void>;
 
     constructor() {
-        this.client = new Client({ intents: gatewayIntents });
+        this.client = new Client({ intents: gatewayIntents, partials: [Partials.Message, Partials.Channel] });
         this.router = new CommandRouter();
 
         this.readyPromise = new Promise<void>((resolve) => {

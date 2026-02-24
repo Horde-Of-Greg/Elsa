@@ -1,4 +1,4 @@
-import { type Message, Routes } from "discord.js";
+import { type Message, type PartialMessage, Routes } from "discord.js";
 
 import { Cache } from "../caching/Cache";
 import { redisKeys } from "../caching/keys";
@@ -28,7 +28,7 @@ export class MessageLinkService {
         });
     }
 
-    async deleteLinkedMessage(userMessage: Message): Promise<void> {
+    async deleteLinkedMessage(userMessage: Message | PartialMessage): Promise<void> {
         const cacheResult = await this.cache.get(redisKeys.messageLink(userMessage));
         if (!cacheResult) return;
 

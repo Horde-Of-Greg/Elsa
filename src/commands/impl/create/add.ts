@@ -20,10 +20,22 @@ export class CommandAddDef extends CommandDef<void, CommandAddInstance> {
                     guild: ensureStrictPositive(5),
                 },
                 info: {
-                    description: "Adds a new command to the database",
+                    description: "Adds a new tag to the database",
                     arguments: [
-                        { name: "tag-name", required: true, parseResultKey: "subcommand" },
-                        { name: "tag-body", required: true, parseResultKey: "args" },
+                        {
+                            name: "tag-name",
+                            required: true,
+                            parseResultKey: "subcommand",
+                            description:
+                                "The name of the tag you wish to create. This name must be unique. It must also be useful as this is how people will call, and search for your tag.",
+                        },
+                        {
+                            name: "tag-body",
+                            required: true,
+                            parseResultKey: "args",
+                            description:
+                                "The body of the tag you wish to add. This can be a simple text, an image link (not an image itself), or it can be a script. To add a script, wrap the text in a codeblock set to the language of the script. Check the README of the bot for language support.",
+                        },
                     ],
                 },
             },

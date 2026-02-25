@@ -48,6 +48,7 @@ export type ArgumentDefinition = {
     name: string;
     required: boolean;
     parseResultKey: RequirableParseResult;
+    description: string;
 };
 
 export type Versions = {

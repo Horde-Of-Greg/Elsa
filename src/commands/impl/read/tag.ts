@@ -29,8 +29,19 @@ export class CommandTagDef extends CommandDef<tagReplyElements, CommandTagInstan
                 info: {
                     description: "Return the body of a tag stored in the database.",
                     arguments: [
-                        { name: "tag-name", required: true, parseResultKey: "subcommand" },
-                        { name: "tag-args", required: false, parseResultKey: "args" },
+                        {
+                            name: "tag-name",
+                            required: true,
+                            parseResultKey: "subcommand",
+                            description: "The tag you wish to call.",
+                        },
+                        {
+                            name: "tag-args",
+                            required: false,
+                            parseResultKey: "args",
+                            description:
+                                "The arguments you wish to pass to the tag. If the tag is not a script, this does nothing. They are passed as a string array, split by spaces.",
+                        },
                     ],
                 },
             },

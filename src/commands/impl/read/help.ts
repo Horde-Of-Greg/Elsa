@@ -1,4 +1,11 @@
-import { type APIEmbedField, EmbedBuilder, type Message, type MessageReplyOptions } from "discord.js";
+import {
+    type APIEmbedField,
+    EmbedBuilder,
+    inlineCode,
+    type Message,
+    type MessageReplyOptions,
+    underline,
+} from "discord.js";
 
 import { EmbedColors, HogColors } from "../../../assets/colors/colors";
 import { appConfig } from "../../../config/config";
@@ -46,14 +53,14 @@ export class CommandHelpDef extends CommandDef<MessageReplyOptions, CommandHelpI
 export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
     private readonly commandDefs = commands.allCommands;
     private readonly message: APIEmbedField[] = [];
-    private command: string | null;
+    private command: string | undefined;
 
     protected async validateData(): Promise<void> {
-        this.command = this.arg<string | null>("command-name");
+        this.command = this.arg<string | undefined>("command-name");
     }
 
     protected async execute(): Promise<MessageReplyOptions> {
-        if (this.command === null) {
+        if (this.command === undefined) {
             return this.replyGlobalHelp();
         }
 
@@ -90,11 +97,11 @@ export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
             });
 
             this.message.push({
-                name: `\`${params.name}\``,
+                name: inlineCode(params.name),
                 // prettier-ignore
-                value: `Usage: \`${appConfig.PREFIX}${[params.name].concat(params.aliases).join('|')} ${args.join(" ")}\`
-Description: ${params.info.description}
-Perm Level Required: ${PermLevel[params.permLevelRequired]}`,
+                value: `Usage: ${inlineCode(appConfig.PREFIX + [params.name].concat(params.aliases).join('|') + args.join(" "))}\n`
+                     + `Description: ${params.info.description}\n`
+                     + `Perm Level Required: ${inlineCode(PermLevel[params.permLevelRequired])}`,
             });
         }
 
@@ -110,67 +117,54 @@ Perm Level Required: ${PermLevel[params.permLevelRequired]}`,
         const params = commandDef.getParams();
 
         const capitalizedName = params.name.charAt(0).toUpperCase() + params.name.slice(1);
-        const formattedGuildName = this.context.message.guild?.name ?? "This Guild";
-        const formattedGuildCdName = params.cooldowns.guild > 0 ? `${params.cooldowns.guild}s` : "none";
-        const formattedChannelCdName = params.cooldowns.channel > 0 ? `${params.cooldowns.channel}s` : "none";
 
-        const formattedAliases = params.aliases.map((alias) => `- ${alias}`).join("\n");
-        const formattedArgsNoDesc =
+        const formattedGuildName = this.context.message.guild?.name ?? "This Guild";
+        const formattedGuildCd = params.cooldowns.guild > 0 ? `${params.cooldowns.guild}s` : "none";
+        const formattedChannelCd = params.cooldowns.channel > 0 ? `${params.cooldowns.channel}s` : "none";
+
+        const inlineAliases = [params.name].concat(params.aliases).join("|");
+        const aliasList = params.aliases.map((alias) => `- ${alias}`).join("\n");
+
+        const inlineArgs =
             params.info.arguments
-                ?.map((arg) => ` <${arg.name.replaceAll("-", "_").toUpperCase()}>`)
-                .join("") ?? "";
-        const formattedArgsWithDesc = params.info.arguments
+                ?.map((arg) => `<${arg.name.replaceAll("-", "_").toUpperCase()}>`)
+                .join(" ") ?? "";
+
+        const argList = params.info.arguments
             ?.map((arg) => {
-                const formattedArgName = arg.name.replaceAll("-", "_").toUpperCase();
+                const argName = arg.name.replaceAll("-", "_").toUpperCase();
                 const optionality = arg.required ? "required" : "optional";
 
-                return `- ${formattedArgName}(\`${optionality}\`): ${arg.description}`;
+                return `- ${argName}(${inlineCode(optionality)}): ${arg.description}`;
             })
             .join("\n");
 
         const formattedCooldown =
-            `- ${formattedGuildName}: ${formattedGuildCdName}` +
-            "\n" +
-            `- This channel: ${formattedChannelCdName}`;
+            `- ${formattedGuildName}: ${formattedGuildCd}` + "\n" + `- This channel: ${formattedChannelCd}`;
 
-        let color: HogColors;
-        switch (params.permLevelRequired) {
-            case PermLevel.DEFAULT:
-                color = HogColors.WHITE;
-                break;
-
-            case PermLevel.TRUSTED:
-                color = HogColors.GREEN;
-                break;
-
-            case PermLevel.MOD:
-                color = HogColors.PURPLE;
-                break;
-
-            case PermLevel.ADMIN:
-                color = HogColors.RED_0;
-                break;
-
-            case PermLevel.OWNER:
-                color = HogColors.RED_1;
-                break;
-        }
+        const permLevelColorMap: Record<PermLevel, HogColors> = {
+            [PermLevel.DEFAULT]: HogColors.WHITE,
+            [PermLevel.TRUSTED]: HogColors.GREEN,
+            [PermLevel.MOD]: HogColors.PURPLE,
+            [PermLevel.ADMIN]: HogColors.RED_0,
+            [PermLevel.OWNER]: HogColors.RED_1,
+        };
 
         const embed = new EmbedBuilder()
             .setTitle(`Command \`${capitalizedName}\` Usage Information`)
             .setDescription(
-                `Usage: \`${appConfig.PREFIX}${[params.name].concat(params.aliases).join("|")}${formattedArgsNoDesc}\``,
+                "Usage: " + inlineCode(`${appConfig.PREFIX}${inlineAliases} ${inlineArgs.trim()}`),
             )
             .setFields(
-                { name: "__Valid Aliases__", value: formattedAliases },
-                { name: "__Rank Required__", value: "`" + PermLevel[params.permLevelRequired] + "`" },
+                { name: underline("Valid Aliases"), value: aliasList },
+                { name: underline("Rank Required"), value: inlineCode(PermLevel[params.permLevelRequired]) },
                 {
-                    name: "__Valid arguments__",
-                    value: formattedArgsWithDesc ?? "This command requires no arguments",
+                    name: underline("Valid arguments"),
+                    value: argList ?? "This command requires no arguments",
                 },
-                { name: "__Cooldowns__", value: formattedCooldown },
+                { name: underline("Cooldowns"), value: formattedCooldown },
             )
-            .setColor(color);
+            .setColor(permLevelColorMap[params.permLevelRequired]);
 
         return { embeds: [embed] };
     }

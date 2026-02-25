@@ -30,6 +30,7 @@ type CommandInstanceConstructor<TReply, LInstance extends CommandInstance<TReply
     services: ServicesResolver,
     cache: Cache<TReply> | undefined,
     cacheParams: CacheParams,
+    commandMap: Map<string, CommandDef<unknown, CommandInstance<unknown>>>,
 ) => LInstance;
 
 export abstract class CommandDef<TReply, LInstance extends CommandInstance<TReply>> {
@@ -62,7 +63,12 @@ export abstract class CommandDef<TReply, LInstance extends CommandInstance<TRepl
     /**
      * Create a new instance to execute this command.
      */
-    createInstance(context: CommandContext, parseResult: ParseResult, cacheKey: string): LInstance {
+    createInstance(
+        context: CommandContext,
+        parseResult: ParseResult,
+        cacheKey: string,
+        commandMap: Map<string, CommandDef<unknown, CommandInstance<unknown>>>,
+    ): LInstance {
         return new this.instanceConstructor(
             context,
             parseResult,
@@ -71,6 +77,7 @@ export abstract class CommandDef<TReply, LInstance extends CommandInstance<TRepl
             this.services,
             this.cache,
             this.cacheParams,
+            commandMap,
         );
     }
 
@@ -108,6 +115,7 @@ export abstract class CommandInstance<TReply> {
         protected readonly services: ServicesResolver,
         protected cache: Cache<TReply> | undefined,
         protected cacheParams: CacheParams,
+        protected commandMap: Map<string, CommandDef<unknown, CommandInstance<unknown>>>,
     ) {
         this.cooldownService = this.services.cooldownService;
         this.permsService = this.services.permsService;

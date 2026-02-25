@@ -8,12 +8,12 @@ import { commands } from "./Commands";
 
 export class CommandRouter {
     private readonly commandList: CommandDef<unknown, CommandInstance<unknown>>[];
-    private readonly hashMap: Map<string, CommandDef<unknown, CommandInstance<unknown>>>;
+    public readonly commandMap: Map<string, CommandDef<unknown, CommandInstance<unknown>>>;
     private _matcher?: RegExp;
 
     constructor() {
-        this.commandList = commands.getAll();
-        this.hashMap = new Map();
+        this.commandList = commands.allCommands;
+        this.commandMap = new Map();
         this.buildHashMap();
     }
 
@@ -22,10 +22,10 @@ export class CommandRouter {
         const parseResult = this.parse(context.message);
         if (!parseResult) return;
 
-        const commandDef = this.hashMap.get(parseResult.command);
+        const commandDef = this.commandMap.get(parseResult.command);
         if (!commandDef) return;
 
-        const instance = commandDef.createInstance(context, parseResult, cacheKey);
+        const instance = commandDef.createInstance(context, parseResult, cacheKey, this.commandMap);
 
         await instance.run();
     }
@@ -34,7 +34,7 @@ export class CommandRouter {
         for (const command of this.commandList) {
             const aliases = command.getIdentifiers();
             for (const alias of aliases) {
-                this.hashMap.set(alias, command);
+                this.commandMap.set(alias, command);
             }
         }
     }

@@ -21,7 +21,14 @@ export class CommandDeleteDef extends CommandDef<void, CommandDeleteInstance> {
                 },
                 info: {
                     description: "Deletes one of your tags.",
-                    arguments: [{ name: "tag-name", required: true, parseResultKey: "subcommand" }],
+                    arguments: [
+                        {
+                            name: "tag-name",
+                            required: true,
+                            parseResultKey: "subcommand",
+                            description: "The name of the tag you wish to delete. You must own this tag.",
+                        },
+                    ],
                 },
             },
             CommandDeleteInstance,

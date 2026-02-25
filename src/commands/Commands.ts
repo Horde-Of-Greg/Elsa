@@ -68,7 +68,7 @@ class Commands {
         return (this._version ??= new CommandVersionDef());
     }
 
-    getAll(): CommandDef<unknown, CommandInstance<unknown>>[] {
+    get allCommands(): CommandDef<unknown, CommandInstance<unknown>>[] {
         return [
             this.add,
             this.help,

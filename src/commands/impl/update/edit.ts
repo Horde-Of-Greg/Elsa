@@ -24,10 +24,21 @@ export class CommandEditDef extends CommandDef<void, CommandEditInstance> {
                     guild: ensureStrictPositive(5),
                 },
                 info: {
-                    description: "Edits the content of an existing tag",
+                    description:
+                        "Edits the content of an existing tag. The tag will have its old body deleted and replaced by the new tag body",
                     arguments: [
-                        { name: "tag-name", required: true, parseResultKey: "subcommand" },
-                        { name: "new-tag-body", required: true, parseResultKey: "args" },
+                        {
+                            name: "tag-name",
+                            required: true,
+                            parseResultKey: "subcommand",
+                            description: "The tag you wish to edit. You must own this tag.",
+                        },
+                        {
+                            name: "new-tag-body",
+                            required: true,
+                            parseResultKey: "args",
+                            description: "The new body of the tag.",
+                        },
                     ],
                 },
             },

@@ -20,10 +20,21 @@ export class CommandSetRankDef extends CommandDef<void, CommandSetRankInstance> 
                     guild: -1,
                 },
                 info: {
-                    description: "Edits the rank of someone",
+                    description:
+                        "Edits the rank of someone. You must have higher permissions than the user you are editing the rank of, and cannot give a permission level higher than yours.",
                     arguments: [
-                        { name: "user-id", required: true, parseResultKey: "subcommand" },
-                        { name: "new-rank", required: true, parseResultKey: "args" },
+                        {
+                            name: "user-id",
+                            required: true,
+                            parseResultKey: "subcommand",
+                            description: "The Discord User ID of the user you wish to change the rank of.",
+                        },
+                        {
+                            name: "new-rank",
+                            required: true,
+                            parseResultKey: "args",
+                            description: "The new rank to give to the user.",
+                        },
                     ],
                 },
             },

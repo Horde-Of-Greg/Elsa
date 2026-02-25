@@ -20,7 +20,14 @@ export class CommandOwnerDef extends CommandDef<UserTable, CommandOwnerInstance>
                 },
                 info: {
                     description: "Return the owner of a command",
-                    arguments: [{ name: "tag-name", required: true, parseResultKey: "subcommand" }],
+                    arguments: [
+                        {
+                            name: "tag-name",
+                            required: true,
+                            parseResultKey: "subcommand",
+                            description: "The tag you want to know the author of.",
+                        },
+                    ],
                 },
             },
             CommandOwnerInstance,

@@ -23,8 +23,20 @@ export class CommandAliasDef extends CommandDef<void, CommandAliasInstance> {
                     description:
                         "Adds an alias to a command. Aliases are alternative names that call a command.",
                     arguments: [
-                        { name: "tag-name", required: true, parseResultKey: "subcommand" },
-                        { name: "alias-name", required: true, parseResultKey: "args" },
+                        {
+                            name: "tag-name",
+                            required: true,
+                            parseResultKey: "subcommand",
+                            description:
+                                "The name of the tag you wish to give a new alias to. You do not need to own this tag.",
+                        },
+                        {
+                            name: "alias-name",
+                            required: true,
+                            parseResultKey: "args",
+                            description:
+                                "The name of the alias. This name must be unique, it cannot be the name of an existing tag. It must also be useful as this is how people will call, and search for your tag.",
+                        },
                     ],
                 },
             },

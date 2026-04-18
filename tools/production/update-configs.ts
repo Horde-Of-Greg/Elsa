@@ -22,7 +22,7 @@ function recursiveScan(dir: string): void {
 
             recursiveScan(child_path);
         }
-        const match = /^(?:\w+)?.(\w+).template$/.exec(dir_child);
+        const match = /^(?:[^.]+)?\.([^.]+)\.template$/.exec(dir_child);
         if (!match) continue;
         const fileExtension = match[1];
         switch (fileExtension) {

@@ -5,3 +5,8 @@ export type TimerResult = {
     adjusted: AdjustedTime;
     formatted: string;
 };
+
+export type TimerKey = string & { readonly __brand: "timer_key" };
+export function parseToTimerKey(key: string): TimerKey {
+    return key as TimerKey;
+}

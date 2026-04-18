@@ -67,7 +67,7 @@ export class CommandDeleteInstance extends CommandInstance<void> {
         core.logger.debug(`User ${this.context.author.username} deleted tag ${this.tagName}`);
     }
 
-    private async ensureTagNameExists() {
+    private async ensureTagNameExists(): Promise<void> {
         const tag = await this.tagService.findTagStrict(this.tagName);
         if (!tag) {
             throw new TagNotFoundError(this.tagName, true);
@@ -75,7 +75,7 @@ export class CommandDeleteInstance extends CommandInstance<void> {
         this.tag = tag;
     }
 
-    private async ensureOwner() {
+    private async ensureOwner(): Promise<void> {
         const user = await this.userService.findOrCreateUser(this.context.author);
         if (this.tag.author.discordId !== this.context.author.id) {
             throw new NotOwnerError(this.tag.author, user, this.tag);

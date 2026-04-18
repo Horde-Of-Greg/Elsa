@@ -84,7 +84,7 @@ class CommandSetRankInstance extends CommandInstance<void> {
         );
     }
 
-    private async ensureUserExists() {
+    private async ensureUserExists(): Promise<void> {
         const user_dc = await getUserById(this.userId);
         if (!user_dc) {
             throw new DiscordUserNotFound({ type: "user id", value: this.userId });

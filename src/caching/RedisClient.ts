@@ -10,11 +10,15 @@ export class RedisClient {
 
     constructor(readonly options: RedisClientOptions = this.defaultOptions) {
         this.client = createClient(this.options);
-        this.client.on("error", (err) => core.logger.error("Redis error:", err));
-        this.client.on("connect", () => core.logger.info("Redis connected"));
+        this.client.on("error", (err) => {
+            core.logger.error("Redis error:", err);
+        });
+        this.client.on("connect", () => {
+            core.logger.info("Redis connected");
+        });
     }
 
-    async init() {
+    async init(): Promise<void> {
         await this.client.connect();
     }
 
@@ -22,7 +26,7 @@ export class RedisClient {
         await this.client.set(key, value, options);
     }
 
-    async delete(keys: RedisKey[]) {
+    async delete(keys: RedisKey[]): Promise<void> {
         await this.client.del(keys);
     }
 
@@ -30,11 +34,11 @@ export class RedisClient {
         return (await this.client.keys(query)) as RedisKey[];
     }
 
-    async addBlankWithTTL(key: RedisKey, TTL: PositiveNumber) {
+    async addBlankWithTTL(key: RedisKey, TTL: PositiveNumber): Promise<string | null> {
         return this.client.set(key, "1", { NX: true, EX: TTL });
     }
 
-    async getRemainingTTL(key: RedisKey) {
+    async getRemainingTTL(key: RedisKey): Promise<number> {
         return this.client.PTTL(key);
     }
 
@@ -42,7 +46,7 @@ export class RedisClient {
         return this.client.get(key);
     }
 
-    async shutdown() {
+    async shutdown(): Promise<void> {
         await this.client.quit();
     }
 

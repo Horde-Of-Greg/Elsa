@@ -8,7 +8,7 @@ import { core } from "../Core";
 import { consoleContainer } from "./ConsoleContainer";
 
 export class LogRotation {
-    private dirSize: number = 0;
+    private dirSize = 0;
     private files!: string[];
     private readonly dir = appConfig.LOGS.OUTPUT_PATH;
     private readonly maxSingleSizeBytes = 10 * 1024 * 1024;

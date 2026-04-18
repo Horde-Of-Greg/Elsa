@@ -33,7 +33,7 @@ export class TagService {
         tagBodyHash: SHA256Hash;
         author: User;
         guild: Guild;
-    }) {
+    }): Promise<TagTable> {
         const authorUser = await this.userService.findOrCreateUser(context.author);
         const hostRecord = await this.hostService.findOrCreateHost(context.guild.id, context.guild.name);
 
@@ -54,22 +54,23 @@ export class TagService {
         aliasName: string,
         context: { tagToAlias: string; type: "literal" } | { tagToAlias: TagTable; type: "object" },
         aliasAuthor: UserTable,
-    ) {
-        let tagToAlias: TagTable;
+    ): Promise<TagTable> {
         if (context.type === "literal") {
-            const tagCandidate = await this.tagRepo.findByName(context.tagToAlias);
-            if (tagCandidate === null) {
+            const tagToAlias = await this.tagRepo.findByName(context.tagToAlias);
+            if (tagToAlias === null) {
                 throw new TagNotFoundError(context.tagToAlias, true);
             }
-            tagToAlias = tagCandidate;
-        } else {
-            tagToAlias = context.tagToAlias;
+            return this.tagRepo.createAlias(aliasName, tagToAlias, aliasAuthor);
         }
-
+        const tagToAlias = context.tagToAlias;
         return this.tagRepo.createAlias(aliasName, tagToAlias, aliasAuthor);
     }
 
-    async updateTag(context: { tagName: string; tagBody: string; tagBodyHash: SHA256Hash }) {
+    async updateTag(context: {
+        tagName: string;
+        tagBody: string;
+        tagBodyHash: SHA256Hash;
+    }): Promise<TagTable> {
         const tag = await this.tagRepo.findByName(context.tagName);
         if (tag === null) {
             throw new TagNotFoundError(context.tagName, true);
@@ -79,7 +80,7 @@ export class TagService {
         return this.tagRepo.forceUpdateOne(tag);
     }
 
-    async deleteTag(tagName?: string, tag?: TagTable) {
+    async deleteTag(tagName?: string, tag?: TagTable): Promise<void> {
         if (tag === undefined) {
             if (tagName === undefined) {
                 throw new TagNotFoundError("unknown", true);
@@ -108,11 +109,11 @@ export class TagService {
         return { exists: true, tagWithBody };
     }
 
-    async findTag(name: string) {
+    async findTag(name: string): Promise<TagTable | null> {
         return this.tagRepo.findByNameOrAlias(name);
     }
 
-    async findTagStrict(name: string) {
+    async findTagStrict(name: string): Promise<TagTable | null> {
         return this.tagRepo.findByName(name);
     }
 }

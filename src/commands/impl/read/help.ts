@@ -61,7 +61,7 @@ export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
 
     protected async execute(): Promise<MessageReplyOptions> {
         if (this.command === undefined) {
-            return this.replyGlobalHelp();
+            return this.buildGlobalHelp();
         }
 
         const commandDef = this.commandMap.get(this.command.toLowerCase());
@@ -73,7 +73,7 @@ export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
                 false,
             );
         }
-        return this.replyCommandHelp(commandDef);
+        return this.buildCommandHelp(commandDef);
     }
 
     protected async reply(): Promise<Message> {
@@ -86,7 +86,7 @@ export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
         core.logger.debug(`Sent command ${this.params.name}`);
     }
 
-    private replyGlobalHelp() {
+    private buildGlobalHelp(): MessageReplyOptions {
         for (const commandDef of this.commandDefs) {
             const params = commandDef.getParams();
             if (params.permLevelRequired > PermLevel.TRUSTED || (params.hideFromHelp ?? false)) continue;
@@ -113,7 +113,7 @@ export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
         return { embeds: [embed] };
     }
 
-    private replyCommandHelp(commandDef: CommandDef<unknown, CommandInstance<unknown>>) {
+    private buildCommandHelp(commandDef: CommandDef<unknown, CommandInstance<unknown>>): MessageReplyOptions {
         const params = commandDef.getParams();
 
         const capitalizedName = params.name.charAt(0).toUpperCase() + params.name.slice(1);

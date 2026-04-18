@@ -3,26 +3,31 @@ import z from "zod";
 import { isActionsEnvironment } from "../utils/node/environment";
 import { isDiscordToken } from "./tests";
 
+const DEFAULT_PORT = {
+    POSTGRES: 5432,
+    REDIS: 6379,
+};
+
 export const EnvSchema = z
     .object({
         DISCORD_TOKEN: z.string().refine(isDiscordToken, "Invalid DISCORD_TOKEN"),
         POSTGRES_HOST: z.string().default("localhost"),
-        POSTGRES_PORT: z.coerce.number().int().positive().default(5432),
+        POSTGRES_PORT: z.coerce.number().int().positive().default(DEFAULT_PORT.POSTGRES),
         POSTGRES_DB: z.string().optional(),
         POSTGRES_USER: z.string().optional(),
         POSTGRES_PASSWORD: z.string().optional(),
         REDIS_USERNAME: z.string().default("default"),
         REDIS_PASSWORD: z.string().optional(),
         REDIS_HOST: z.string().default("localhost"),
-        REDIS_PORT: z.coerce.number().int().positive().default(6379),
+        REDIS_PORT: z.coerce.number().int().positive().default(DEFAULT_PORT.REDIS),
     })
     .refine(
         (data) => {
             if (!isActionsEnvironment()) {
-                return Boolean(
+                return (
                     data.POSTGRES_DB !== undefined &&
                     data.POSTGRES_USER !== undefined &&
-                    data.POSTGRES_PASSWORD !== undefined,
+                    data.POSTGRES_PASSWORD !== undefined
                 );
             }
             return true;
@@ -35,7 +40,7 @@ export const EnvSchema = z
     .refine(
         (data) => {
             if (!isActionsEnvironment()) {
-                return Boolean(data.REDIS_PASSWORD !== undefined);
+                return data.REDIS_PASSWORD !== undefined;
             }
             return true;
         },
@@ -63,7 +68,7 @@ export const appConfigSchema = z
             return true;
         },
         {
-            message: "Need to explicitely allow absolute paths in app configs.",
+            message: "Need to explicitly allow absolute paths in app configs.",
             path: ["LOGS.OUTPUT_PATH"],
         },
     );

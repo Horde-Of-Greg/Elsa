@@ -2,6 +2,17 @@
     "name": "elsa",
     "version": "0.10.5",
     "main": "dist/main.js",
+    "license": "MIT",
+    "description": "A discord bot to handle user created tags and scripts.",
+    "homepage": "ttps://github.com/Horde-Of-Greg/Elsa#readme",
+    "bugs": {
+        "url": "https://github.com/Horde-Of-Greg/Elsa/issues",
+        "email": "alessian@horde-of-greg.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Horde-Of-Greg/Elsa.git"
+    },
     "scripts": {
         "build": "tsc",
         "start": "node dist/main.js",
@@ -64,5 +75,8 @@
     "overrides": {
         "undici": "6.24.0",
         "minimatch": "10.2.3"
-    }
+    },
+    "os": [
+        "linux"
+    ]
 }

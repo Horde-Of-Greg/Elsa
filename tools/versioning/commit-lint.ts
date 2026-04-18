@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
@@ -6,11 +7,14 @@ import { type AcceptedBump, type AcceptedType, typesRegex } from "./types";
 
 const outputName = "bump-type";
 
-async function main() {
+async function main(): Promise<void> {
     try {
         const context = github.context;
 
-        const sha = context.payload.after ?? context.sha;
+        const sha: string = context.payload.after ?? context.sha;
+        if (typeof sha !== "string") {
+            throw new Error("Could not get commit SHA");
+        }
         const commitTitle: string = (await getCommitMessage(sha)).split("\n")[0];
 
         const match = commitTitle.match(typesRegex);
@@ -59,7 +63,7 @@ async function main() {
     }
 }
 
-main().catch((err) => {
+main().catch((err: unknown) => {
     core.setFailed(`Error: ${err instanceof Error ? err.message : String(err)}`);
     core.setOutput(outputName, "none");
     process.exit(1);

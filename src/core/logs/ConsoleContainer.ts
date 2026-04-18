@@ -22,28 +22,28 @@ class ConsoleContainer {
     private _appConsole?: Console;
     private _debugConsole?: Console;
 
-    private get infoStreams() {
+    private get infoStreams(): StreamsContainer {
         return (this._infoStreams ??= {
             terminal: new TerminalStream({ name: "info-terminal", target: "stdout" }),
             files: new FileStream({ name: "info-files", fileName: "logs.log" }),
         });
     }
 
-    private get debugStreams() {
+    private get debugStreams(): StreamsContainer {
         return (this._debugStreams ??= {
             terminal: new TerminalStream({ name: "debug-terminal", target: "stdout" }),
             files: new FileStream({ name: "debug-files", fileName: "debug.log" }),
         });
     }
 
-    private get errStreams() {
+    private get errStreams(): StreamsContainer {
         return (this._errStreams ??= {
             terminal: new TerminalStream({ name: "err-terminal", target: "stderr" }),
             files: new FileStream({ name: "error-files", fileName: "errors.log" }),
         });
     }
 
-    get terminalConsole() {
+    get terminalConsole(): Console {
         return (this._terminalConsole ??= new Console({
             stdout: this.infoStreams.terminal,
             stderr: this.errStreams.terminal,
@@ -51,7 +51,7 @@ class ConsoleContainer {
         }));
     }
 
-    get debugTerminalConsole() {
+    get debugTerminalConsole(): Console {
         return (this._debugTerminalConsole ??= new Console({
             stdout: this.debugStreams.terminal,
             stderr: this.errStreams.terminal,
@@ -59,7 +59,7 @@ class ConsoleContainer {
         }));
     }
 
-    get fileConsole() {
+    get fileConsole(): Console {
         return (this._fileConsole ??= new Console({
             stdout: this.infoStreams.files,
             stderr: this.errStreams.files,
@@ -67,7 +67,7 @@ class ConsoleContainer {
         }));
     }
 
-    get debugFileConsole() {
+    get debugFileConsole(): Console {
         return (this._debugFileConsole ??= new Console({
             stdout: this.debugStreams.files,
             stderr: this.errStreams.files,
@@ -75,14 +75,14 @@ class ConsoleContainer {
         }));
     }
 
-    get appConsole() {
+    get appConsole(): Console {
         return (this._appConsole ??= new Console({
             stdout: new MultiStream({ name: "info", streams: Object.values(this.infoStreams) }),
             stderr: new MultiStream({ name: "error", streams: Object.values(this.errStreams) }),
         }));
     }
 
-    get debugConsole() {
+    get debugConsole(): Console {
         return (this._debugConsole ??= new Console({
             stdout: new MultiStream({ name: "debug", streams: Object.values(this.debugStreams) }),
             stderr: new MultiStream({ name: "error", streams: Object.values(this.errStreams) }),
@@ -111,7 +111,7 @@ class ConsoleContainer {
 
         await Promise.all(
             allStreams.map(
-                (stream) =>
+                async (stream) =>
                     new Promise<void>((resolve, reject) => {
                         stream.once("close", resolve);
                         stream.once("error", reject);
@@ -136,7 +136,7 @@ class ConsoleContainer {
 
         await Promise.all(
             allStreams.map(
-                (stream) =>
+                async (stream) =>
                     new Promise<void>((resolve, reject) => {
                         stream.once("close", resolve);
                         stream.once("error", reject);

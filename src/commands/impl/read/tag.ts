@@ -57,6 +57,7 @@ export class CommandTagDef extends CommandDef<tagReplyElements, CommandTagInstan
 
 class CommandTagInstance extends CommandInstance<tagReplyElements> {
     private tagName!: string;
+    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members
     private tagArgs?: string[];
 
     protected async validateData(): Promise<void> {

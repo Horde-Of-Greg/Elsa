@@ -88,14 +88,14 @@ class CommandAddInstance extends CommandInstance<void> {
      * Helpers
      */
 
-    private async ensureUniqueTagName() {
+    private async ensureUniqueTagName(): Promise<void> {
         const candidate = await this.tagService.findTag(this.tagName);
         if (candidate) {
             throw new TagExistsError(candidate);
         }
     }
 
-    private async ensureUniqueBody() {
+    private async ensureUniqueBody(): Promise<void> {
         const hashContext = await this.tagService.tagBodyExists(this.tagBody);
 
         if (hashContext.exists) {

@@ -5,9 +5,9 @@ import { TagTable } from "./Tag";
 import { TagOverridesTable } from "./TagOverrides";
 
 export enum TagHostStatus {
-    ACCEPTED,
-    PENDING,
-    BANNED,
+    ACCEPTED = 0,
+    PENDING = 1,
+    BANNED = 2,
 }
 
 @Entity({ name: "tag_hosts" })

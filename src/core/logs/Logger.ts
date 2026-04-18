@@ -68,7 +68,7 @@ export class Logger {
     private format(level: LogLevel, message: string, color?: AnsiFg | AnsiFgBright): string {
         const timestamp = getTimestampNow();
         const newMessage = message[0].toUpperCase() + message.slice(1);
-        return `${color !== undefined ? color : ""}[${timestamp}] [${LogLevel[level]}] ${newMessage}${color !== undefined ? AnsiStyle.RESET : ""}`;
+        return `${color ?? ""}[${timestamp}] [${LogLevel[level]}] ${newMessage}${color !== undefined ? AnsiStyle.RESET : ""}`;
     }
 
     async shutdown(): Promise<void> {
@@ -87,7 +87,7 @@ export class Logger {
         this.info("Logger Back!");
     }
 
-    private switchToBackupConsoles() {
+    private switchToBackupConsoles(): void {
         const console = new Console({
             stdout: process.stdout,
             stderr: process.stderr,
@@ -99,7 +99,7 @@ export class Logger {
         this.debugFileConsole = console;
     }
 
-    private initConsoles() {
+    private initConsoles(): void {
         this.console = consoleContainer.appConsole;
         this.terminalConsole = consoleContainer.terminalConsole;
         this.debugConsole = consoleContainer.debugConsole;

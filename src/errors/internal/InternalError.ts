@@ -8,7 +8,7 @@ import { AppError } from "../AppError";
 
 export abstract class InternalError extends AppError {
     readonly httpStatus = 500;
-    abstract readonly code: string;
+    abstract readonly code?: string;
 
     get reply(): MessageReplyOptions {
         return {
@@ -38,13 +38,13 @@ export abstract class InternalError extends AppError {
         };
     }
 
-    get truncatedStack() {
+    get truncatedStack(): string {
         const MAX_STACKTRACE_LENGTH = 1000;
 
         const stack = this.stack ?? "No stack trace available";
         const stackLines = stack.match(/^\s+at\s+(.+?)\s+\(/gm);
         const methodNames = stackLines
-            ? stackLines.map((line) => line.match(/at\s+(.+?)\s+\(/)?.[1] ?? line)
+            ? stackLines.map((line) => (/at\s+(.+?)\s+\(/.exec(line))?.[1] ?? line)
             : [stack];
         return methodNames.join("\n").slice(0, MAX_STACKTRACE_LENGTH);
     }

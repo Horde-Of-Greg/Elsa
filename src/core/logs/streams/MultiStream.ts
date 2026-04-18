@@ -21,7 +21,7 @@ export class MultiStream extends BaseWritableStream {
     protected override async flush(): Promise<void> {
         await Promise.all(
             this.streams.map(
-                (s) =>
+                async (s) =>
                     new Promise<void>((resolve) => {
                         s.once("drain", resolve);
                     }),
@@ -32,9 +32,9 @@ export class MultiStream extends BaseWritableStream {
     protected override async cleanup(): Promise<void> {
         await Promise.all(
             this.streams.map(
-                (s) =>
+                async (s) =>
                     new Promise<void>((resolve, reject) => {
-                        s.end(() => resolve());
+                        s.end(() => { resolve(); });
                         s.once("error", reject);
                     }),
             ),

@@ -10,6 +10,6 @@ export class CacheRegistry {
     async clearAll(): Promise<void> {
         const toClear = this.caches.filter((cache) => cache.clearOnRestart);
 
-        await Promise.all(toClear.map((cache) => cache.clear()));
+        await Promise.all(toClear.map(async (cache) => cache.clear()));
     }
 }

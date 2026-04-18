@@ -25,7 +25,7 @@ redisKeys.cooldown({ scope: "guild", tagName: "help", authorId: "123", scopeId: 
 // Returns: "Elsa:cd:g:help:123:789"
 
 // Generic caches
-makeRedisKey("cmd-parse:xyz");
+parseToRedisKey("cmd-parse:xyz");
 // Returns: "Elsa:cmd-parse:xyz"
 ```
 
@@ -60,7 +60,7 @@ JavaScript `Map` instances used for runtime state tracking (not persisted).
 
 ```typescript
 // In Command.ts
-private makeTimerKey() {
+private parseToTimerKey() {
     return `cmd:${this.context.message.id}`;
 }
 

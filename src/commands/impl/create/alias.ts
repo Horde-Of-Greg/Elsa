@@ -79,7 +79,7 @@ export class CommandAliasInstance extends CommandInstance<void> {
         );
     }
 
-    private async ensureTagNameExists() {
+    private async ensureTagNameExists(): Promise<void> {
         const tag = await this.tagService.findTagStrict(this.tagName);
         if (!tag) {
             throw new TagNotFoundError(this.tagName, true);

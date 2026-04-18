@@ -20,8 +20,8 @@ export function getTimeNow(): AppDate {
  * @param ms Time to sleep in milliseconds.
  * @returns A promise resolving in the specified time.
  */
-export function sleep(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+export async function sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => void setTimeout(resolve, ms));
 }
 
 export function adjustTime(time_ns: _ns, unitToStopAt?: TimeUnit): AdjustedTime & { highestUnit: TimeUnit } {
@@ -80,10 +80,7 @@ export function adjustTime(time_ns: _ns, unitToStopAt?: TimeUnit): AdjustedTime 
     return { d, h, m, s, ms, micro, nano, highestUnit: "d" };
 }
 
-export function formatTime(
-    adjustedTime: AdjustedTime & { highestUnit: TimeUnit },
-    precision: number = 2,
-): string {
+export function formatTime(adjustedTime: AdjustedTime & { highestUnit: TimeUnit }, precision = 2): string {
     core.logger.debug("adjustedTime:", adjustedTime);
     let formatted: string;
     switch (adjustedTime.highestUnit) {

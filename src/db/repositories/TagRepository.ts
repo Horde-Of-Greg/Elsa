@@ -100,12 +100,13 @@ export class TagRepository extends BaseRepository<TagTable> {
         return tags;
     }
 
-    async createAlias(aliasName: string, tagToAlias: TagTable, aliasAuthor: UserTable) {
-        await this.createAndSaveOnOtherTable(TagAliasTable, {
+    async createAlias(aliasName: string, tagToAlias: TagTable, aliasAuthor: UserTable): Promise<TagTable> {
+        const tagTable = await this.createAndSaveOnOtherTable(TagAliasTable, {
             name: aliasName,
             tagId: tagToAlias.id,
             authorId: aliasAuthor.id,
         });
+        return tagTable.tag;
     }
 
     /*
@@ -178,7 +179,7 @@ export class TagRepository extends BaseRepository<TagTable> {
 
     async findByNameOrAlias(nameOrAlias: string): Promise<TagTable | null> {
         let tag = await this.findByName(nameOrAlias);
-        if (tag === null) tag = await this.findByAlias(nameOrAlias);
+        tag ??= await this.findByAlias(nameOrAlias);
         return tag;
     }
 
@@ -186,15 +187,15 @@ export class TagRepository extends BaseRepository<TagTable> {
         return this.findOne({ id }, { overrides: true, author: true, tagHosts: true });
     }
 
-    async findByHash(hash: SHA256Hash) {
+    async findByHash(hash: SHA256Hash): Promise<TagTable | null> {
         return this.findOne({ bodyHash: hash });
     }
 
-    async hashExists(hash: SHA256Hash) {
+    async hashExists(hash: SHA256Hash): Promise<boolean> {
         return this.exists({ bodyHash: hash });
     }
 
-    async tagExistsByName(name: string) {
+    async tagExistsByName(name: string): Promise<boolean> {
         return this.exists({ name });
     }
 
@@ -202,12 +203,12 @@ export class TagRepository extends BaseRepository<TagTable> {
      * Update
      */
 
-    async forceUpdateOne(tag: TagTable): Promise<void> {
-        await this.save(tag);
+    async forceUpdateOne(tag: TagTable): Promise<TagTable> {
+        return this.save(tag);
     }
 
-    async forceUpdateMany(tags: TagTable[]): Promise<void> {
-        await this.saveMany(tags);
+    async forceUpdateMany(tags: TagTable[]): Promise<TagTable[]> {
+        return this.saveMany(tags);
     }
 
     async banTagOnHost(tag: TagTable, host: HostTable): Promise<TagTable | null> {
@@ -235,7 +236,7 @@ export class TagRepository extends BaseRepository<TagTable> {
      * Delete
      */
 
-    async deleteTag(tag: TagTable) {
+    async deleteTag(tag: TagTable): Promise<void> {
         await this.delete(tag);
     }
 }

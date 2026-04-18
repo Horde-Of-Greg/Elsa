@@ -10,7 +10,7 @@ export class MessageLinkService {
     cache!: Cache<MessageFindParameters>;
 
     constructor(
-        private readonly cacheProvider = dependencies.cache,
+        readonly cacheProvider = dependencies.cache,
         private readonly bot = dependencies.discord.bot,
     ) {
         this.cache = new Cache<MessageFindParameters>(

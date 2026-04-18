@@ -10,13 +10,13 @@ import { PermLevel } from "../entities/UserHost";
 export class Seeder {
     constructor(private readonly appConfig: SeederConfig) {}
 
-    async seed() {
+    async seed(): Promise<void> {
         await this.drop();
         await this.createSudoers();
         core.logger.info("Seeded Database.");
     }
 
-    private async drop() {
+    private async drop(): Promise<void> {
         if (!this.appConfig.DROP_DB) return;
 
         const wait_s = 3;
@@ -37,7 +37,7 @@ export class Seeder {
         core.logger.info("Database cleared.");
     }
 
-    private async createSudoers() {
+    private async createSudoers(): Promise<void> {
         const sudoers = this.appConfig.SUDOERS.USERS;
 
         const guild_ids = this.appConfig.SUDOERS.GUILDS;

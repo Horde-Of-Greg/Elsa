@@ -16,11 +16,11 @@ const ROOT_DIR = process.cwd();
 const SRC = path.join(ROOT_DIR, "src");
 //prettier-ignore
 const CLASS_MATCHER = new RegExp(`export class ([A-Z][A-Za-z]+) extends [A-Z][A-Za-z]+ {(?:\n\\s*(?:readonly )?httpStatus\\s?=\\s?\\d{3};?)?\n\\s*(?:readonly )?code\\s?=\\s?"([A-Z_]+)";?`)
-const USAGE_MATCHER = (className: string) => new RegExp(`throw new ${className}`);
+const USAGE_MATCHER = (className: string): RegExp => new RegExp(`throw new ${className}`);
 
 void main();
 
-async function main() {
+async function main(): Promise<void> {
     const MATCHING_CLASSES = (await searchDir(SRC, CLASS_MATCHER)).filter(
         (result) => result.match[2] === ARG,
     );
@@ -43,7 +43,7 @@ async function searchDir(
         const stats = await fs.promises.stat(pathed_child);
         if (stats.isDirectory()) {
             const result = await searchDir(pathed_child, toFind);
-            if (result !== null) matches.push(...result);
+            matches.push(...result);
             continue;
         }
         const file = await fs.promises.readFile(pathed_child, "utf-8");

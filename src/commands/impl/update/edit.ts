@@ -90,7 +90,7 @@ export class CommandEditInstance extends CommandInstance<void> {
      * Helpers
      */
 
-    private async ensureTagNameExists() {
+    private async ensureTagNameExists(): Promise<void> {
         const tag = await this.tagService.findTagStrict(this.tagName);
         if (!tag) {
             throw new TagNotFoundError(this.tagName, true);
@@ -98,7 +98,7 @@ export class CommandEditInstance extends CommandInstance<void> {
         this.tag = tag;
     }
 
-    private async ensureUniqueBody() {
+    private async ensureUniqueBody(): Promise<void> {
         const hashContext = await this.tagService.tagBodyExists(this.newTagBody);
 
         if (hashContext.exists) {
@@ -110,14 +110,14 @@ export class CommandEditInstance extends CommandInstance<void> {
         this.tagBodyHash = hashContext.hash;
     }
 
-    private async ensureOwner() {
+    private async ensureOwner(): Promise<void> {
         const user = await this.userService.findOrCreateUser(this.context.author);
         if (this.tag.author.discordId !== this.context.author.id) {
             throw new NotOwnerError(this.tag.author, user, this.tag);
         }
     }
 
-    private async invalidateCache() {
+    private async invalidateCache(): Promise<void> {
         await commands.tag.invalidateCache();
     }
 }

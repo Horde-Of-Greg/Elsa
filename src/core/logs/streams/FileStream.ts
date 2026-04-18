@@ -45,10 +45,10 @@ export class FileStream extends BaseWritableStream {
 
     protected override async flush(): Promise<void> {
         return new Promise((resolve, reject) => {
-            if (!this.fileHandle) return resolve();
+            if (!this.fileHandle) { resolve(); return; }
 
             if (!this.fileHandle.writableNeedDrain) {
-                return resolve();
+                resolve(); return;
             }
 
             this.fileHandle.once("drain", resolve);
@@ -58,7 +58,7 @@ export class FileStream extends BaseWritableStream {
 
     protected override async cleanup(): Promise<void> {
         await new Promise<void>((resolve, reject) => {
-            if (!this.fileHandle) return resolve();
+            if (!this.fileHandle) { resolve(); return; }
 
             this.fileHandle.end(() => {
                 this.fileHandle = null;

@@ -16,7 +16,7 @@ AI can work fine as a search engine, and we do not feel like we should judge whi
 
 ### Assistance in writing documentation
 
-Writing documentation sucks, and it is one of the things AI is not too bad at. Asking AI to generate some docs is fine, but they should always be thouroughly read and understood. Don't ask `gemini, make the docs for this file` and call it a day.
+Writing documentation sucks, and it is one of the things AI is not too bad at. Asking AI to generate some docs is fine, but they should always be thoroughly read and understood. Don't ask `gemini, make the docs for this file` and call it a day.
 
 ### Boilerplating
 

@@ -16,7 +16,7 @@ let cmdName: string;
 let filePath: string;
 let crudType: string;
 
-async function main() {
+async function main(): Promise<void> {
     cmdName = await askCmdName();
     crudType = await askCrudType();
     filePath = path.join(
@@ -33,7 +33,7 @@ async function main() {
     rl.close();
 }
 
-function askCmdName(): Promise<string> {
+async function askCmdName(): Promise<string> {
     return new Promise((resolve) => {
         rl.question("Enter the name of the new command\n>", (answer) => {
             if (!/^[a-z-]+$/.test(answer)) {
@@ -46,7 +46,7 @@ function askCmdName(): Promise<string> {
     });
 }
 
-function askCrudType(): Promise<string> {
+async function askCrudType(): Promise<string> {
     return new Promise((resolve) => {
         rl.question("Enter type of the command (create/delete/read/update)\n>", (answer) => {
             if (!["create", "delete", "read", "update"].includes(answer)) {
@@ -59,8 +59,8 @@ function askCrudType(): Promise<string> {
     });
 }
 
-async function write() {
-    const text = (CmdName: string, cmd_name: string) => `import { core } from "../../../core/Core";
+async function write(): Promise<void> {
+    const text = (CmdName: string, cmd_name: string): string => `import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { CommandDef, CommandInstance } from "../../Command";
 
@@ -103,7 +103,7 @@ export class Command${CmdName}Instance extends CommandInstance<void> {
     console.info(`wrote to ${filePath} successfully!`);
 }
 
-function capitalizeWithDashes(input: string) {
+function capitalizeWithDashes(input: string): string {
     const split = input.split("");
     for (let i = 0; i < split.length; i++) {
         if (i === 0) split[i] = split[i].toUpperCase();
@@ -112,7 +112,7 @@ function capitalizeWithDashes(input: string) {
     return split.join("").replace("-", "");
 }
 
-async function updateCommandsRegistry() {
+async function updateCommandsRegistry(): Promise<void> {
     const CmdName = capitalizeWithDashes(cmdName);
     const cmdNameNoHyphen = cmdName.replaceAll(/-/g, "");
 
@@ -140,7 +140,7 @@ async function updateCommandsRegistry() {
     const getAllIndex = withProperty.indexOf("getAll():");
     const withGetter = withProperty.slice(0, getAllIndex) + getter + "\n" + withProperty.slice(getAllIndex);
 
-    const arrayMatch = withGetter.match(/return \[([\s\S]*?)\] as CommandDef/);
+    const arrayMatch = /return \[([\s\S]*?)\] as CommandDef/.exec(withGetter);
     if (arrayMatch) {
         const currentItems = arrayMatch[1].trim();
         const newArray = `return [\n            ${currentItems}\n            this.${cmdNameNoHyphen},\n        ] as CommandDef`;

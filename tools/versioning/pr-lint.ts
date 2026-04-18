@@ -3,7 +3,7 @@ import * as github from "@actions/github";
 
 import { typesRegex } from "./types";
 
-async function main() {
+function main(): void {
     try {
         const context = github.context;
 
@@ -12,7 +12,7 @@ async function main() {
             process.exit(1);
         }
 
-        const prTitle: string = context.payload.pull_request.title;
+        const prTitle = context.payload.pull_request.title as string;
 
         const match = prTitle.match(typesRegex);
 
@@ -29,7 +29,9 @@ async function main() {
     }
 }
 
-main().catch((err) => {
+try {
+    main();
+} catch (err: unknown) {
     core.setFailed(`Error: ${err instanceof Error ? err.message : String(err)}`);
     process.exit(1);
-});
+}

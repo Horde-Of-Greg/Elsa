@@ -38,6 +38,8 @@ export default defineConfig(
             "eqeqeq": ["error", "always"],
             "no-console": "error",
             "no-duplicate-imports": "error",
+            "no-duplicate-case": "error",
+            "no-dupe-keys": "error",
             "no-loss-of-precision": "error",
             "prefer-const": "error",
 
@@ -119,9 +121,18 @@ export default defineConfig(
             "n/no-deprecated-api": "warn",
             "n/prefer-global/process": "warn",
 
+            "sonarjs/class-name": "error",
+            "sonarjs/different-types-comparison": "error",
+            "sonarjs/elseif-without-else": "error",
+            "sonarjs/empty-string-repetition": "error",
+            "sonarjs/no-commented-code": "error",
+            "sonarjs/no-identical-conditions": "error",
+            "sonarjs/no-identical-expressions": "error",
+
+            "sonarjs/cognitive-complexity": ["warn", 15],
+            "sonarjs/concise-regex": "warn",
             "sonarjs/no-duplicate-string": "warn",
             "sonarjs/no-identical-functions": "warn",
-            "sonarjs/cognitive-complexity": ["warn", 15],
 
             "unused-imports/no-unused-imports": "error",
         },

@@ -91,6 +91,8 @@ function scanJsonRecursive(production: Record<string, unknown>, template: Record
                     modified = true;
                 }
             }
+        } else {
+            throw new Error("Error whilst scanning JSON");
         }
     }
 

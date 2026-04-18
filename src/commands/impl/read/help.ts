@@ -16,6 +16,8 @@ import { ensureStrictPositive } from "../../../utils/numbers/positive";
 import { CommandDef, CommandInstance } from "../../Command";
 import { commands } from "../../Commands";
 
+const commandId = "command-name";
+
 export class CommandHelpDef extends CommandDef<MessageReplyOptions, CommandHelpInstance> {
     constructor() {
         super(
@@ -32,7 +34,7 @@ export class CommandHelpDef extends CommandDef<MessageReplyOptions, CommandHelpI
                         "Sends this command if called with no arguments. Sends the usage information for a single command if called with an argument.",
                     arguments: [
                         {
-                            name: "command-name",
+                            name: commandId,
                             required: false,
                             parseResultKey: "subcommand",
                             description: "The command you wish to know the usage information of",
@@ -56,7 +58,7 @@ export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
     private command: string | undefined;
 
     protected async validateData(): Promise<void> {
-        this.command = this.arg<string | undefined>("command-name");
+        this.command = this.arg<string | undefined>(commandId);
     }
 
     protected async execute(): Promise<MessageReplyOptions> {
@@ -66,12 +68,7 @@ export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
 
         const commandDef = this.commandMap.get(this.command.toLowerCase());
         if (!commandDef) {
-            throw new BadArgumentError(
-                "command-name",
-                Array.from(this.commandMap.keys()),
-                this.command,
-                false,
-            );
+            throw new BadArgumentError(commandId, Array.from(this.commandMap.keys()), this.command, false);
         }
         return this.buildCommandHelp(commandDef);
     }

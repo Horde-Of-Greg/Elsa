@@ -81,7 +81,7 @@ class CommandTagInstance extends CommandInstance<tagReplyElements> {
         if (isProductionEnvironment()) {
             return this.context.message.reply(this.content.body);
         } else {
-            return this.context.message.reply({ embeds: [this.debugEmbed()] });
+            return this.context.message.reply({ embeds: [this.debugEmbed] });
         }
     }
 
@@ -91,7 +91,7 @@ class CommandTagInstance extends CommandInstance<tagReplyElements> {
         core.logger.debug(`Sent tag ${this.content.name}`);
     }
 
-    private debugEmbed(): EmbedBuilder {
+    private get debugEmbed(): EmbedBuilder {
         return new EmbedBuilder()
             .setTitle("Tag Run Info")
             .addFields(

@@ -2,11 +2,9 @@ import type { Message } from "discord.js";
 
 import { emojis } from "../../../config/config";
 import { core } from "../../../core/Core";
-import type { TagTable } from "../../../db/entities/Tag";
 import { PermLevel } from "../../../db/entities/UserHost";
-import { NotOwnerError } from "../../../errors/client/403";
-import { TagNotFoundError } from "../../../errors/client/404";
-import { CommandDef, CommandInstance } from "../../Command";
+import { CommandDef } from "../../Command";
+import { TagHandlingCommandInstance } from "../../TagHandlingCommand";
 
 export class CommandDeleteDef extends CommandDef<void, CommandDeleteInstance> {
     constructor() {
@@ -39,10 +37,7 @@ export class CommandDeleteDef extends CommandDef<void, CommandDeleteInstance> {
     }
 }
 
-export class CommandDeleteInstance extends CommandInstance<void> {
-    private tagName!: string;
-    private tag!: TagTable;
-
+export class CommandDeleteInstance extends TagHandlingCommandInstance<void> {
     protected async validateData(): Promise<void> {
         this.tagName = this.arg<string>("tag-name");
 
@@ -65,20 +60,5 @@ export class CommandDeleteInstance extends CommandInstance<void> {
 
     protected logExecution(): void {
         core.logger.debug(`User ${this.context.author.username} deleted tag ${this.tagName}`);
-    }
-
-    private async ensureTagNameExists(): Promise<void> {
-        const tag = await this.tagService.findTagStrict(this.tagName);
-        if (!tag) {
-            throw new TagNotFoundError(this.tagName, true);
-        }
-        this.tag = tag;
-    }
-
-    private async ensureOwner(): Promise<void> {
-        const user = await this.userService.findOrCreateUser(this.context.author);
-        if (this.tag.author.discordId !== this.context.author.id) {
-            throw new NotOwnerError(this.tag.author, user, this.tag);
-        }
     }
 }

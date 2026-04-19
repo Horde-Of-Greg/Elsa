@@ -81,23 +81,11 @@ export class TagRepository extends BaseRepository<TagTable> {
     }
 
     async createAndSaveManyTags(elements: Map<TagElements, TagHostElements>): Promise<TagTable[]> {
-        const entries = Array.from(elements.entries());
-        const tags = entries.map(([tagElements]) => this.createTag(tagElements));
-
-        await this.saveMany(tags);
-
-        const tagHosts = tags.map((tag, index) => {
-            const [_, hostElements] = entries[index];
-            return this.createOnOtherTable(TagHostTable, {
-                tagId: tag.id,
-                hostId: hostElements.host.id,
-                status: hostElements.status ?? TagHostStatus.PENDING,
-            });
-        });
-
-        await this.saveManyOnOtherTable(tagHosts);
-
-        return tags;
+        const createdElements = new Map<TagTable, TagHostElements>();
+        for (const [tagElements, tagHostElements] of elements) {
+            createdElements.set(this.createTag(tagElements), tagHostElements);
+        }
+        return this.saveManyTags(createdElements);
     }
 
     async createAlias(aliasName: string, tagToAlias: TagTable, aliasAuthor: UserTable): Promise<TagTable> {

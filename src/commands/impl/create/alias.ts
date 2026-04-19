@@ -2,11 +2,10 @@ import type { Message } from "discord.js";
 
 import { emojis } from "../../../config/config";
 import { core } from "../../../core/Core";
-import type { TagTable } from "../../../db/entities/Tag";
 import { PermLevel } from "../../../db/entities/UserHost";
-import { TagNotFoundError } from "../../../errors/client/404";
 import { ensureStrictPositive } from "../../../utils/numbers/positive";
-import { CommandDef, CommandInstance } from "../../Command";
+import { CommandDef } from "../../Command";
+import { TagHandlingCommandInstance } from "../../TagHandlingCommand";
 
 export class CommandAliasDef extends CommandDef<void, CommandAliasInstance> {
     constructor() {
@@ -48,10 +47,8 @@ export class CommandAliasDef extends CommandDef<void, CommandAliasInstance> {
     }
 }
 
-export class CommandAliasInstance extends CommandInstance<void> {
+export class CommandAliasInstance extends TagHandlingCommandInstance<void> {
     private aliasName!: string;
-    private tagName!: string;
-    private tag!: TagTable;
 
     protected async validateData(): Promise<void> {
         this.tagName = this.arg<string>("tag-name");
@@ -77,13 +74,5 @@ export class CommandAliasInstance extends CommandInstance<void> {
         core.logger.info(
             `User ${this.context.author.username} created alias ${this.aliasName} to tag ${this.tagName}`,
         );
-    }
-
-    private async ensureTagNameExists(): Promise<void> {
-        const tag = await this.tagService.findTagStrict(this.tagName);
-        if (!tag) {
-            throw new TagNotFoundError(this.tagName, true);
-        }
-        this.tag = tag;
     }
 }

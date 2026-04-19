@@ -103,14 +103,8 @@ class ConsoleContainer {
     }
 
     async stop(): Promise<void> {
-        const allStreams = [
-            ...Object.values(this._infoStreams ?? {}),
-            ...Object.values(this._debugStreams ?? {}),
-            ...Object.values(this._errStreams ?? {}),
-        ];
-
         await Promise.all(
-            allStreams.map(
+            this.allStreams.map(
                 async (stream) =>
                     new Promise<void>((resolve, reject) => {
                         stream.once("close", resolve);
@@ -122,28 +116,13 @@ class ConsoleContainer {
     }
 
     async shutdown(): Promise<void> {
-        const allStreams = [
-            ...Object.values(this._infoStreams ?? {}),
-            ...Object.values(this._debugStreams ?? {}),
-            ...Object.values(this._errStreams ?? {}),
-        ];
-
         if (isProductionEnvironment()) {
             await this.archiveLogs();
         }
 
         await this.clearLogs();
 
-        await Promise.all(
-            allStreams.map(
-                async (stream) =>
-                    new Promise<void>((resolve, reject) => {
-                        stream.once("close", resolve);
-                        stream.once("error", reject);
-                        stream.end();
-                    }),
-            ),
-        );
+        await this.stop();
     }
 
     async archiveLogs(): Promise<void> {
@@ -164,6 +143,14 @@ class ConsoleContainer {
                 await fs.promises.truncate(path.join(logDir, file), 0);
             }
         }
+    }
+
+    private get allStreams(): (TerminalStream | FileStream)[] {
+        return [
+            ...Object.values(this._infoStreams ?? {}),
+            ...Object.values(this._debugStreams ?? {}),
+            ...Object.values(this._errStreams ?? {}),
+        ];
     }
 }
 

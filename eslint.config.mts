@@ -7,6 +7,12 @@ import unusedImports from "eslint-plugin-unused-imports";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
+declare global {
+    interface ImportMeta {
+        dirname: string;
+    }
+}
+
 export default defineConfig(
     {
         ignores: ["dist/**", "config/**", "ecosystem.config.js"],

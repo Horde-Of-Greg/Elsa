@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { castNumberToTime, formatTime } from "../utils/time";
 import type { AppConfig, EmojiConfig, SeederConfig } from "./schema";
 import { validateAppConfigs, validateEmojiConfigs, validateSeederConfigs } from "./validate";
 
@@ -17,3 +18,6 @@ const emojiConfigFile = JSON.parse(fs.readFileSync(emojiConfigPath, "utf-8")) as
 export const appConfig: AppConfig = validateAppConfigs(appConfigFile);
 export const seederConfig: SeederConfig = validateSeederConfigs(seedConfigFile);
 export const emojis: EmojiConfig = validateEmojiConfigs(emojiConfigFile);
+
+const delayAdjusted = castNumberToTime(appConfig.COMMANDS.UNDELETE.DELAY_S, "s");
+export const formattedDelay = formatTime(delayAdjusted);

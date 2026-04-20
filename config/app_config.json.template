@@ -1,9 +1,14 @@
 {
-    "PREFIX": "!",
+    "PREFIX": "?",
     "NAME": "Elsa",
     "LOGS": {
         "VERBOSE_LOGGING": true,
         "OUTPUT_PATH": "logs/",
         "ALLOW_ABSOLUTE_PATH": false
+    },
+    "COMMANDS": {
+        "UNDELETE": {
+            "DELAY_S": 900
+        }
     }
 }

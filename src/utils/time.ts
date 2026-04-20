@@ -114,3 +114,38 @@ export function formatTime(adjustedTime: AdjustedTime & { highestUnit: TimeUnit 
     }
     return formatted;
 }
+
+export function castNumberToTime(number: number, unit: TimeUnit): AdjustedTime & { highestUnit: TimeUnit } {
+    let multiplier: number;
+    switch (unit) {
+        case "nano":
+            multiplier = 1;
+            break;
+
+        case "micro":
+            multiplier = 1000;
+            break;
+
+        case "ms":
+            multiplier = 1000 * 1000;
+            break;
+
+        case "s":
+            multiplier = 1000 * 1000 * 1000;
+            break;
+
+        case "m":
+            multiplier = 1000 * 1000 * 1000 * 60;
+            break;
+
+        case "h":
+            multiplier = 1000 * 1000 * 1000 * 60 * 60;
+            break;
+
+        case "d":
+            multiplier = 1000 * 1000 * 1000 * 60 * 60 * 24;
+            break;
+    }
+    const time_ns: _ns = (number * multiplier) as _ns;
+    return adjustTime(time_ns);
+}

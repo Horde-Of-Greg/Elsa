@@ -11,6 +11,8 @@ import { CommandVersionDef } from "./impl/read/version";
 import { CommandEditDef } from "./impl/update/edit";
 import { CommandSetRankDef } from "./impl/update/setrank";
 
+import { CommandUndeleteDef } from "./impl/delete/undelete";
+
 class Commands {
     private _add?: CommandAddDef;
     private _list?: CommandHelpDef;
@@ -23,6 +25,7 @@ class Commands {
     private _delete?: CommandDeleteDef;
     private _alias?: CommandAliasDef;
     private _version?: CommandVersionDef;
+    private _undelete?: CommandUndeleteDef;
 
     get add(): CommandAddDef {
         return (this._add ??= new CommandAddDef());
@@ -81,8 +84,14 @@ class Commands {
             this.delete,
             this.alias,
             this.version,
+            this.undelete,
         ] as CommandDef<unknown, CommandInstance<unknown>>[];
     }
 }
 
 export const commands = new Commands();
+    get undelete(): CommandUndeleteDef {
+        return (this._undelete ??= new CommandUndeleteDef());
+    }
+
+

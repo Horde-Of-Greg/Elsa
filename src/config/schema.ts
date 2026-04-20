@@ -1,6 +1,7 @@
 import z from "zod";
 
 import { isActionsEnvironment } from "../utils/node/environment";
+import { ensureStrictPositive } from "../utils/numbers/positive";
 import { isDiscordToken } from "./tests";
 
 const DEFAULT_PORT = {
@@ -59,6 +60,11 @@ export const appConfigSchema = z
             OUTPUT_PATH: z.string().regex(/^\/?(?:[a-z0-9]{0,256}\/)+$/i),
             ALLOW_ABSOLUTE_PATH: z.boolean(),
         }),
+        COMMANDS: z.object({
+            UNDELETE: z.object({
+                DELAY_S: z.number().int().min(1).transform(ensureStrictPositive),
+            }),
+        }),
     })
     .refine(
         (data) => {
@@ -71,7 +77,8 @@ export const appConfigSchema = z
             message: "Need to explicitly allow absolute paths in app configs.",
             path: ["LOGS.OUTPUT_PATH"],
         },
-    );
+    )
+    .refine((data) => {});
 
 export const SeederConfigSchema = z.object({
     DEPTH: z.number().int().min(1).max(100000),

@@ -1,5 +1,7 @@
 import type { Guild, User } from "discord.js";
 
+import { Cache } from "../caching/Cache";
+import { appConfig } from "../config/config";
 import type { RepositoryResolver } from "../core/containers/Repository";
 import type { ServicesResolver } from "../core/containers/Services";
 import { dependencies } from "../core/Dependencies";
@@ -17,6 +19,7 @@ export class TagService {
     private readonly tagRepo: TagRepository;
     private readonly userService: UserService;
     private readonly hostService: HostService;
+    private readonly deletionMemory: Cache<TagTable>;
 
     constructor(
         repositories: RepositoryResolver = dependencies.repositories,
@@ -25,6 +28,8 @@ export class TagService {
         this.tagRepo = repositories.tagRepo;
         this.userService = services.userService;
         this.hostService = services.hostService;
+
+        this.deletionMemory = new Cache("deletion_memory", appConfig.COMMANDS.UNDELETE.DELAY_S, true);
     }
 
     async createTag(context: {
@@ -92,7 +97,16 @@ export class TagService {
             await this.tagRepo.deleteTag(foundTag);
             return;
         }
+        await this.deletionMemory.set(tag.name, tag);
         await this.tagRepo.deleteTag(tag);
+    }
+
+    async retrieveTag(tagName: string): Promise<TagTable> {
+        const tag = await this.deletionMemory.get(tagName);
+        if (tag === null) {
+            throw new TagNotFoundError(tagName, true);
+        }
+        return tag;
     }
 
     async tagExists(name: string): Promise<boolean> {

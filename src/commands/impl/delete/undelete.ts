@@ -1,35 +1,35 @@
 import type { Message } from "discord.js";
 
-import { emojis } from "../../../config/config";
+import { emojis, formattedDelay } from "../../../config/config";
 import { core } from "../../../core/Core";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { CommandDef } from "../../Command";
 import { TagHandlingCommandInstance } from "../../TagHandlingCommand";
 
-export class CommandDeleteDef extends CommandDef<void, CommandDeleteInstance> {
+export class CommandUndeleteDef extends CommandDef<void, CommandUndeleteInstance> {
     constructor() {
         super(
             {
-                name: "delete",
-                aliases: ["d", "remove"],
+                name: "undelete",
+                aliases: ["udel", "udl"],
                 permLevelRequired: PermLevel.DEFAULT,
                 cooldowns: {
                     channel: -1,
                     guild: -1,
                 },
                 info: {
-                    description: "Deletes one of your tags.",
+                    description: `Tries to retrieve one of your recently deleted tags. Only checks for tags in the past ${formattedDelay}`,
                     arguments: [
                         {
                             name: "tag-name",
                             required: true,
                             parseResultKey: "subcommand",
-                            description: "The name of the tag you wish to delete. You must own this tag.",
+                            description: "The name of the tag you wish to retrieve. You must own this tag.",
                         },
                     ],
                 },
             },
-            CommandDeleteInstance,
+            CommandUndeleteInstance,
             {
                 useCache: false,
             },
@@ -37,28 +37,33 @@ export class CommandDeleteDef extends CommandDef<void, CommandDeleteInstance> {
     }
 }
 
-export class CommandDeleteInstance extends TagHandlingCommandInstance<void> {
+export class CommandUndeleteInstance extends TagHandlingCommandInstance<void> {
     protected async validateData(): Promise<void> {
         this.tagName = this.arg<string>("tag-name");
 
-        await this.ensureTagNameExists();
+        this.tag = await this.tagService.retrieveTag(this.tagName);
         await this.ensureOwner();
     }
 
     protected async execute(): Promise<void> {
-        await this.tagService.deleteTag(undefined, this.tag);
+        await this.tagService.createTag({
+            tagName: this.tag.name,
+            tagBody: this.tag.body,
+            tagBodyHash: this.tag.bodyHash,
+            author: this.context.author,
+            guild: this.context.guild,
+        });
     }
 
     protected async reply(): Promise<Message> {
         return this.context.message.reply(
-            `Tag **${this.tagName}** deleted successfully! ${emojis.CHECKMARK}.` +
-                `\nYou have  minutes to undo this action with \`%t undelete ${this.tagName}\``,
+            `Tag **${this.tagName}** retrieved successfully! ${emojis.CHECKMARK}.`,
         );
     }
 
     protected async postReply(sentMessage: Message): Promise<void> {}
 
     protected logExecution(): void {
-        core.logger.debug(`User ${this.context.author.username} deleted tag ${this.tagName}`);
+        core.logger.info(`User ${this.context.author.tag} retrieved tag: ${this.tagName}`);
     }
 }

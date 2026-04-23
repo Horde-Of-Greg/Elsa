@@ -1,7 +1,7 @@
 import type { Message } from "discord.js";
 
-import { emojis, formattedDelay } from "../../../config/config";
 import { core } from "../../../core/Core";
+import { dependencies } from "../../../core/Dependencies";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { CommandDef } from "../../Command";
 import { TagHandlingCommandInstance } from "../../TagHandlingCommand";
@@ -57,7 +57,7 @@ export class CommandUndeleteInstance extends TagHandlingCommandInstance<void> {
 
     protected async reply(): Promise<Message> {
         return this.context.message.reply(
-            `Tag **${this.tagName}** retrieved successfully! ${emojis.CHECKMARK}.`,
+            `Tag **${this.tagName}** retrieved successfully! ${dependencies.config.emoji.CHECKMARK}.`,
         );
     }
 

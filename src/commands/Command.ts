@@ -1,7 +1,6 @@
 import type { Message } from "discord.js";
 
 import { Cache } from "../caching/Cache";
-import { appConfig } from "../config/config";
 import type { ServicesResolver } from "../core/containers/Services";
 import { core } from "../core/Core";
 import { AppError } from "../errors/AppError";
@@ -248,7 +247,9 @@ export abstract class CommandInstance<TReply> {
     private requireParseResult<K extends RequirableParseResult>(key: K): NonNullable<ParseResult[K]> {
         const value = this.parseResult[key];
         if (value === undefined) {
-            throw new MissingArgumentError(`See \`${appConfig.PREFIX}help\` for details on command usages.`);
+            throw new MissingArgumentError(
+                `See \`${dependencies.config.app.PREFIX}help\` for details on command usages.`,
+            );
         }
 
         return value as NonNullable<ParseResult[K]>;

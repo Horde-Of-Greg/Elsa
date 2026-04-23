@@ -3,5 +3,6 @@
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "always"
     },
-    "eslint.validate": ["typescript", "javascript"]
+    "eslint.validate": ["typescript", "javascript"],
+    "editor.pasteAs.preferences": ["text.updateImports.jsts"]
 }

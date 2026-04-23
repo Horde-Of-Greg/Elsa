@@ -1,7 +1,7 @@
 import type { Message } from "discord.js";
 
-import { emojis } from "../../../config/config";
 import { core } from "../../../core/Core";
+import { dependencies } from "../../../core/Dependencies";
 import { PermLevel } from "../../../db/entities/UserHost";
 import type { _ms } from "../../../types/time/time";
 import type { TimerResult } from "../../../types/time/timer";
@@ -39,7 +39,7 @@ export class CommandPingInstance extends CommandInstance<void> {
 
     protected async reply(): Promise<Message> {
         this.serverLatency = core.queryTimer(this.timerKey).getTime("ms");
-        return this.context.message.reply(`${emojis.PING_PONG} Pinging...`);
+        return this.context.message.reply(`${dependencies.config.emoji.PING_PONG} Pinging...`);
     }
 
     protected async postReply(sentMessage: Message): Promise<void> {
@@ -47,9 +47,9 @@ export class CommandPingInstance extends CommandInstance<void> {
             this.context.message.createdTimestamp) as _ms;
 
         await sentMessage.edit(
-            `${emojis.PING_PONG} Pong!\n` +
-                `**Total latency:** \`${roundTripLatency}ms\` ${roundTripLatency > 1000 ? emojis.WORRIED : ""}\n` +
-                `**Server latency:** \`${this.serverLatency.formatted}\` ${this.serverLatency.raw > 1e8 ? emojis.WORRIED : ""}\n`,
+            `${dependencies.config.emoji.PING_PONG} Pong!\n` +
+                `**Total latency:** \`${roundTripLatency}ms\` ${roundTripLatency > 1000 ? dependencies.config.emoji.WORRIED : ""}\n` +
+                `**Server latency:** \`${this.serverLatency.formatted}\` ${this.serverLatency.raw > 1e8 ? dependencies.config.emoji.WORRIED : ""}\n`,
         );
     }
 

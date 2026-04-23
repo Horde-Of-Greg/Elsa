@@ -8,8 +8,8 @@ import {
 } from "discord.js";
 
 import { EmbedColors, HogColors } from "../../../assets/colors/colors";
-import { appConfig } from "../../../config/config";
 import { core } from "../../../core/Core";
+import { dependencies } from "../../../core/Dependencies";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { BadArgumentError } from "../../../errors/client/400";
 import { ensureStrictPositive } from "../../../utils/numbers/positive";
@@ -96,7 +96,7 @@ export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
             this.message.push({
                 name: inlineCode(params.name),
                 // prettier-ignore
-                value: `Usage: ${inlineCode(appConfig.PREFIX + [params.name].concat(params.aliases).join('|') + args.join(" "))}\n`
+                value: `Usage: ${inlineCode( dependencies.config.app.PREFIX + [params.name].concat(params.aliases).join('|') + args.join(" "))}\n`
                      + `Description: ${params.info.description}\n`
                      + `Perm Level Required: ${inlineCode(PermLevel[params.permLevelRequired])}`,
             });
@@ -150,7 +150,8 @@ export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
         const embed = new EmbedBuilder()
             .setTitle(`Command \`${capitalizedName}\` Usage Information`)
             .setDescription(
-                "Usage: " + inlineCode(`${appConfig.PREFIX}${inlineAliases} ${inlineArgs.trim()}`),
+                "Usage: " +
+                    inlineCode(`${dependencies.config.app.PREFIX}${inlineAliases} ${inlineArgs.trim()}`),
             )
             .setFields(
                 { name: underline("Valid Aliases"), value: aliasList },

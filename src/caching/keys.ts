@@ -1,10 +1,10 @@
 import type { Message, PartialMessage } from "discord.js";
 
-import { appConfig } from "../config/config";
+import { dependencies } from "../core/Dependencies";
 
 export type RedisKey = string & { brand: "redis" };
 export function parseToRedisKey(keyProto: string): RedisKey {
-    return `${appConfig.NAME}:${keyProto}` as RedisKey;
+    return `${dependencies.config.app.NAME}:${keyProto}` as RedisKey;
 }
 
 export type Scope = "channel" | "guild";

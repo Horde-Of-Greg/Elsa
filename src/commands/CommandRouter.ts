@@ -1,6 +1,6 @@
 import type { Message } from "discord.js";
 
-import { appConfig } from "../config/config";
+import { dependencies } from "../core/Dependencies";
 import type { CommandContext, ParseResult } from "../types/command";
 import { computeSHA256 } from "../utils/crypto/sha256Hash";
 import type { CommandDef, CommandInstance } from "./Command";
@@ -82,7 +82,7 @@ export class CommandRouter {
 
     private readonly pattern = [
         "^",
-        `\\${appConfig.PREFIX}`,
+        `\\${dependencies.config.app.PREFIX}`,
         "([a-z0-9]+)",
         "(?:-([a-z0-9]*))?",
         String.raw`(?:\s(\w+))?`,

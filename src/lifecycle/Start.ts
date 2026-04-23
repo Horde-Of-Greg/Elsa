@@ -1,5 +1,3 @@
-import { seederConfig } from "../config/config";
-import { env } from "../config/env";
 import { core } from "../core/Core";
 import { dependencies } from "../core/Dependencies";
 import { Seeder } from "../db/seeding/Seeder";
@@ -24,14 +22,14 @@ export const Start = {
 
     async initBot(): Promise<void> {
         if (isActionsEnvironment()) return;
-        await dependencies.discord.bot.login(env.DISCORD_TOKEN);
+        await dependencies.discord.bot.login(dependencies.config.env.DISCORD_TOKEN);
 
         core.logger.info("Bot initialized");
     },
 
     async seed(): Promise<void> {
         if (isProductionEnvironment() || isActionsEnvironment()) return;
-        const seeder = new Seeder(seederConfig);
+        const seeder = new Seeder(dependencies.config.seeder);
         await seeder.seed();
     },
 };

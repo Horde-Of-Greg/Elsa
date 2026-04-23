@@ -1,7 +1,7 @@
 import type { Message } from "discord.js";
 
-import { appConfig } from "../../../config/config";
 import { core } from "../../../core/Core";
+import { dependencies } from "../../../core/Dependencies";
 import { PermLevel } from "../../../db/entities/UserHost";
 import type { TimerResult } from "../../../types/time/timer";
 import { CommandDef, CommandInstance } from "../../Command";
@@ -46,7 +46,7 @@ export class CommandUptimeInstance extends CommandInstance<void> {
         const unixTimestamp = Math.floor(this.startDate.getTime() / 1000);
 
         return this.context.message.reply(
-            `**${appConfig.NAME}** has been up for \`${this.uptime.formatted}\` (Since <t:${unixTimestamp}:F>)`,
+            `**${dependencies.config.app.NAME}** has been up for \`${this.uptime.formatted}\` (Since <t:${unixTimestamp}:F>)`,
         );
     }
 

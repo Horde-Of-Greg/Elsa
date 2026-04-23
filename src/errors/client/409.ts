@@ -2,7 +2,7 @@ import { EmbedBuilder } from "@discordjs/builders";
 import type { MessageReplyOptions } from "discord.js";
 
 import { EmbedColors } from "../../assets/colors/colors";
-import { emojis } from "../../config/config";
+import { dependencies } from "../../core/Dependencies";
 import type { TagTable } from "../../db/entities/Tag";
 import { AppError } from "../AppError";
 
@@ -21,7 +21,7 @@ export class TagExistsError extends AppError {
                     .setTitle("Tag already exists")
                     .setColor(EmbedColors.YELLOW)
                     .setDescription(
-                        `Cannot add tag ${this.tag.name} as it already exists, and is owned by <@${this.tag.author.discordId}> ${emojis.EXCLAMATION_MARK}`,
+                        `Cannot add tag ${this.tag.name} as it already exists, and is owned by <@${this.tag.author.discordId}> ${dependencies.config.emoji.EXCLAMATION_MARK}`,
                     ),
             ],
         };
@@ -56,8 +56,8 @@ export class TagBodyExistsError extends AppError {
                     .setColor(EmbedColors.YELLOW)
                     .setDescription(
                         this.type === "edit"
-                            ? `Cannot edit tag ${this.tagName} as it already contains the same body. ${emojis.EXCLAMATION_MARK}`
-                            : `Cannot add tag ${this.tagName} as it contains the same body as tag: ${this.existingTag.name} ${emojis.WORRIED}. Please use !alias instead.`,
+                            ? `Cannot edit tag ${this.tagName} as it already contains the same body. ${dependencies.config.emoji.EXCLAMATION_MARK}`
+                            : `Cannot add tag ${this.tagName} as it contains the same body as tag: ${this.existingTag.name} ${dependencies.config.emoji.WORRIED}. Please use !alias instead.`,
                     ),
             ],
         };

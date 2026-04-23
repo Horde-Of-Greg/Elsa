@@ -1,16 +1,16 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { appConfig } from "../../config/config";
 import { ReaddirError } from "../../errors/internal/schedules";
 import { isProductionEnvironment } from "../../utils/node/environment";
 import { core } from "../Core";
+import { dependencies } from "../Dependencies";
 import { consoleContainer } from "./ConsoleContainer";
 
 export class LogRotation {
     private dirSize = 0;
     private files!: string[];
-    private readonly dir = appConfig.LOGS.OUTPUT_PATH;
+    private readonly dir = dependencies.config.app.LOGS.OUTPUT_PATH;
     private readonly maxSingleSizeBytes = 10 * 1024 * 1024;
     private readonly maxTotalSizeBytes = 25 * 1024 * 1024;
 

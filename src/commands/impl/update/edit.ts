@@ -1,7 +1,7 @@
 import type { Message } from "discord.js";
 
-import { emojis } from "../../../config/config";
 import { core } from "../../../core/Core";
+import { dependencies } from "../../../core/Dependencies";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { TagBodyExistsError } from "../../../errors/client/409";
 import type { SHA256Hash } from "../../../types/crypto";
@@ -72,7 +72,9 @@ export class CommandEditInstance extends TagHandlingCommandInstance<void> {
     }
 
     protected async reply(): Promise<Message> {
-        return this.context.message.reply(`Tag \`${this.tagName}\` edited successfully! ${emojis.CHECKMARK}`);
+        return this.context.message.reply(
+            `Tag \`${this.tagName}\` edited successfully! ${dependencies.config.emoji.CHECKMARK}`,
+        );
     }
 
     protected async postReply(sentMessage: Message): Promise<void> {}

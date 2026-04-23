@@ -2,8 +2,8 @@ import { EmbedBuilder } from "@discordjs/builders";
 import type { MessageReplyOptions } from "discord.js";
 
 import { EmbedColors } from "../../assets/colors/colors";
-import { emojis } from "../../config/config";
 import { core } from "../../core/Core";
+import { dependencies } from "../../core/Dependencies";
 import { AppError } from "../AppError";
 
 export abstract class InternalError extends AppError {
@@ -15,7 +15,9 @@ export abstract class InternalError extends AppError {
             embeds: [
                 new EmbedBuilder()
                     .setTitle("Internal Error Occurred")
-                    .setDescription(`This is not your fault. It is ours. ${emojis.WORRIED}`)
+                    .setDescription(
+                        `This is not your fault. It is ours. ${dependencies.config.emoji.WORRIED}`,
+                    )
                     .setColor(EmbedColors.RED)
                     .addFields(
                         {
@@ -44,7 +46,7 @@ export abstract class InternalError extends AppError {
         const stack = this.stack ?? "No stack trace available";
         const stackLines = stack.match(/^\s+at\s+(.+?)\s+\(/gm);
         const methodNames = stackLines
-            ? stackLines.map((line) => (/at\s+(.+?)\s+\(/.exec(line))?.[1] ?? line)
+            ? stackLines.map((line) => /at\s+(.+?)\s+\(/.exec(line)?.[1] ?? line)
             : [stack];
         return methodNames.join("\n").slice(0, MAX_STACKTRACE_LENGTH);
     }

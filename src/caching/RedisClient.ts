@@ -1,8 +1,8 @@
 import { createClient, type RedisArgument, type RedisClientOptions, type SetOptions } from "redis";
 
-import { env } from "../config/env";
 import { core } from "../core/Core";
 import type { PositiveNumber } from "../types/numbers";
+import { dependencies } from "./../core/Dependencies";
 import type { RedisKey } from "./keys";
 
 export class RedisClient {
@@ -51,11 +51,11 @@ export class RedisClient {
     }
 
     private readonly defaultOptions: RedisClientOptions = {
-        username: env.REDIS_USERNAME,
-        password: env.REDIS_PASSWORD,
+        username: dependencies.config.env.REDIS_USERNAME,
+        password: dependencies.config.env.REDIS_PASSWORD,
         socket: {
-            host: env.REDIS_HOST,
-            port: env.REDIS_PORT,
+            host: dependencies.config.env.REDIS_HOST,
+            port: dependencies.config.env.REDIS_PORT,
             tls: false,
         },
     };

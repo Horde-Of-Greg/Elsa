@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { appConfig } from "../../../config/config";
 import { isActionsEnvironment } from "../../../utils/node/environment";
+import { dependencies } from "../../Dependencies";
 import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream";
 
 export interface FileStreamConfig extends StreamConfig {
@@ -16,7 +16,7 @@ export class FileStream extends BaseWritableStream {
 
     constructor(config: FileStreamConfig) {
         super(config);
-        this.filePath = path.join(appConfig.LOGS.OUTPUT_PATH, config.fileName);
+        this.filePath = path.join(dependencies.config.app.LOGS.OUTPUT_PATH, config.fileName);
         this.ensureDirectory();
         this.openFile(config.flags ?? "a");
     }
@@ -45,10 +45,14 @@ export class FileStream extends BaseWritableStream {
 
     protected override async flush(): Promise<void> {
         return new Promise((resolve, reject) => {
-            if (!this.fileHandle) { resolve(); return; }
+            if (!this.fileHandle) {
+                resolve();
+                return;
+            }
 
             if (!this.fileHandle.writableNeedDrain) {
-                resolve(); return;
+                resolve();
+                return;
             }
 
             this.fileHandle.once("drain", resolve);
@@ -58,7 +62,10 @@ export class FileStream extends BaseWritableStream {
 
     protected override async cleanup(): Promise<void> {
         await new Promise<void>((resolve, reject) => {
-            if (!this.fileHandle) { resolve(); return; }
+            if (!this.fileHandle) {
+                resolve();
+                return;
+            }
 
             this.fileHandle.end(() => {
                 this.fileHandle = null;

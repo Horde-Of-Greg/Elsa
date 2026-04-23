@@ -1,5 +1,4 @@
-import { seederConfig } from "../../config/config";
-import type { SeederConfig } from "../../config/schema";
+import type { SeederConfig } from "../../config/schemas/seeder.schema";
 import { core } from "../../core/Core";
 import { dependencies } from "../../core/Dependencies";
 import { getGuildById } from "../../utils/discord/guilds";
@@ -8,7 +7,7 @@ import { sleep } from "../../utils/time";
 import { PermLevel } from "../entities/UserHost";
 
 export class Seeder {
-    constructor(private readonly appConfig: SeederConfig) {}
+    constructor(private readonly seederConfig: SeederConfig) {}
 
     async seed(): Promise<void> {
         await this.drop();
@@ -17,15 +16,15 @@ export class Seeder {
     }
 
     private async drop(): Promise<void> {
-        if (!this.appConfig.DROP_DB) return;
+        if (!this.seederConfig.DROP_DB) return;
 
         const wait_s = 3;
 
         core.logger.warnUser(
-            `Clearing all data from database ${seederConfig.WAIT_TO_DROP_DB ? `in ${wait_s.toString()}s. Ctrl + C to stop.` : ""}`,
+            `Clearing all data from database ${this.seederConfig.WAIT_TO_DROP_DB ? `in ${wait_s.toString()}s. Ctrl + C to stop.` : ""}`,
         );
 
-        if (seederConfig.WAIT_TO_DROP_DB) {
+        if (this.seederConfig.WAIT_TO_DROP_DB) {
             for (let i = 0; i < wait_s; i++) {
                 core.logger.warnUser((wait_s - i).toString());
                 await sleep(1000);
@@ -38,9 +37,9 @@ export class Seeder {
     }
 
     private async createSudoers(): Promise<void> {
-        const sudoers = this.appConfig.SUDOERS.USERS;
+        const sudoers = this.seederConfig.SUDOERS.USERS;
 
-        const guild_ids = this.appConfig.SUDOERS.GUILDS;
+        const guild_ids = this.seederConfig.SUDOERS.GUILDS;
         for (const guild_id of guild_ids) {
             const guild = await getGuildById(guild_id);
             if (!guild) {

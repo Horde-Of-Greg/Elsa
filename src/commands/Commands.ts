@@ -2,6 +2,7 @@ import type { CommandDef, CommandInstance } from "./Command";
 import { CommandAddDef } from "./impl/create/add";
 import { CommandAliasDef } from "./impl/create/alias";
 import { CommandDeleteDef } from "./impl/delete/delete";
+import { CommandUndeleteDef } from "./impl/delete/undelete";
 import { CommandHelpDef } from "./impl/read/help";
 import { CommandOwnerDef } from "./impl/read/owner";
 import { CommandPingDef } from "./impl/read/ping";
@@ -10,8 +11,6 @@ import { CommandUptimeDef } from "./impl/read/uptime";
 import { CommandVersionDef } from "./impl/read/version";
 import { CommandEditDef } from "./impl/update/edit";
 import { CommandSetRankDef } from "./impl/update/setrank";
-
-import { CommandUndeleteDef } from "./impl/delete/undelete";
 
 class Commands {
     private _add?: CommandAddDef;
@@ -71,6 +70,10 @@ class Commands {
         return (this._version ??= new CommandVersionDef());
     }
 
+    get undelete(): CommandUndeleteDef {
+        return (this._undelete ??= new CommandUndeleteDef());
+    }
+
     get allCommands(): CommandDef<unknown, CommandInstance<unknown>>[] {
         return [
             this.add,
@@ -90,8 +93,3 @@ class Commands {
 }
 
 export const commands = new Commands();
-    get undelete(): CommandUndeleteDef {
-        return (this._undelete ??= new CommandUndeleteDef());
-    }
-
-

@@ -1,7 +1,6 @@
 import type { Guild, User } from "discord.js";
 
 import { Cache } from "../caching/Cache";
-import { appConfig } from "../config/config";
 import type { RepositoryResolver } from "../core/containers/Repository";
 import type { ServicesResolver } from "../core/containers/Services";
 import { dependencies } from "../core/Dependencies";
@@ -29,7 +28,11 @@ export class TagService {
         this.userService = services.userService;
         this.hostService = services.hostService;
 
-        this.deletionMemory = new Cache("deletion_memory", appConfig.COMMANDS.UNDELETE.DELAY_S, true);
+        this.deletionMemory = new Cache(
+            "deletion_memory",
+            dependencies.config.app.COMMANDS.UNDELETE.DELAY_S,
+            true,
+        );
     }
 
     async createTag(context: {

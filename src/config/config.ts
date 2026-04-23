@@ -1,23 +1,42 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { castNumberToTime, formatTime } from "../utils/time";
-import type { AppConfig, EmojiConfig, SeederConfig } from "./schema";
-import { validateAppConfigs, validateEmojiConfigs, validateSeederConfigs } from "./validate";
+import dotenv from "dotenv";
+import type z from "zod";
 
-const configsPath = "config";
+export class Config<TSchema extends z.ZodObject> {
+    data: z.infer<TSchema>;
 
-const appConfigPath: string = path.join(configsPath, "app_config.json");
-const seedConfigPath: string = path.join(configsPath, "seeder_config.json");
-const emojiConfigPath: string = path.join(configsPath, "emoji_config.json");
+    private readonly configsPath = "config";
+    private readonly fileLocation: string;
 
-const appConfigFile = JSON.parse(fs.readFileSync(appConfigPath, "utf-8")) as object;
-const seedConfigFile = JSON.parse(fs.readFileSync(seedConfigPath, "utf-8")) as object;
-const emojiConfigFile = JSON.parse(fs.readFileSync(emojiConfigPath, "utf-8")) as object;
+    constructor(
+        readonly fileName: string,
+        readonly schema: TSchema,
+    ) {
+        if (fileName !== ".env") {
+            this.fileLocation = path.join(this.configsPath, fileName);
+        }
+        this.data = this.validate();
+    }
 
-export const appConfig: AppConfig = validateAppConfigs(appConfigFile);
-export const seederConfig: SeederConfig = validateSeederConfigs(seedConfigFile);
-export const emojis: EmojiConfig = validateEmojiConfigs(emojiConfigFile);
+    private validate(): z.infer<TSchema> {
+        const parsed = this.schema.safeParse(this.file);
+        if (!parsed.success) {
+            const errors = parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ");
+            throw new Error(`Config validation failed: ${errors}`);
+        }
+        return parsed.data as z.infer<TSchema>;
+    }
 
-const delayAdjusted = castNumberToTime(appConfig.COMMANDS.UNDELETE.DELAY_S, "s");
-export const formattedDelay = formatTime(delayAdjusted);
+    private get file(): NodeJS.ProcessEnv | string {
+        if (this.fileLocation === ".env") {
+            dotenv.config();
+            return process.env;
+        }
+        if (this.fileLocation.endsWith(".json")) {
+            return JSON.parse(fs.readFileSync(this.fileLocation, "utf-8"));
+        }
+        return "";
+    }
+}

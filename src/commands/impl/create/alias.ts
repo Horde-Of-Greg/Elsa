@@ -1,7 +1,7 @@
 import type { Message } from "discord.js";
 
-import { emojis } from "../../../config/config";
 import { core } from "../../../core/Core";
+import { dependencies } from "../../../core/Dependencies";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { ensureStrictPositive } from "../../../utils/numbers/positive";
 import { CommandDef } from "../../Command";
@@ -64,7 +64,7 @@ export class CommandAliasInstance extends TagHandlingCommandInstance<void> {
 
     protected async reply(): Promise<Message> {
         return this.context.message.reply(
-            `Aliased \`${this.tagName}\` as \`${this.aliasName}\` ${emojis.CHECKMARK}`,
+            `Aliased \`${this.tagName}\` as \`${this.aliasName}\` ${dependencies.config.emoji.CHECKMARK}`,
         );
     }
 

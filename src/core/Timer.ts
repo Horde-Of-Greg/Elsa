@@ -22,7 +22,7 @@ export class Timer {
      *   - `adjusted`: The elapsed time converted to the specified unit
      *   - `formatted`: A human-readable string with the adjusted time and unit label (e.g., "123.45ms")
      */
-    getTime(unit: TimeUnit | "auto" = "auto", precision: number = 2): TimerResult {
+    getTime(unit: TimeUnit | "auto" = "auto", precision = 2): TimerResult {
         const raw: _ns = (this.queryTime() - this.startTime) as _ns;
         const adjusted = adjustTime(raw, unit !== "auto" ? unit : undefined);
         const formatted = formatTime(adjusted, precision);
@@ -30,7 +30,7 @@ export class Timer {
         return { raw, adjusted, formatted };
     }
 
-    getStartDate() {
+    getStartDate(): Date {
         return this.startDate;
     }
 

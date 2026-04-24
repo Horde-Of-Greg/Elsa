@@ -1,11 +1,11 @@
 import { execSync } from "child_process";
 
-import { env } from "../../src/config/env";
 import { core } from "../../src/core/Core";
+import { dependencies } from "./../../src/core/Dependencies";
 
-const user = env.POSTGRES_USER;
-const host = env.POSTGRES_HOST;
-export const db = env.POSTGRES_DB;
+const user = dependencies.config.env.POSTGRES_USER;
+const host = dependencies.config.env.POSTGRES_HOST;
+export const db = dependencies.config.env.POSTGRES_DB;
 
 core.logger.info(`Creating database: ${db}`);
 

@@ -1,5 +1,6 @@
 import type { RepositoryResolver } from "../core/containers/Repository";
 import { dependencies } from "../core/Dependencies";
+import type { HostTable } from "../db/entities/Host";
 import type { HostRepository } from "../db/repositories/HostRepository";
 
 export class HostService {
@@ -9,7 +10,7 @@ export class HostService {
         this.hostRepo = repositories.hostRepo;
     }
 
-    async findOrCreateHost(hostDId: string, hostName: string) {
+    async findOrCreateHost(hostDId: string, hostName: string): Promise<HostTable> {
         return this.hostRepo.findOrCreateByDiscordId(hostDId, hostName);
     }
 }

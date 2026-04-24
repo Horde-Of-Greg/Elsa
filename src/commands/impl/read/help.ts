@@ -8,13 +8,15 @@ import {
 } from "discord.js";
 
 import { EmbedColors, HogColors } from "../../../assets/colors/colors";
-import { appConfig } from "../../../config/config";
 import { core } from "../../../core/Core";
+import { dependencies } from "../../../core/Dependencies";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { BadArgumentError } from "../../../errors/client/400";
 import { ensureStrictPositive } from "../../../utils/numbers/positive";
 import { CommandDef, CommandInstance } from "../../Command";
 import { commands } from "../../Commands";
+
+const commandId = "command-name";
 
 export class CommandHelpDef extends CommandDef<MessageReplyOptions, CommandHelpInstance> {
     constructor() {
@@ -32,7 +34,7 @@ export class CommandHelpDef extends CommandDef<MessageReplyOptions, CommandHelpI
                         "Sends this command if called with no arguments. Sends the usage information for a single command if called with an argument.",
                     arguments: [
                         {
-                            name: "command-name",
+                            name: commandId,
                             required: false,
                             parseResultKey: "subcommand",
                             description: "The command you wish to know the usage information of",
@@ -56,24 +58,19 @@ export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
     private command: string | undefined;
 
     protected async validateData(): Promise<void> {
-        this.command = this.arg<string | undefined>("command-name");
+        this.command = this.arg<string | undefined>(commandId);
     }
 
     protected async execute(): Promise<MessageReplyOptions> {
         if (this.command === undefined) {
-            return this.replyGlobalHelp();
+            return this.buildGlobalHelp();
         }
 
         const commandDef = this.commandMap.get(this.command.toLowerCase());
         if (!commandDef) {
-            throw new BadArgumentError(
-                "command-name",
-                Array.from(this.commandMap.keys()),
-                this.command,
-                false,
-            );
+            throw new BadArgumentError(commandId, Array.from(this.commandMap.keys()), this.command, false);
         }
-        return this.replyCommandHelp(commandDef);
+        return this.buildCommandHelp(commandDef);
     }
 
     protected async reply(): Promise<Message> {
@@ -86,7 +83,7 @@ export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
         core.logger.debug(`Sent command ${this.params.name}`);
     }
 
-    private replyGlobalHelp() {
+    private buildGlobalHelp(): MessageReplyOptions {
         for (const commandDef of this.commandDefs) {
             const params = commandDef.getParams();
             if (params.permLevelRequired > PermLevel.TRUSTED || (params.hideFromHelp ?? false)) continue;
@@ -99,7 +96,7 @@ export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
             this.message.push({
                 name: inlineCode(params.name),
                 // prettier-ignore
-                value: `Usage: ${inlineCode(appConfig.PREFIX + [params.name].concat(params.aliases).join('|') + args.join(" "))}\n`
+                value: `Usage: ${inlineCode( dependencies.config.app.PREFIX + [params.name].concat(params.aliases).join('|') + args.join(" "))}\n`
                      + `Description: ${params.info.description}\n`
                      + `Perm Level Required: ${inlineCode(PermLevel[params.permLevelRequired])}`,
             });
@@ -113,7 +110,7 @@ export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
         return { embeds: [embed] };
     }
 
-    private replyCommandHelp(commandDef: CommandDef<unknown, CommandInstance<unknown>>) {
+    private buildCommandHelp(commandDef: CommandDef<unknown, CommandInstance<unknown>>): MessageReplyOptions {
         const params = commandDef.getParams();
 
         const capitalizedName = params.name.charAt(0).toUpperCase() + params.name.slice(1);
@@ -153,7 +150,8 @@ export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
         const embed = new EmbedBuilder()
             .setTitle(`Command \`${capitalizedName}\` Usage Information`)
             .setDescription(
-                "Usage: " + inlineCode(`${appConfig.PREFIX}${inlineAliases} ${inlineArgs.trim()}`),
+                "Usage: " +
+                    inlineCode(`${dependencies.config.app.PREFIX}${inlineAliases} ${inlineArgs.trim()}`),
             )
             .setFields(
                 { name: underline("Valid Aliases"), value: aliasList },

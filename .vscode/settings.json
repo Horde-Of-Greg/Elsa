@@ -1,6 +1,8 @@
 {
-    "sonarlint.connectedMode.project": {
-        "connectionId": "horde-of-greg",
-        "projectKey": "Horde-Of-Greg_Elsa"
-    }
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "always"
+    },
+    "eslint.validate": ["typescript", "javascript"],
+    "editor.pasteAs.preferences": ["text.updateImports.jsts"]
 }

@@ -4,11 +4,11 @@ import { HostTable } from "./Host";
 import { UserTable } from "./User";
 
 export enum PermLevel {
-    DEFAULT,
-    TRUSTED,
-    MOD,
-    ADMIN,
-    OWNER,
+    DEFAULT = 0,
+    TRUSTED = 1,
+    MOD = 2,
+    ADMIN = 3,
+    OWNER = 4,
 }
 
 @Entity({ name: "user_hosts" })

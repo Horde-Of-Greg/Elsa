@@ -1,5 +1,6 @@
 import type { Guild, User } from "discord.js";
 
+import { Cache } from "../caching/Cache";
 import type { RepositoryResolver } from "../core/containers/Repository";
 import type { ServicesResolver } from "../core/containers/Services";
 import { dependencies } from "../core/Dependencies";
@@ -17,6 +18,7 @@ export class TagService {
     private readonly tagRepo: TagRepository;
     private readonly userService: UserService;
     private readonly hostService: HostService;
+    private readonly deletionMemory: Cache<TagTable>;
 
     constructor(
         repositories: RepositoryResolver = dependencies.repositories,
@@ -25,6 +27,12 @@ export class TagService {
         this.tagRepo = repositories.tagRepo;
         this.userService = services.userService;
         this.hostService = services.hostService;
+
+        this.deletionMemory = new Cache(
+            "deletion_memory",
+            dependencies.config.app.COMMANDS.UNDELETE.DELAY_S,
+            true,
+        );
     }
 
     async createTag(context: {
@@ -33,7 +41,7 @@ export class TagService {
         tagBodyHash: SHA256Hash;
         author: User;
         guild: Guild;
-    }) {
+    }): Promise<TagTable> {
         const authorUser = await this.userService.findOrCreateUser(context.author);
         const hostRecord = await this.hostService.findOrCreateHost(context.guild.id, context.guild.name);
 
@@ -54,22 +62,23 @@ export class TagService {
         aliasName: string,
         context: { tagToAlias: string; type: "literal" } | { tagToAlias: TagTable; type: "object" },
         aliasAuthor: UserTable,
-    ) {
-        let tagToAlias: TagTable;
+    ): Promise<TagTable> {
         if (context.type === "literal") {
-            const tagCandidate = await this.tagRepo.findByName(context.tagToAlias);
-            if (tagCandidate === null) {
+            const tagToAlias = await this.tagRepo.findByName(context.tagToAlias);
+            if (tagToAlias === null) {
                 throw new TagNotFoundError(context.tagToAlias, true);
             }
-            tagToAlias = tagCandidate;
-        } else {
-            tagToAlias = context.tagToAlias;
+            return this.tagRepo.createAlias(aliasName, tagToAlias, aliasAuthor);
         }
-
+        const tagToAlias = context.tagToAlias;
         return this.tagRepo.createAlias(aliasName, tagToAlias, aliasAuthor);
     }
 
-    async updateTag(context: { tagName: string; tagBody: string; tagBodyHash: SHA256Hash }) {
+    async updateTag(context: {
+        tagName: string;
+        tagBody: string;
+        tagBodyHash: SHA256Hash;
+    }): Promise<TagTable> {
         const tag = await this.tagRepo.findByName(context.tagName);
         if (tag === null) {
             throw new TagNotFoundError(context.tagName, true);
@@ -79,7 +88,7 @@ export class TagService {
         return this.tagRepo.forceUpdateOne(tag);
     }
 
-    async deleteTag(tagName?: string, tag?: TagTable) {
+    async deleteTag(tagName?: string, tag?: TagTable): Promise<void> {
         if (tag === undefined) {
             if (tagName === undefined) {
                 throw new TagNotFoundError("unknown", true);
@@ -91,7 +100,16 @@ export class TagService {
             await this.tagRepo.deleteTag(foundTag);
             return;
         }
+        await this.deletionMemory.set(tag.name, tag);
         await this.tagRepo.deleteTag(tag);
+    }
+
+    async retrieveTag(tagName: string): Promise<TagTable> {
+        const tag = await this.deletionMemory.get(tagName);
+        if (tag === null) {
+            throw new TagNotFoundError(tagName, true);
+        }
+        return tag;
     }
 
     async tagExists(name: string): Promise<boolean> {
@@ -108,11 +126,11 @@ export class TagService {
         return { exists: true, tagWithBody };
     }
 
-    async findTag(name: string) {
+    async findTag(name: string): Promise<TagTable | null> {
         return this.tagRepo.findByNameOrAlias(name);
     }
 
-    async findTagStrict(name: string) {
+    async findTagStrict(name: string): Promise<TagTable | null> {
         return this.tagRepo.findByName(name);
     }
 }

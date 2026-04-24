@@ -2,20 +2,22 @@ import { EmbedBuilder } from "@discordjs/builders";
 import type { MessageReplyOptions } from "discord.js";
 
 import { EmbedColors } from "../../assets/colors/colors";
-import { emojis } from "../../config/config";
 import { core } from "../../core/Core";
+import { dependencies } from "../../core/Dependencies";
 import { AppError } from "../AppError";
 
 export abstract class InternalError extends AppError {
     readonly httpStatus = 500;
-    abstract readonly code: string;
+    abstract readonly code?: string;
 
     get reply(): MessageReplyOptions {
         return {
             embeds: [
                 new EmbedBuilder()
                     .setTitle("Internal Error Occurred")
-                    .setDescription(`This is not your fault. It is ours. ${emojis.WORRIED}`)
+                    .setDescription(
+                        `This is not your fault. It is ours. ${dependencies.config.emoji.WORRIED}`,
+                    )
                     .setColor(EmbedColors.RED)
                     .addFields(
                         {
@@ -38,13 +40,14 @@ export abstract class InternalError extends AppError {
         };
     }
 
-    get truncatedStack() {
+    get truncatedStack(): string {
         const MAX_STACKTRACE_LENGTH = 1000;
 
         const stack = this.stack ?? "No stack trace available";
-        const stackLines = stack.match(/^\s+at\s+(.+?)\s+\(/gm);
+        const stackLinePattern = /^\s*at\s+([^\n(]+)\s*(?=\()/gm;
+        const stackLines = stack.match(stackLinePattern);
         const methodNames = stackLines
-            ? stackLines.map((line) => line.match(/at\s+(.+?)\s+\(/)?.[1] ?? line)
+            ? stackLines.map((line) => stackLinePattern.exec(line)?.[1] ?? line)
             : [stack];
         return methodNames.join("\n").slice(0, MAX_STACKTRACE_LENGTH);
     }

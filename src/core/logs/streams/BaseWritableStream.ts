@@ -34,7 +34,11 @@ export abstract class BaseWritableStream extends Writable {
             const result = this.processChunk(data);
 
             if (result instanceof Promise) {
-                result.then(() => callback()).catch(callback);
+                result
+                    .then(() => {
+                        callback();
+                    })
+                    .catch(callback);
             } else {
                 callback();
             }
@@ -55,14 +59,26 @@ export abstract class BaseWritableStream extends Writable {
 
     override _final(callback: (error?: Error | null) => void): void {
         this.flush()
-            .then(() => callback())
+            .then(() => {
+                callback();
+            })
             .catch(callback);
     }
 
     override _destroy(error: Error | null, callback: (error?: Error | null) => void): void {
         this.cleanup()
-            .then(() => callback(error))
-            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-            .catch((cleanupError) => callback(cleanupError || error));
+            .then(() => {
+                callback(error);
+            })
+
+            .catch((cleanupError: unknown) => {
+                if (cleanupError instanceof Error || cleanupError === null) {
+                    callback(cleanupError);
+                    return;
+                }
+                throw new Error(
+                    "Could not get error for cleanupError. If this ever happens, it is VERY worrying",
+                );
+            });
     }
 }

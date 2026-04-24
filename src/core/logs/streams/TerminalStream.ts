@@ -16,11 +16,11 @@ export class TerminalStream extends BaseWritableStream {
         this.target.write(data);
     }
 
-    protected flush(): Promise<void> {
+    protected async flush(): Promise<void> {
         return Promise.resolve();
     }
 
-    protected cleanup(): Promise<void> {
+    protected async cleanup(): Promise<void> {
         return Promise.resolve();
     }
 
@@ -28,13 +28,13 @@ export class TerminalStream extends BaseWritableStream {
      * Whether the terminal supports colors
      */
     get supportsColor(): boolean {
-        return this.target.isTTY ?? false;
+        return this.target.isTTY;
     }
 
     /**
      * Terminal width for formatting
      */
     get columns(): number {
-        return this.target.columns ?? 80;
+        return this.target.columns;
     }
 }

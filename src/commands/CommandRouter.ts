@@ -1,10 +1,17 @@
 import type { Message } from "discord.js";
 
-import { appConfig } from "../config/config";
+import { dependencies } from "../core/Dependencies";
 import type { CommandContext, ParseResult } from "../types/command";
 import { computeSHA256 } from "../utils/crypto/sha256Hash";
 import type { CommandDef, CommandInstance } from "./Command";
 import { commands } from "./Commands";
+
+const PARSE_INDEX = {
+    COMMAND: 1,
+    SERVER: 2,
+    SUBCOMMAND: 3,
+    ARGS: 4,
+};
 
 export class CommandRouter {
     private readonly commandList: CommandDef<unknown, CommandInstance<unknown>>[];
@@ -30,7 +37,7 @@ export class CommandRouter {
         await instance.run();
     }
 
-    private buildHashMap() {
+    private buildHashMap(): void {
         for (const command of this.commandList) {
             const aliases = command.getIdentifiers();
             for (const alias of aliases) {
@@ -55,26 +62,27 @@ export class CommandRouter {
          * 3            subcommand  Optional        Matches "oc"
          * 4            args        Optional        Matches "30 10 15 5"
          */
+
         return {
-            command: parsed[1],
-            server: parsed[2],
-            subcommand: parsed[3],
-            args: parsed[4] ? parsed[4].split(/\s+/) : undefined,
+            command: parsed[PARSE_INDEX.COMMAND],
+            server: parsed[PARSE_INDEX.SERVER],
+            subcommand: parsed[PARSE_INDEX.SUBCOMMAND],
+            args: parsed[PARSE_INDEX.ARGS] ? parsed[PARSE_INDEX.ARGS].split(/\s+/) : undefined,
         };
     }
 
-    private buildCacheKey(content: string) {
+    private buildCacheKey(content: string): string {
         return computeSHA256(content).toString();
     }
 
-    private get matcher() {
+    private get matcher(): RegExp {
         const matcher = (this._matcher ??= new RegExp(this.pattern, "i"));
         return matcher;
     }
 
     private readonly pattern = [
         "^",
-        `\\${appConfig.PREFIX}`,
+        `\\${dependencies.config.app.PREFIX}`,
         "([a-z0-9]+)",
         "(?:-([a-z0-9]*))?",
         String.raw`(?:\s(\w+))?`,

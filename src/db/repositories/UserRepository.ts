@@ -26,27 +26,37 @@ export class UserRepository extends BaseRepository<UserTable> {
         return user;
     }
 
-    async getPermLevel(user: UserTable, host: HostTable): Promise<PermLevel | null> {
-        const userHost = await this.findOneByJoin(UserHostTable, user, host);
-        return userHost?.permLevel ?? null;
-    }
-
-    async createPermLevel(user: UserTable, host: HostTable, permLevel: PermLevel) {
-        await this.createAndSaveOnOtherTable(UserHostTable, {
+    async createPermLevel(
+        user: UserTable,
+        host: HostTable,
+        permLevel: PermLevel,
+    ): Promise<{ user: UserTable; perm: PermLevel }> {
+        const userhost = await this.createAndSaveOnOtherTable(UserHostTable, {
             userId: user.id,
             hostId: host.id,
             permLevel,
         });
+        return { user: userhost.user, perm: userhost.permLevel };
     }
 
-    async updateOrCreatePermLevel(user: UserTable, host: HostTable, permLevel: PermLevel) {
+    async updateOrCreatePermLevel(
+        user: UserTable,
+        host: HostTable,
+        permLevel: PermLevel,
+    ): Promise<{ user: UserTable; perm: PermLevel }> {
         const existingUserHost = await this.findOneByJoin(UserHostTable, user, host);
 
         if (existingUserHost) {
             existingUserHost.permLevel = permLevel;
-            await this.saveOnOtherTable(existingUserHost);
-        } else {
-            await this.createPermLevel(user, host, permLevel);
+            const newUserHost = await this.saveOnOtherTable(existingUserHost);
+            return { user: newUserHost.user, perm: newUserHost.permLevel };
         }
+
+        return this.createPermLevel(user, host, permLevel);
+    }
+
+    async getPermLevel(user: UserTable, host: HostTable): Promise<PermLevel | null> {
+        const userHost = await this.findOneByJoin(UserHostTable, user, host);
+        return userHost?.permLevel ?? null;
     }
 }

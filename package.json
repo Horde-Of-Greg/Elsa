@@ -2,6 +2,17 @@
     "name": "elsa",
     "version": "0.10.5",
     "main": "dist/main.js",
+    "license": "MIT",
+    "description": "A discord bot to handle user created tags and scripts.",
+    "homepage": "ttps://github.com/Horde-Of-Greg/Elsa#readme",
+    "bugs": {
+        "url": "https://github.com/Horde-Of-Greg/Elsa/issues",
+        "email": "alessian@horde-of-greg.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Horde-Of-Greg/Elsa.git"
+    },
     "scripts": {
         "build": "tsc",
         "start": "node dist/main.js",
@@ -17,6 +28,7 @@
         "lint:fix": "eslint . --fix",
         "lint:report": "eslint \"src/**/*.ts\" --format json --output-file temp/lint/eslint_report.json",
         "lint:knip": "knip",
+        "lint:duplicates": "jscpd ./src",
         "actions:bump": "ts-node tools/versioning/bump.ts",
         "actions:lint-pr": "ts-node tools/versioning/pr-lint.ts",
         "actions:lint-commit": "ts-node tools/versioning/commit-lint.ts",
@@ -53,6 +65,7 @@
         "eslint-plugin-unused-imports": "^4.3.0",
         "globals": "^16.5.0",
         "jiti": "^2.6.1",
+        "jscpd": "^4.0.9",
         "knip": "^5.73.4",
         "prettier": "^3.7.4",
         "reflect-metadata": "^0.2.2",
@@ -64,5 +77,9 @@
     "overrides": {
         "undici": "6.24.0",
         "minimatch": "10.2.3"
-    }
+    },
+    "os": [
+        "linux",
+        "darwin"
+    ]
 }

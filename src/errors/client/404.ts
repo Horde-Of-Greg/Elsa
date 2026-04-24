@@ -1,7 +1,7 @@
 import { EmbedBuilder, type MessageReplyOptions } from "discord.js";
 
 import { EmbedColors } from "../../assets/colors/colors";
-import { emojis } from "../../config/config";
+import { dependencies } from "../../core/Dependencies";
 import { AppError } from "../AppError";
 
 export class TagNotFoundError extends AppError {
@@ -22,7 +22,7 @@ export class TagNotFoundError extends AppError {
                     .setTitle("Could not Find Tag")
                     .setColor(EmbedColors.MAGENTA)
                     .setDescription(
-                        `Could not find tag \`${this.tagName}\` by name${this.strict ? "" : " or alias"}. ${emojis.QUESTION_MARK}`,
+                        `Could not find tag \`${this.tagName}\` by name${this.strict ? "" : " or alias"}. ${dependencies.config.emoji.QUESTION_MARK}`,
                     ),
             ],
         };
@@ -51,6 +51,29 @@ export class DiscordUserNotFound extends AppError {
                     )
                     .setFields([{ name: this.userSearchQuery.type, value: this.userSearchQuery.value }])
                     .setColor(EmbedColors.YELLOW),
+            ],
+        };
+    }
+
+    log(): void {}
+}
+
+export class DeletedTagNotFound extends AppError {
+    readonly code = "DELETED_TAG_NOT_FOUND";
+    readonly httpStatus = 404;
+
+    constructor(readonly name: string) {
+        super(`Could not find the tag ${name} in the cache of recently deleted tags.`);
+    }
+
+    get reply(): MessageReplyOptions {
+        return {
+            embeds: [
+                new EmbedBuilder()
+                    .setTitle("Could Not Retrieve Tag")
+                    .setDescription(
+                        `Could not retrieve a tag named \`${this.name}\` in the cache of tags deleted in the past ${dependencies.formatter.app.formattedDelay}. Either this tag was never deleted, or you ran this command too late`,
+                    ),
             ],
         };
     }

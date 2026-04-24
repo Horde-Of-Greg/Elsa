@@ -9,7 +9,8 @@
         "skipLibCheck": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "strictPropertyInitialization": false
+        "strictPropertyInitialization": false,
+        "noImplicitReturns": true
     },
     "exclude": ["*.config.*", "node_modules", "dist", "tools", "ecosystem.config.js"]
 }

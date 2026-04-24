@@ -1,12 +1,12 @@
 import { execSync } from "child_process";
 import readline from "readline";
 
-import { env } from "../../src/config/env";
 import { core } from "../../src/core/Core";
+import { dependencies } from "../../src/core/Dependencies";
 
-const user = env.POSTGRES_USER;
-const host = env.POSTGRES_HOST;
-const db = env.POSTGRES_DB;
+const user = dependencies.config.env.POSTGRES_USER;
+const host = dependencies.config.env.POSTGRES_HOST;
+const db = dependencies.config.env.POSTGRES_DB;
 export const environment = process.env.NODE_ENV;
 
 if (environment !== "development") {

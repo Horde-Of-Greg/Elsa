@@ -1,6 +1,6 @@
 //config
-import "./config/config";
-import "./config/env";
+import "./config/legacy/config";
+import "./config/legacy/env";
 //db
 import "reflect-metadata";
 

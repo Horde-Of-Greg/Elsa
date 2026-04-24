@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-parameters */
 import type { DeepPartial, FindOptionsRelations, FindOptionsWhere, Repository } from "typeorm";
 
 import type { DatabaseResolver } from "../../core/containers/Database";

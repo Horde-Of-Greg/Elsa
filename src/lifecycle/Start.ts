@@ -1,37 +1,35 @@
-import { seederConfig } from "../config/config";
-import { env } from "../config/env";
 import { core } from "../core/Core";
 import { dependencies } from "../core/Dependencies";
 import { Seeder } from "../db/seeding/Seeder";
 import { isActionsEnvironment, isProductionEnvironment } from "../utils/node/environment";
 
 export const Start = {
-    initCore() {
+    initCore(): void {
         core.startTimer("main");
         core.logger.info("Core Ready");
     },
 
-    async initCache() {
+    async initCache(): Promise<void> {
         await dependencies.cache.client.init();
         core.logger.info("Cache Layer initialized");
     },
 
-    async initDb() {
+    async initDb(): Promise<void> {
         if (isActionsEnvironment()) return;
         await dependencies.database.dataSource.initialize();
         core.logger.info("Database initialized");
     },
 
-    async initBot() {
+    async initBot(): Promise<void> {
         if (isActionsEnvironment()) return;
-        await dependencies.discord.bot.login(env.DISCORD_TOKEN);
+        await dependencies.discord.bot.login(dependencies.config.env.DISCORD_TOKEN);
 
         core.logger.info("Bot initialized");
     },
 
-    async seed() {
+    async seed(): Promise<void> {
         if (isProductionEnvironment() || isActionsEnvironment()) return;
-        const seeder = new Seeder(seederConfig);
+        const seeder = new Seeder(dependencies.config.seeder);
         await seeder.seed();
     },
 };

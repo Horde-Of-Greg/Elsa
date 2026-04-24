@@ -1,8 +1,8 @@
 import { EmbedBuilder, type MessageReplyOptions, type User } from "discord.js";
 
 import { EmbedColors } from "../../assets/colors/colors";
-import { emojis } from "../../config/config";
 import { core } from "../../core/Core";
+import { dependencies } from "../../core/Dependencies";
 import { type CommandParams } from "../../types/command";
 import { AppError } from "../AppError";
 
@@ -40,7 +40,7 @@ export class CooldownError extends AppError {
                     .setDescription(
                         `You hit the cooldown for ${
                             this.commandParams.name
-                        } ${emojis.EXCLAMATION_MARK}. Try again in ${tryAgainIn.toFixed(2)}${unit}`,
+                        } ${dependencies.config.emoji.EXCLAMATION_MARK}. Try again in ${tryAgainIn.toFixed(2)}${unit}`,
                     ),
             ],
         };

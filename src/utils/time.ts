@@ -20,8 +20,8 @@ export function getTimeNow(): AppDate {
  * @param ms Time to sleep in milliseconds.
  * @returns A promise resolving in the specified time.
  */
-export function sleep(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+export async function sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => void setTimeout(resolve, ms));
 }
 
 export function adjustTime(time_ns: _ns, unitToStopAt?: TimeUnit): AdjustedTime & { highestUnit: TimeUnit } {
@@ -80,10 +80,7 @@ export function adjustTime(time_ns: _ns, unitToStopAt?: TimeUnit): AdjustedTime 
     return { d, h, m, s, ms, micro, nano, highestUnit: "d" };
 }
 
-export function formatTime(
-    adjustedTime: AdjustedTime & { highestUnit: TimeUnit },
-    precision: number = 2,
-): string {
+export function formatTime(adjustedTime: AdjustedTime & { highestUnit: TimeUnit }, precision = 2): string {
     core.logger.debug("adjustedTime:", adjustedTime);
     let formatted: string;
     switch (adjustedTime.highestUnit) {
@@ -116,4 +113,39 @@ export function formatTime(
             break;
     }
     return formatted;
+}
+
+export function castNumberToTime(number: number, unit: TimeUnit): AdjustedTime & { highestUnit: TimeUnit } {
+    let multiplier: number;
+    switch (unit) {
+        case "nano":
+            multiplier = 1;
+            break;
+
+        case "micro":
+            multiplier = 1000;
+            break;
+
+        case "ms":
+            multiplier = 1000 * 1000;
+            break;
+
+        case "s":
+            multiplier = 1000 * 1000 * 1000;
+            break;
+
+        case "m":
+            multiplier = 1000 * 1000 * 1000 * 60;
+            break;
+
+        case "h":
+            multiplier = 1000 * 1000 * 1000 * 60 * 60;
+            break;
+
+        case "d":
+            multiplier = 1000 * 1000 * 1000 * 60 * 60 * 24;
+            break;
+    }
+    const time_ns: _ns = (number * multiplier) as _ns;
+    return adjustTime(time_ns);
 }

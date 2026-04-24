@@ -1,7 +1,7 @@
 import type { Message } from "discord.js";
 
-import { emojis } from "../../../config/config";
 import { core } from "../../../core/Core";
+import { dependencies } from "../../../core/Dependencies";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { TagBodyExistsError, TagExistsError } from "../../../errors/client/409";
 import type { SHA256Hash } from "../../../types/crypto";
@@ -74,7 +74,7 @@ class CommandAddInstance extends CommandInstance<void> {
 
     protected async reply(): Promise<Message> {
         return this.context.message.reply(
-            `Tag \`${this.tagName}\` created successfully! ${emojis.CHECKMARK}`,
+            `Tag \`${this.tagName}\` created successfully! ${dependencies.config.emoji.CHECKMARK}`,
         );
     }
 
@@ -88,14 +88,14 @@ class CommandAddInstance extends CommandInstance<void> {
      * Helpers
      */
 
-    private async ensureUniqueTagName() {
+    private async ensureUniqueTagName(): Promise<void> {
         const candidate = await this.tagService.findTag(this.tagName);
         if (candidate) {
             throw new TagExistsError(candidate);
         }
     }
 
-    private async ensureUniqueBody() {
+    private async ensureUniqueBody(): Promise<void> {
         const hashContext = await this.tagService.tagBodyExists(this.tagBody);
 
         if (hashContext.exists) {

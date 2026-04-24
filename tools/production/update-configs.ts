@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable no-console */
 
 import fs from "node:fs";
@@ -9,7 +10,7 @@ const ROOT_DIR = process.cwd();
 let missingKeys = false;
 dotenv.config();
 
-function recursiveScan(dir: string) {
+function recursiveScan(dir: string): void {
     for (const dir_child of fs.readdirSync(dir)) {
         const child_path = path.join(dir, dir_child);
         const child_stats = fs.statSync(child_path);
@@ -21,7 +22,7 @@ function recursiveScan(dir: string) {
 
             recursiveScan(child_path);
         }
-        const match = dir_child.match(/^(?:\w+)?.(\w+).template$/);
+        const match = /^(?:[^.]+)?\.([^.]+)\.template$/.exec(dir_child);
         if (!match) continue;
         const fileExtension = match[1];
         switch (fileExtension) {
@@ -42,11 +43,11 @@ function recursiveScan(dir: string) {
     }
 }
 
-function scanEnv(templateFileName: string) {
+function scanEnv(templateFileName: string): void {
     const productionEnv = process.env;
     const templateLines = fs.readFileSync(templateFileName, "utf-8").split("\n");
     for (const line of templateLines) {
-        const match = line.match(/^([A-Z_]+)=.+$/);
+        const match = /^([A-Z_]+)=.+$/.exec(line);
         if (!match) continue;
         const lineKey = match[1];
         if (productionEnv[lineKey] === undefined) {
@@ -56,13 +57,13 @@ function scanEnv(templateFileName: string) {
     }
 }
 
-function scanJson(templateFileName: string) {
+function scanJson(templateFileName: string): void {
     const productionFileName = templateFileName.replace(".template", "");
     if (!fs.existsSync(productionFileName)) {
         fs.writeFileSync(productionFileName, "{}");
     }
-    const production = JSON.parse(fs.readFileSync(productionFileName, "utf-8"));
-    const template = JSON.parse(fs.readFileSync(templateFileName, "utf-8"));
+    const production: Record<string, string> = JSON.parse(fs.readFileSync(productionFileName, "utf-8"));
+    const template: Record<string, string> = JSON.parse(fs.readFileSync(templateFileName, "utf-8"));
 
     const modified = scanJsonRecursive(production, template);
 
@@ -72,18 +73,14 @@ function scanJson(templateFileName: string) {
     }
 }
 
-function scanJsonRecursive(production: Record<string, unknown>, template: object): boolean {
+function scanJsonRecursive(production: Record<string, unknown>, template: Record<string, string>): boolean {
     let modified = false;
 
     for (const [key, templateValue] of Object.entries(template)) {
         if (!(key in production)) {
             production[key] = structuredClone(templateValue);
             modified = true;
-        } else if (
-            templateValue !== null &&
-            typeof templateValue === "object" &&
-            !Array.isArray(templateValue)
-        ) {
+        } else if (typeof templateValue === "object" && !Array.isArray(templateValue)) {
             const productionValue = production[key];
             if (
                 typeof productionValue === "object" &&
@@ -94,6 +91,8 @@ function scanJsonRecursive(production: Record<string, unknown>, template: object
                     modified = true;
                 }
             }
+        } else {
+            throw new Error("Error whilst scanning JSON");
         }
     }
 
@@ -101,6 +100,3 @@ function scanJsonRecursive(production: Record<string, unknown>, template: object
 }
 
 recursiveScan(ROOT_DIR);
-if (missingKeys) {
-    process.exit(1);
-}

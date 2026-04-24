@@ -1,7 +1,6 @@
 import type { Message } from "discord.js";
 
 import { Cache } from "../caching/Cache";
-import { appConfig } from "../config/config";
 import type { ServicesResolver } from "../core/containers/Services";
 import { core } from "../core/Core";
 import { AppError } from "../errors/AppError";
@@ -20,6 +19,7 @@ import type {
     ParseResult,
     RequirableParseResult,
 } from "../types/command";
+import { parseToTimerKey, type TimerKey } from "../types/time/timer";
 import { dependencies } from "./../core/Dependencies";
 
 type CommandInstanceConstructor<TReply, LInstance extends CommandInstance<TReply>> = new (
@@ -81,18 +81,21 @@ export abstract class CommandDef<TReply, LInstance extends CommandInstance<TRepl
         );
     }
 
-    private buildCache() {
-        this.cache = this.cacheParams.useCache
-            ? new Cache(
-                  `cmd-run:${this.params.name}`,
-                  this.cacheParams.ttl_s,
-                  this.cacheParams.clear,
-                  this.cacheProvider,
-              )
-            : undefined;
+    private buildCache(): Cache<TReply> | undefined {
+        if (this.cacheParams.useCache) {
+            this.cache = new Cache(
+                `cmd-run:${this.params.name}`,
+                this.cacheParams.ttl_s,
+                this.cacheParams.clear,
+                this.cacheProvider,
+            );
+        } else {
+            this.cache = undefined;
+        }
+        return this.cache;
     }
 
-    async invalidateCache() {
+    async invalidateCache(): Promise<void> {
         if (!this.cache) return;
         await this.cache.clear();
     }
@@ -126,7 +129,7 @@ export abstract class CommandInstance<TReply> {
 
     async run(): Promise<void> {
         try {
-            this.timerKey = this.makeTimerKey();
+            this.timerKey = this.parseToTimerKey();
             core.startTimer(this.timerKey);
             await this.validateData();
             await this.validatePermissions();
@@ -198,6 +201,7 @@ export abstract class CommandInstance<TReply> {
      * Automatically uses required/optional based on ArgumentDefinition.
      */
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
     protected arg<T = unknown>(name: string): T {
         if (!this.params.info.arguments) {
             throw new NoArgsDefinedError(name, this.constructor.name);
@@ -228,8 +232,8 @@ export abstract class CommandInstance<TReply> {
         await this.cooldownService.assertCooldownOk(this.context.author, this.context.channel, this.params);
     }
 
-    private makeTimerKey() {
-        return `cmd:${this.context.message.id}`;
+    private parseToTimerKey(): TimerKey {
+        return parseToTimerKey(`cmd:${this.context.message.id}`);
     }
 
     private async validatePermissions(): Promise<void> {
@@ -243,7 +247,9 @@ export abstract class CommandInstance<TReply> {
     private requireParseResult<K extends RequirableParseResult>(key: K): NonNullable<ParseResult[K]> {
         const value = this.parseResult[key];
         if (value === undefined) {
-            throw new MissingArgumentError(`See \`${appConfig.PREFIX}help\` for details on command usages.`);
+            throw new MissingArgumentError(
+                `See \`${dependencies.config.app.PREFIX}help\` for details on command usages.`,
+            );
         }
 
         return value as NonNullable<ParseResult[K]>;

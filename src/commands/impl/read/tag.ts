@@ -57,6 +57,7 @@ export class CommandTagDef extends CommandDef<tagReplyElements, CommandTagInstan
 
 class CommandTagInstance extends CommandInstance<tagReplyElements> {
     private tagName!: string;
+    // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members
     private tagArgs?: string[];
 
     protected async validateData(): Promise<void> {
@@ -80,7 +81,7 @@ class CommandTagInstance extends CommandInstance<tagReplyElements> {
         if (isProductionEnvironment()) {
             return this.context.message.reply(this.content.body);
         } else {
-            return this.context.message.reply({ embeds: [this.debugEmbed()] });
+            return this.context.message.reply({ embeds: [this.debugEmbed] });
         }
     }
 
@@ -90,7 +91,7 @@ class CommandTagInstance extends CommandInstance<tagReplyElements> {
         core.logger.debug(`Sent tag ${this.content.name}`);
     }
 
-    private debugEmbed(): EmbedBuilder {
+    private get debugEmbed(): EmbedBuilder {
         return new EmbedBuilder()
             .setTitle("Tag Run Info")
             .addFields(

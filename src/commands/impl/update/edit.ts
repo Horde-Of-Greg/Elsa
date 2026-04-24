@@ -1,16 +1,13 @@
 import type { Message } from "discord.js";
 
-import { emojis } from "../../../config/config";
 import { core } from "../../../core/Core";
-import type { TagTable } from "../../../db/entities/Tag";
+import { dependencies } from "../../../core/Dependencies";
 import { PermLevel } from "../../../db/entities/UserHost";
-import { NotOwnerError } from "../../../errors/client/403";
-import { TagNotFoundError } from "../../../errors/client/404";
 import { TagBodyExistsError } from "../../../errors/client/409";
 import type { SHA256Hash } from "../../../types/crypto";
 import { ensureStrictPositive } from "../../../utils/numbers/positive";
-import { CommandDef, CommandInstance } from "../../Command";
-import { commands } from "../../Commands";
+import { CommandDef } from "../../Command";
+import { TagHandlingCommandInstance } from "../../TagHandlingCommand";
 
 export class CommandEditDef extends CommandDef<void, CommandEditInstance> {
     constructor() {
@@ -50,11 +47,9 @@ export class CommandEditDef extends CommandDef<void, CommandEditInstance> {
     }
 }
 
-export class CommandEditInstance extends CommandInstance<void> {
-    private tagName!: string;
+export class CommandEditInstance extends TagHandlingCommandInstance<void> {
     private newTagBody!: string;
     private tagBodyHash!: SHA256Hash;
-    private tag!: TagTable;
 
     protected async validateData(): Promise<void> {
         this.tagName = this.arg<string>("tag-name");
@@ -77,7 +72,9 @@ export class CommandEditInstance extends CommandInstance<void> {
     }
 
     protected async reply(): Promise<Message> {
-        return this.context.message.reply(`Tag \`${this.tagName}\` edited successfully! ${emojis.CHECKMARK}`);
+        return this.context.message.reply(
+            `Tag \`${this.tagName}\` edited successfully! ${dependencies.config.emoji.CHECKMARK}`,
+        );
     }
 
     protected async postReply(sentMessage: Message): Promise<void> {}
@@ -90,15 +87,7 @@ export class CommandEditInstance extends CommandInstance<void> {
      * Helpers
      */
 
-    private async ensureTagNameExists() {
-        const tag = await this.tagService.findTagStrict(this.tagName);
-        if (!tag) {
-            throw new TagNotFoundError(this.tagName, true);
-        }
-        this.tag = tag;
-    }
-
-    private async ensureUniqueBody() {
+    private async ensureUniqueBody(): Promise<void> {
         const hashContext = await this.tagService.tagBodyExists(this.newTagBody);
 
         if (hashContext.exists) {
@@ -108,16 +97,5 @@ export class CommandEditInstance extends CommandInstance<void> {
             throw new TagBodyExistsError(this.tagName, this.newTagBody, hashContext.tagWithBody, "add");
         }
         this.tagBodyHash = hashContext.hash;
-    }
-
-    private async ensureOwner() {
-        const user = await this.userService.findOrCreateUser(this.context.author);
-        if (this.tag.author.discordId !== this.context.author.id) {
-            throw new NotOwnerError(this.tag.author, user, this.tag);
-        }
-    }
-
-    private async invalidateCache() {
-        await commands.tag.invalidateCache();
     }
 }

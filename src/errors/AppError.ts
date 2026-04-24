@@ -1,16 +1,17 @@
 import type { MessagePayload, MessageReplyOptions } from "discord.js";
 
+import type { AppErrorClientResponse, AppErrorData, AppErrorParams } from "../types/errors/appError";
 import type { AppDate } from "../types/time/time";
 import { getTimeNow } from "../utils/time";
 
 export abstract class AppError extends Error {
-    abstract readonly code: string;
+    abstract readonly code?: string;
     abstract readonly httpStatus: number;
     readonly timestamp: AppDate;
 
     constructor(
         message: string,
-        public readonly data?: Record<string, unknown>,
+        public readonly data?: AppErrorData,
         public readonly stack?: string,
     ) {
         super(message);
@@ -20,10 +21,10 @@ export abstract class AppError extends Error {
         Error.captureStackTrace(this, this.constructor);
     }
 
-    toJSON() {
+    toJSON(): AppErrorParams {
         return {
             name: this.name,
-            code: this.code,
+            code: this.code ?? "UNKNOWN",
             message: this.message,
             timestamp: this.timestamp,
             data: this.data,
@@ -31,9 +32,9 @@ export abstract class AppError extends Error {
         };
     }
 
-    toClientResponse() {
+    toClientResponse(): AppErrorClientResponse {
         return {
-            error: this.code,
+            error: this.code ?? "UNKNOWN",
             message: this.message,
             timestamp: this.timestamp,
         };

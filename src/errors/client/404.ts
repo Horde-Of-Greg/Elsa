@@ -72,7 +72,7 @@ export class DeletedTagNotFound extends AppError {
                 new EmbedBuilder()
                     .setTitle("Could Not Retrieve Tag")
                     .setDescription(
-                        `Could not retrieve a tag named \`${this.name}\` in the cache of tags deleted in the past ${formattedDelay}. Either this tag was never deleted, or you ran this command too late`,
+                        `Could not retrieve a tag named \`${this.name}\` in the cache of tags deleted in the past ${dependencies.formatter.app.formattedDelay}. Either this tag was never deleted, or you ran this command too late`,
                     ),
             ],
         };

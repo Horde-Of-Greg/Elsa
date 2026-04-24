@@ -18,7 +18,7 @@ export class CommandUndeleteDef extends CommandDef<void, CommandUndeleteInstance
                     guild: -1,
                 },
                 info: {
-                    description: `Tries to retrieve one of your recently deleted tags. Only checks for tags in the past ${formattedDelay}`,
+                    description: `Tries to retrieve one of your recently deleted tags. Only checks for tags in the past ${dependencies.formatter.app.formattedDelay}`,
                     arguments: [
                         {
                             name: "tag-name",

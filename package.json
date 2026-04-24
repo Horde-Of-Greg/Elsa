@@ -1,6 +1,6 @@
 {
     "name": "elsa",
-    "version": "0.10.5",
+    "version": "0.11.0",
     "main": "dist/main.js",
     "license": "MIT",
     "description": "A discord bot to handle user created tags and scripts.",

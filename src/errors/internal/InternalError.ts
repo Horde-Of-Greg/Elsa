@@ -44,9 +44,10 @@ export abstract class InternalError extends AppError {
         const MAX_STACKTRACE_LENGTH = 1000;
 
         const stack = this.stack ?? "No stack trace available";
-        const stackLines = stack.match(/^\s+at\s+(.+?)\s+\(/gm);
+        const stackLinePattern = /^\s*at\s+([^\n(]+)\s*(?=\()/gm;
+        const stackLines = stack.match(stackLinePattern);
         const methodNames = stackLines
-            ? stackLines.map((line) => /at\s+(.+?)\s+\(/.exec(line)?.[1] ?? line)
+            ? stackLines.map((line) => stackLinePattern.exec(line)?.[1] ?? line)
             : [stack];
         return methodNames.join("\n").slice(0, MAX_STACKTRACE_LENGTH);
     }

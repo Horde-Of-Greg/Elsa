@@ -24,7 +24,7 @@ export abstract class AppError extends Error {
     toJSON(): AppErrorParams {
         return {
             name: this.name,
-            code: this.code ?? "UNKNOWN",
+            code: this.code ?? "UNKNOWN_ERROR",
             message: this.message,
             timestamp: this.timestamp,
             data: this.data,
@@ -34,7 +34,7 @@ export abstract class AppError extends Error {
 
     toClientResponse(): AppErrorClientResponse {
         return {
-            error: this.code ?? "UNKNOWN",
+            error: this.code ?? "UNKNOWN_ERROR",
             message: this.message,
             timestamp: this.timestamp,
         };

@@ -1,7 +1,7 @@
 import { InternalError } from "../InternalError";
 
 export class ErrorNotAnErrorError extends InternalError {
-    readonly code = "CRITICAL_ERROR_NOT_AN_ERROR_ERROR";
+    readonly code = "CRITICAL_ERROR_NOT_AN_ERROR";
 
     constructor(objectReceived: unknown) {
         super(

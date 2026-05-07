@@ -22,7 +22,7 @@ export class JoinTableError extends DatabaseError {
 }
 
 export class RelationNotFoundError extends InternalError {
-    readonly code = "RELATION_NOT_FOUND_ERROR";
+    readonly code = "RELATION_NOT_FOUND";
 
     constructor(joinTable: string, firstTable: string, secondTable?: string) {
         if (secondTable === undefined) {

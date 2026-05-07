@@ -2,7 +2,7 @@ import { dependencies } from "../../core/Dependencies";
 import { InternalError } from "../InternalError";
 
 export class WrongEntryPointError extends InternalError {
-    code = "WRONG_ENTRY_POINT_ERROR";
+    code = "WRONG_ENTRY_POINT";
 
     constructor(correctEntryPoint: string, thisEntryPoint: string, details?: string) {
         super(

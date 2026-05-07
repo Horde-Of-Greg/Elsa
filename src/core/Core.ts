@@ -1,3 +1,4 @@
+import { TimerIdNotFound } from "../errors/internal/timer";
 import { Logger } from "./logs/Logger";
 import { Timer } from "./Timer";
 
@@ -17,14 +18,14 @@ class Core {
 
     stopTimer(id: string): Timer {
         const timer = this._timers.get(id);
-        if (!timer) throw new Error(`Timer ${id} not found`);
+        if (!timer) throw new TimerIdNotFound(id);
         this._timers.delete(id);
         return timer;
     }
 
     queryTimer(id: string): Timer {
         const timer = this._timers.get(id);
-        if (!timer) throw new Error(`Timer ${id} not found`);
+        if (!timer) throw new TimerIdNotFound(id);
         return timer;
     }
 

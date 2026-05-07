@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { WriteAfterCloseError } from "../../../errors/internal/async";
 import { isActionsEnvironment } from "../../../utils/node/environment";
 import { dependencies } from "../../Dependencies";
 import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream";
@@ -36,7 +37,7 @@ export class FileStream extends BaseWritableStream {
     protected processChunk(data: string): void {
         if (isActionsEnvironment()) return;
         if (!this.fileHandle) {
-            throw new Error(`FileStream "${this.name}" is not open`);
+            throw new WriteAfterCloseError(this.name);
         }
         // eslint-disable-next-line no-control-regex
         const clean = data.replaceAll(/\x1b\[[0-9;]*m/g, "");

@@ -39,6 +39,20 @@ export default defineConfig(
             "importsort": simpleImportSort,
         },
         rules: {
+            "no-restricted-syntax": [
+                "error",
+                {
+                    selector: "CallExpression[callee.name='Error']",
+                    message:
+                        "Use a custom Error class, that extends AppError, instead of using the Error class itself.",
+                },
+                {
+                    selector: "NewExpression[callee.name='Error']",
+                    message:
+                        "Use a custom Error class, that extends AppError, instead of using the Error class itself.",
+                },
+            ],
+
             "default-param-last": "error",
             "dot-notation": "error",
             "eqeqeq": ["error", "always"],

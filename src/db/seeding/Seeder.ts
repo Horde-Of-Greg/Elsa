@@ -42,15 +42,9 @@ export class Seeder {
         const guild_ids = this.seederConfig.SUDOERS.GUILDS;
         for (const guild_id of guild_ids) {
             const guild = await getGuildById(guild_id);
-            if (!guild) {
-                throw new Error("Could not find guild in seeder");
-            }
 
             for (const sudoer of sudoers) {
                 const user_dc = await getUserById(sudoer);
-                if (!user_dc) {
-                    throw new Error(`User with id:${sudoer} not found.`);
-                }
                 await dependencies.services.userService.createUserWithPerms(user_dc, guild, PermLevel.OWNER);
             }
         }

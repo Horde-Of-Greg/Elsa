@@ -92,6 +92,7 @@ function scanJsonRecursive(production: Record<string, unknown>, template: Record
                 }
             }
         } else {
+            // eslint-disable-next-line no-restricted-syntax
             throw new Error("Error whilst scanning JSON");
         }
     }

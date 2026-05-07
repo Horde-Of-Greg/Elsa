@@ -1,5 +1,8 @@
 import * as github from "@actions/github";
 
+import { EnvVariableNotFound } from "../../errors/internal/config";
+import { FailedToFetchError } from "../../errors/internal/http";
+
 interface GitHubCommitResponse {
     commit: {
         message: string;
@@ -9,7 +12,7 @@ interface GitHubCommitResponse {
 export async function getCommitMessage(sha: string): Promise<string> {
     const token = process.env.GITHUB_TOKEN;
     if (token === undefined) {
-        throw new Error("GITHUB_TOKEN not found");
+        throw new EnvVariableNotFound("GITHUB_TOKEN");
     }
 
     const context = github.context;
@@ -24,7 +27,7 @@ export async function getCommitMessage(sha: string): Promise<string> {
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch commit: ${response.status} ${response.statusText}`);
+        throw new FailedToFetchError(response, "Failed to fetch commit.");
     }
 
     const data = (await response.json()) as GitHubCommitResponse;

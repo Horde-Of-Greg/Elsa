@@ -4,6 +4,8 @@ import path from "node:path";
 import dotenv from "dotenv";
 import type z from "zod";
 
+import { ConfigValidationError } from "../errors/internal/config";
+
 export class Config<TSchema extends z.ZodObject> {
     data: z.infer<TSchema>;
 
@@ -23,8 +25,7 @@ export class Config<TSchema extends z.ZodObject> {
     private validate(): z.infer<TSchema> {
         const parsed = this.schema.safeParse(this.file);
         if (!parsed.success) {
-            const errors = parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ");
-            throw new Error(`Config validation failed: ${errors}`);
+            throw new ConfigValidationError(this, parsed.error);
         }
         return parsed.data as z.infer<TSchema>;
     }

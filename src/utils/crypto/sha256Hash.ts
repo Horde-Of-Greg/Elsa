@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 
+import { MalformedSHA256Error } from "../../errors/internal/sha256";
 import type { SHA256Hash } from "../../types/crypto";
 
 /**
@@ -23,7 +24,7 @@ export function computeSHA256(input: string): SHA256Hash {
  */
 export function fromBuffer(buffer: Buffer): SHA256Hash {
     if (buffer.length !== 32) {
-        throw new Error(`Invalid SHA-256 hash: expected 32 bytes, got ${buffer.length}`);
+        throw new MalformedSHA256Error("hash", "32 bytes", buffer.length.toString());
     }
     return buffer as SHA256Hash;
 }
@@ -38,7 +39,7 @@ export function fromBuffer(buffer: Buffer): SHA256Hash {
  */
 export function fromHex(hex: string): SHA256Hash {
     if (!/^[0-9a-fA-F]{64}$/.test(hex)) {
-        throw new Error(`Invalid SHA-256 hex string: expected 64 hex characters, got "${hex}"`);
+        throw new MalformedSHA256Error("hew string", "64 hex characters", hex);
     }
     return Buffer.from(hex, "hex") as SHA256Hash;
 }

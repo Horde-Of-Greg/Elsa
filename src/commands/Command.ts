@@ -6,7 +6,8 @@ import { core } from "../core/Core";
 import { AppError } from "../errors/AppError";
 import { MissingArgumentError } from "../errors/client/400";
 import { ArgNotDefinedError, NoArgsDefinedError } from "../errors/internal/commands";
-import { UnknownInternalError } from "../errors/internal/InternalError";
+import { ErrorNotAnErrorError } from "../errors/internal/critical";
+import { UnknownInternalError } from "../errors/InternalError";
 import type { CooldownService } from "../services/CooldownService";
 import type { HostService } from "../services/HostService";
 import type { PermissionsService } from "../services/PermsService";
@@ -140,7 +141,7 @@ export abstract class CommandInstance<TReply> {
             await this.linkMessage(sentMessage);
             this.logExecution();
         } catch (error: unknown) {
-            await this.replyError(error instanceof Error ? error : new Error(String(error)));
+            await this.replyError(error instanceof Error ? error : new ErrorNotAnErrorError(error));
         } finally {
             core.stopTimer(this.timerKey);
         }

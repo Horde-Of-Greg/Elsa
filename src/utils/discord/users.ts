@@ -1,7 +1,7 @@
 import type { Snowflake, User } from "discord.js";
 
 import { dependencies } from "../../core/Dependencies";
-import { DcUserNotFoundError } from "../../errors/internal/discord";
+import { DiscordUserNotFound } from "../../errors/client/404";
 
 /**
  * Fetch a Discord User object by their ID.
@@ -12,6 +12,6 @@ export async function getUserById(userId: Snowflake): Promise<User> {
     try {
         return await dependencies.discord.bot.client.users.fetch(userId);
     } catch (error) {
-        throw new DcUserNotFoundError(userId);
+        throw new DiscordUserNotFound({ type: "user id", value: userId });
     }
 }

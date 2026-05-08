@@ -1,7 +1,7 @@
 import type { Guild, Snowflake } from "discord.js";
 
 import { dependencies } from "../../core/Dependencies";
-import { GuildNotFoundError } from "../../errors/internal/discord";
+import { DiscordGuildNotFound } from "../../errors/client/404";
 
 /**
  * Fetch a Discord Guild object by its ID.
@@ -12,6 +12,6 @@ export async function getGuildById(guildId: Snowflake): Promise<Guild> {
     try {
         return await dependencies.discord.bot.client.guilds.fetch(guildId);
     } catch (error) {
-        throw new GuildNotFoundError(guildId);
+        throw new DiscordGuildNotFound(guildId);
     }
 }

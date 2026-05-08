@@ -59,6 +59,30 @@ export class DiscordUserNotFound extends AppError {
     log(): void {}
 }
 
+export class DiscordGuildNotFound extends AppError {
+    readonly code = "DC_GUILD_NOT_FOUND";
+    readonly httpStatus: 404;
+
+    constructor(readonly guildName: string) {
+        super(`Could not find any guild named ${guildName} on discord's API.`);
+    }
+
+    get reply(): MessageReplyOptions {
+        return {
+            embeds: [
+                new EmbedBuilder()
+                    .setTitle("Discord GUILD Not Found")
+                    .setDescription(
+                        `Could not find guild on discord's API. The guild you are trying to find probably does not exist anymore, or you entered its data wrong.`,
+                    )
+                    .setColor(EmbedColors.YELLOW),
+            ],
+        };
+    }
+
+    log(): void {}
+}
+
 export class DeletedTagNotFound extends AppError {
     readonly code = "DELETED_TAG_NOT_FOUND";
     readonly httpStatus = 404;

@@ -26,11 +26,11 @@ class ConfigRepository implements ConfigsResolver {
     }
 
     get emoji(): EmojiConfig {
-        return (this._emoji ??= new Config(".emoji_config.json", EmojiConfigSchema).data);
+        return (this._emoji ??= new Config("emoji_config.json", EmojiConfigSchema).data);
     }
 
     get seeder(): SeederConfig {
-        return (this._seeder ??= new Config(".seeder_config.json", SeederConfigSchema).data);
+        return (this._seeder ??= new Config("seeder_config.json", SeederConfigSchema).data);
     }
 
     reset(): void {

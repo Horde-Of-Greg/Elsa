@@ -266,9 +266,9 @@ export abstract class CommandInstance<TReply> {
 
         if (e instanceof AppError) {
             error = e;
+        } else {
+            error = new UnknownInternalError(e.message, e.stack);
         }
-
-        error = new UnknownInternalError(e.message, e.stack);
 
         error.log();
         await this.context.message.reply(error.reply);

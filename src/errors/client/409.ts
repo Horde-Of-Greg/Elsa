@@ -57,7 +57,7 @@ export class TagBodyExistsError extends AppError {
                     .setDescription(
                         this.type === "edit"
                             ? `Cannot edit tag ${this.tagName} as it already contains the same body. ${Configs.emoji.EXCLAMATION_MARK}`
-                            : `Cannot add tag ${this.tagName} as it contains the same body as tag: ${this.existingTag.name} ${Configs.emoji.WORRIED}. Please use !alias instead.`,
+                            : `Cannot add tag ${this.tagName} as it contains the same body as tag: ${this.existingTag.name} ${Configs.emoji.WORRIED}. Please use ${Configs.app.PREFIX}alias instead.`,
                     ),
             ],
         };

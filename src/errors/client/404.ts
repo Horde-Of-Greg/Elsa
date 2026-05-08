@@ -1,6 +1,7 @@
 import { EmbedBuilder, type MessageReplyOptions } from "discord.js";
 
 import { EmbedColors } from "../../assets/colors/colors";
+import { Configs } from "../../config/Configs";
 import { dependencies } from "../../core/Dependencies";
 import { AppError } from "../AppError";
 
@@ -22,7 +23,7 @@ export class TagNotFoundError extends AppError {
                     .setTitle("Could not Find Tag")
                     .setColor(EmbedColors.MAGENTA)
                     .setDescription(
-                        `Could not find tag \`${this.tagName}\` by name${this.strict ? "" : " or alias"}. ${dependencies.config.emoji.QUESTION_MARK}`,
+                        `Could not find tag \`${this.tagName}\` by name${this.strict ? "" : " or alias"}. ${Configs.emoji.QUESTION_MARK}`,
                     ),
             ],
         };

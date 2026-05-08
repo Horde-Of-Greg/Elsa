@@ -1,4 +1,4 @@
-import { dependencies } from "../../core/Dependencies";
+import { Configs } from "../../config/Configs";
 import { InternalError } from "../InternalError";
 
 export class WrongEntryPointError extends InternalError {
@@ -6,7 +6,7 @@ export class WrongEntryPointError extends InternalError {
 
     constructor(correctEntryPoint: string, thisEntryPoint: string, details?: string) {
         super(
-            `Wrong entry point into ${dependencies.config.app.NAME} used. Expected: ${correctEntryPoint}, Used: ${thisEntryPoint}.` +
+            `Wrong entry point into ${Configs.app.NAME} used. Expected: ${correctEntryPoint}, Used: ${thisEntryPoint}.` +
                 details,
         );
     }

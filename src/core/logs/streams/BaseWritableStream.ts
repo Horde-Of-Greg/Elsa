@@ -1,7 +1,5 @@
 import { Writable, type WritableOptions } from "node:stream";
 
-import { ErrorNotAnErrorError } from "../../../errors/internal/critical";
-
 export interface StreamConfig {
     name: string;
     encoding?: BufferEncoding;
@@ -45,7 +43,8 @@ export abstract class BaseWritableStream extends Writable {
                 callback();
             }
         } catch (error) {
-            callback(error instanceof Error ? error : new ErrorNotAnErrorError(error));
+            // eslint-disable-next-line no-restricted-syntax
+            callback(error instanceof Error ? error : new Error(String(error)));
         }
     }
 
@@ -78,7 +77,10 @@ export abstract class BaseWritableStream extends Writable {
                     callback(cleanupError);
                     return;
                 }
-                throw new ErrorNotAnErrorError(cleanupError);
+                // eslint-disable-next-line no-restricted-syntax
+                throw new Error(
+                    "Could not get error for cleanupError. If this ever happens, it is VERY worrying",
+                );
             });
     }
 }

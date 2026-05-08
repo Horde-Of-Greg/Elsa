@@ -1,7 +1,7 @@
 import type { Message } from "discord.js";
 
+import { Configs } from "../../../config/Configs";
 import { core } from "../../../core/Core";
-import { dependencies } from "../../../core/Dependencies";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { TagBodyExistsError, TagExistsError } from "../../../errors/client/409";
 import type { SHA256Hash } from "../../../types/crypto";
@@ -74,7 +74,7 @@ class CommandAddInstance extends CommandInstance<void> {
 
     protected async reply(): Promise<Message> {
         return this.context.message.reply(
-            `Tag \`${this.tagName}\` created successfully! ${dependencies.config.emoji.CHECKMARK}`,
+            `Tag \`${this.tagName}\` created successfully! ${Configs.emoji.CHECKMARK}`,
         );
     }
 

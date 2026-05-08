@@ -1,9 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { WriteAfterCloseError } from "../../../errors/internal/async";
+import { Configs } from "../../../config/Configs";
 import { isActionsEnvironment } from "../../../utils/node/environment";
-import { dependencies } from "../../Dependencies";
 import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream";
 
 export interface FileStreamConfig extends StreamConfig {
@@ -17,7 +16,7 @@ export class FileStream extends BaseWritableStream {
 
     constructor(config: FileStreamConfig) {
         super(config);
-        this.filePath = path.join(dependencies.config.app.LOGS.OUTPUT_PATH, config.fileName);
+        this.filePath = path.join(Configs.app.LOGS.OUTPUT_PATH, config.fileName);
         this.ensureDirectory();
         this.openFile(config.flags ?? "a");
     }
@@ -37,7 +36,8 @@ export class FileStream extends BaseWritableStream {
     protected processChunk(data: string): void {
         if (isActionsEnvironment()) return;
         if (!this.fileHandle) {
-            throw new WriteAfterCloseError(this.name);
+            // eslint-disable-next-line no-restricted-syntax
+            throw new Error(`FileStream "${this.name}" is not open`);
         }
         // eslint-disable-next-line no-control-regex
         const clean = data.replaceAll(/\x1b\[[0-9;]*m/g, "");

@@ -1,6 +1,7 @@
 import type { Message } from "discord.js";
 
 import { Cache } from "../caching/Cache";
+import { Configs } from "../config/Configs";
 import type { ServicesResolver } from "../core/containers/Services";
 import { core } from "../core/Core";
 import { AppError } from "../errors/AppError";
@@ -249,7 +250,7 @@ export abstract class CommandInstance<TReply> {
         const value = this.parseResult[key];
         if (value === undefined) {
             throw new MissingArgumentError(
-                `See \`${dependencies.config.app.PREFIX}help\` for details on command usages.`,
+                `See \`${Configs.app.PREFIX}help\` for details on command usages.`,
             );
         }
 

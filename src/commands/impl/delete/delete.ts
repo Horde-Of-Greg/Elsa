@@ -52,7 +52,7 @@ export class CommandDeleteInstance extends TagHandlingCommandInstance<void> {
     protected async reply(): Promise<Message> {
         return this.context.message.reply(
             `Tag **${this.tagName}** deleted successfully! ${Configs.emoji.CHECKMARK}.` +
-                `\nYou have  minutes to undo this action with \`%t undelete ${this.tagName}\``,
+                `\nYou have  minutes to undo this action with \`${Configs.app.PREFIX} undelete ${this.tagName}\``,
         );
     }
 

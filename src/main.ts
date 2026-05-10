@@ -5,6 +5,7 @@
 import "./index";
 
 import { core } from "./core/Core";
+import { timers } from "./core/Timers";
 import { gracefulShutdown } from "./lifecycle/shutdown";
 import { Start } from "./lifecycle/Start";
 
@@ -15,7 +16,7 @@ async function main(): Promise<void> {
     await Start.initDb();
     await Start.initBot();
     await Start.seed();
-    core.logger.info(`App Ready in ${core.queryTimer("main").getTime().formatted}!`);
+    core.logger.info(`App Ready in ${timers.queryTimer("main").getTime().formatted}!`);
 }
 
 main().catch((e: unknown) => {

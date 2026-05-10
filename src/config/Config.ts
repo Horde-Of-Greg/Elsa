@@ -14,9 +14,7 @@ export class Config<TSchema extends z.ZodObject> {
         readonly fileName: string,
         readonly schema: TSchema,
     ) {
-        if (fileName !== ".env") {
-            this.fileLocation = path.join(this.configsPath, fileName);
-        }
+        this.fileLocation = fileName === ".env" ? fileName : path.join(this.configsPath, fileName);
         this.data = this.validate();
     }
 
@@ -24,6 +22,7 @@ export class Config<TSchema extends z.ZodObject> {
         const parsed = this.schema.safeParse(this.file);
         if (!parsed.success) {
             const errors = parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ");
+            // eslint-disable-next-line no-restricted-syntax
             throw new Error(`Config validation failed: ${errors}`);
         }
         return parsed.data as z.infer<TSchema>;

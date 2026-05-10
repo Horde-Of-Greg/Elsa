@@ -1,7 +1,7 @@
 import type { Message } from "discord.js";
 
+import { Configs } from "../../../config/Configs";
 import { core } from "../../../core/Core";
-import { dependencies } from "../../../core/Dependencies";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { CommandDef } from "../../Command";
 import { TagHandlingCommandInstance } from "../../TagHandlingCommand";
@@ -51,8 +51,8 @@ export class CommandDeleteInstance extends TagHandlingCommandInstance<void> {
 
     protected async reply(): Promise<Message> {
         return this.context.message.reply(
-            `Tag **${this.tagName}** deleted successfully! ${dependencies.config.emoji.CHECKMARK}.` +
-                `\nYou have  minutes to undo this action with \`%t undelete ${this.tagName}\``,
+            `Tag **${this.tagName}** deleted successfully! ${Configs.emoji.CHECKMARK}.` +
+                `\nYou have  minutes to undo this action with \`${Configs.app.PREFIX} undelete ${this.tagName}\``,
         );
     }
 

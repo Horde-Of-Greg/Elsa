@@ -1,5 +1,6 @@
 import type { Message } from "discord.js";
 
+import { Configs } from "../../../config/Configs";
 import { core } from "../../../core/Core";
 import { dependencies } from "../../../core/Dependencies";
 import { PermLevel } from "../../../db/entities/UserHost";
@@ -57,7 +58,7 @@ export class CommandUndeleteInstance extends TagHandlingCommandInstance<void> {
 
     protected async reply(): Promise<Message> {
         return this.context.message.reply(
-            `Tag **${this.tagName}** retrieved successfully! ${dependencies.config.emoji.CHECKMARK}.`,
+            `Tag **${this.tagName}** retrieved successfully! ${Configs.emoji.CHECKMARK}.`,
         );
     }
 

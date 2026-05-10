@@ -1,10 +1,9 @@
 import type { Message, User } from "discord.js";
 
+import { Configs } from "../../../config/Configs";
 import { core } from "../../../core/Core";
-import { dependencies } from "../../../core/Dependencies";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { BadArgumentError } from "../../../errors/client/400";
-import { DiscordUserNotFound } from "../../../errors/client/404";
 import { getUserById } from "../../../utils/discord/users";
 import { CommandDef, CommandInstance } from "../../Command";
 
@@ -72,7 +71,7 @@ class CommandSetRankInstance extends CommandInstance<void> {
 
     protected async reply(): Promise<Message> {
         return this.context.message.reply(
-            `Successfully updated <@${this.user.id}>'s rank to ${PermLevel[this.newRank]} ${dependencies.config.emoji.CHECKMARK}`,
+            `Successfully updated <@${this.user.id}>'s rank to ${PermLevel[this.newRank]} ${Configs.emoji.CHECKMARK}`,
         );
     }
 
@@ -86,9 +85,6 @@ class CommandSetRankInstance extends CommandInstance<void> {
 
     private async ensureUserExists(): Promise<void> {
         const user_dc = await getUserById(this.userId);
-        if (!user_dc) {
-            throw new DiscordUserNotFound({ type: "user id", value: this.userId });
-        }
         this.user = user_dc;
     }
 }

@@ -1,4 +1,4 @@
-import { InternalError } from "./InternalError";
+import { InternalError } from "../InternalError";
 
 export class ChannelNotFoundError extends InternalError {
     readonly code = "CHANNEL_NOT_FOUND";

@@ -3,6 +3,7 @@ import type { DeepPartial, FindOptionsRelations, FindOptionsWhere, Repository } 
 
 import type { DatabaseResolver } from "../../core/containers/Database";
 import { dependencies } from "../../core/Dependencies";
+import { RelationNotFoundError } from "../../errors/internal/db";
 import type { ValidEntity } from "../../types/db/entities";
 
 //TODO: Add Transaction support.
@@ -108,9 +109,7 @@ export abstract class BaseRepository<T extends ValidEntity> {
         const otherRelation = joinMetadata.relations.find((rel) => rel.type === otherMetadata.target);
 
         if (!thisRelation || !otherRelation) {
-            throw new Error(
-                `Could not find relations in ${joinTable.name} for ${thisTable.name} and ${otherTable.name}`,
-            );
+            throw new RelationNotFoundError(joinTable.name, thisTable.name, otherTable.name);
         }
 
         const thisColumnName = thisRelation.joinColumns[0]?.propertyName ?? `${thisRelation.propertyName}Id`;
@@ -154,7 +153,7 @@ export abstract class BaseRepository<T extends ValidEntity> {
         const thatRelation = joinMetadata.relations.find((rel) => rel.type === thatMetadata.target);
 
         if (!thatRelation) {
-            throw new Error(`Could not find relation in ${joinTable.name} for ${thatTable.name}`);
+            throw new RelationNotFoundError(joinTable.name, thatTable.name);
         }
 
         const thatColumnName = thatRelation.joinColumns[0]?.propertyName ?? `${thatRelation.propertyName}Id`;

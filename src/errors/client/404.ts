@@ -1,6 +1,7 @@
 import { EmbedBuilder, type MessageReplyOptions } from "discord.js";
 
 import { EmbedColors } from "../../assets/colors/colors";
+import { Configs } from "../../config/Configs";
 import { dependencies } from "../../core/Dependencies";
 import { AppError } from "../AppError";
 
@@ -22,7 +23,7 @@ export class TagNotFoundError extends AppError {
                     .setTitle("Could not Find Tag")
                     .setColor(EmbedColors.MAGENTA)
                     .setDescription(
-                        `Could not find tag \`${this.tagName}\` by name${this.strict ? "" : " or alias"}. ${dependencies.config.emoji.QUESTION_MARK}`,
+                        `Could not find tag \`${this.tagName}\` by name${this.strict ? "" : " or alias"}. ${Configs.emoji.QUESTION_MARK}`,
                     ),
             ],
         };
@@ -50,6 +51,30 @@ export class DiscordUserNotFound extends AppError {
                         `Could not find user on discord's API. The user you are trying to find probably does not exist anymore, or you entered its data wrong.`,
                     )
                     .setFields([{ name: this.userSearchQuery.type, value: this.userSearchQuery.value }])
+                    .setColor(EmbedColors.YELLOW),
+            ],
+        };
+    }
+
+    log(): void {}
+}
+
+export class DiscordGuildNotFound extends AppError {
+    readonly code = "DC_GUILD_NOT_FOUND";
+    readonly httpStatus: 404;
+
+    constructor(readonly guildName: string) {
+        super(`Could not find any guild named ${guildName} on discord's API.`);
+    }
+
+    get reply(): MessageReplyOptions {
+        return {
+            embeds: [
+                new EmbedBuilder()
+                    .setTitle("Discord GUILD Not Found")
+                    .setDescription(
+                        `Could not find guild on discord's API. The guild you are trying to find probably does not exist anymore, or you entered its data wrong.`,
+                    )
                     .setColor(EmbedColors.YELLOW),
             ],
         };

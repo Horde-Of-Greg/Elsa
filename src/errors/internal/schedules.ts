@@ -1,4 +1,4 @@
-import { InternalError } from "./InternalError";
+import { InternalError } from "../InternalError";
 
 export class ReaddirError extends InternalError {
     readonly code = "READDIR";

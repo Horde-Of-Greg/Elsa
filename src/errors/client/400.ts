@@ -1,8 +1,8 @@
 import { EmbedBuilder, type MessageReplyOptions } from "discord.js";
 
 import { EmbedColors } from "../../assets/colors/colors";
+import { Configs } from "../../config/Configs";
 import { AppError } from "../AppError";
-import { dependencies } from "./../../core/Dependencies";
 
 export class MissingArgumentError extends AppError {
     readonly code = "MISSING_ARGUMENT";
@@ -14,7 +14,7 @@ export class MissingArgumentError extends AppError {
                 new EmbedBuilder()
                     .setTitle("Missing arguments")
                     .setColor(EmbedColors.YELLOW)
-                    .setDescription(this.message + dependencies.config.emoji.QUESTION_MARK),
+                    .setDescription(this.message + Configs.emoji.QUESTION_MARK),
             ],
         };
     }
@@ -46,7 +46,7 @@ export class BadArgumentError extends AppError {
                         `The bot successfully received the argument for ${this.argName}, but deemed it invalid.`,
                     )
                     .setFields([
-                        { name: "Expected values", value: this.expectedValues.join("|") },
+                        { name: "Expected values", value: this.expectedValues.join("| ") },
                         { name: "Value received", value: this.value },
                     ])
                     .setFooter({ text: `Is case sensitive? ${this.isCaseSensitive ? "Yes" : "No"}` })

@@ -1,5 +1,4 @@
 import { CacheContainer, type CacheResolver } from "./containers/Cache";
-import { ConfigContainer, type ConfigResolver } from "./containers/Config";
 import { DatabaseContainer, type DatabaseResolver } from "./containers/Database";
 import { DiscordContainer, type DiscordResolver } from "./containers/Discord";
 import { FormatterContainer, type FormatterResolver } from "./containers/Formatter";
@@ -12,12 +11,10 @@ class Dependencies {
     readonly services: ServicesResolver;
     readonly repositories: RepositoryResolver;
     readonly cache: CacheResolver;
-    readonly config: ConfigResolver;
     readonly formatter: FormatterResolver;
 
     constructor(
         cache: CacheResolver,
-        config: ConfigResolver,
         database: DatabaseResolver,
         discord: DiscordResolver,
         formatter: FormatterResolver,
@@ -25,7 +22,6 @@ class Dependencies {
         repositories: RepositoryResolver,
     ) {
         this.cache = cache;
-        this.config = config;
         this.database = database;
         this.discord = discord;
         this.formatter = formatter;
@@ -35,7 +31,6 @@ class Dependencies {
 
     resetAll(): void {
         this.cache.reset();
-        this.config.reset();
         this.database.reset();
         this.discord.reset();
         this.services.reset();
@@ -45,7 +40,6 @@ class Dependencies {
 
 export const dependencies = new Dependencies(
     new CacheContainer(),
-    new ConfigContainer(),
     new DatabaseContainer(),
     new DiscordContainer(),
     new FormatterContainer(),

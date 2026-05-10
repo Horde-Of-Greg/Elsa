@@ -1,12 +1,15 @@
 import type { Message } from "discord.js";
 
 import { Cache } from "../caching/Cache";
+import { Configs } from "../config/Configs";
 import type { ServicesResolver } from "../core/containers/Services";
 import { core } from "../core/Core";
+import { timers } from "../core/Timers";
 import { AppError } from "../errors/AppError";
 import { MissingArgumentError } from "../errors/client/400";
 import { ArgNotDefinedError, NoArgsDefinedError } from "../errors/internal/commands";
-import { UnknownInternalError } from "../errors/internal/InternalError";
+import { ErrorNotAnErrorError } from "../errors/internal/critical";
+import { UnknownInternalError } from "../errors/InternalError";
 import type { CooldownService } from "../services/CooldownService";
 import type { HostService } from "../services/HostService";
 import type { PermissionsService } from "../services/PermsService";
@@ -130,7 +133,7 @@ export abstract class CommandInstance<TReply> {
     async run(): Promise<void> {
         try {
             this.timerKey = this.parseToTimerKey();
-            core.startTimer(this.timerKey);
+            timers.startTimer(this.timerKey);
             await this.validateData();
             await this.validatePermissions();
             await this.checkCooldown();
@@ -140,9 +143,9 @@ export abstract class CommandInstance<TReply> {
             await this.linkMessage(sentMessage);
             this.logExecution();
         } catch (error: unknown) {
-            await this.replyError(error instanceof Error ? error : new Error(String(error)));
+            await this.replyError(error instanceof Error ? error : new ErrorNotAnErrorError(error));
         } finally {
-            core.stopTimer(this.timerKey);
+            timers.stopTimer(this.timerKey);
         }
     }
 
@@ -248,7 +251,7 @@ export abstract class CommandInstance<TReply> {
         const value = this.parseResult[key];
         if (value === undefined) {
             throw new MissingArgumentError(
-                `See \`${dependencies.config.app.PREFIX}help\` for details on command usages.`,
+                `See \`${Configs.app.PREFIX}help\` for details on command usages.`,
             );
         }
 
@@ -264,9 +267,9 @@ export abstract class CommandInstance<TReply> {
 
         if (e instanceof AppError) {
             error = e;
+        } else {
+            error = new UnknownInternalError(e.message, e.stack);
         }
-
-        error = new UnknownInternalError(e.message, e.stack);
 
         error.log();
         await this.context.message.reply(error.reply);

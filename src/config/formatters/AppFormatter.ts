@@ -1,8 +1,8 @@
-import { dependencies } from "../../core/Dependencies";
 import { castNumberToTime, formatTime } from "../../utils/time";
-import type { ConfigResolver } from "./../../core/containers/Config";
+import { Configs, type ConfigsResolver } from "../Configs";
+
 export class AppFormatter {
-    constructor(private readonly configs: ConfigResolver = dependencies.config) {}
+    constructor(private readonly configs: ConfigsResolver = Configs) {}
 
     get formattedDelay(): string {
         const adjustedDelay = castNumberToTime(this.configs.app.COMMANDS.UNDELETE.DELAY_S, "s");

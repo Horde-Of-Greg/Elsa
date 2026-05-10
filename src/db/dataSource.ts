@@ -1,15 +1,15 @@
 import { DataSource } from "typeorm";
 
+import { Configs } from "../config/Configs";
 import { isProductionEnvironment } from "../utils/node/environment";
-import { dependencies } from "./../core/Dependencies";
 
 export const dataSourceAppConfig = new DataSource({
     type: "postgres",
-    host: dependencies.config.env.POSTGRES_HOST,
-    port: dependencies.config.env.POSTGRES_PORT,
-    username: dependencies.config.env.POSTGRES_USER,
-    password: dependencies.config.env.POSTGRES_PASSWORD,
-    database: dependencies.config.env.POSTGRES_DB,
+    host: Configs.env.POSTGRES_HOST,
+    port: Configs.env.POSTGRES_PORT,
+    username: Configs.env.POSTGRES_USER,
+    password: Configs.env.POSTGRES_PASSWORD,
+    database: Configs.env.POSTGRES_DB,
 
     synchronize: true, // isDevelopmentEnvironment(), // Auto-create tables in development
 

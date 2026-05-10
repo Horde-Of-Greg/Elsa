@@ -1,16 +1,17 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { Configs } from "../../config/Configs";
+import { ErrorNotAnErrorError } from "../../errors/internal/critical";
 import { ReaddirError } from "../../errors/internal/schedules";
 import { isProductionEnvironment } from "../../utils/node/environment";
 import { core } from "../Core";
-import { dependencies } from "../Dependencies";
 import { consoleContainer } from "./ConsoleContainer";
 
 export class LogRotation {
     private dirSize = 0;
     private files!: string[];
-    private readonly dir = dependencies.config.app.LOGS.OUTPUT_PATH;
+    private readonly dir = Configs.app.LOGS.OUTPUT_PATH;
     private readonly maxSingleSizeBytes = 10 * 1024 * 1024;
     private readonly maxTotalSizeBytes = 25 * 1024 * 1024;
 
@@ -31,8 +32,8 @@ export class LogRotation {
                     await this.rotate();
                 }
             }
-        } catch (err) {
-            throw new ReaddirError(err instanceof Error ? err : new Error(String(err)));
+        } catch (err: unknown) {
+            throw new ReaddirError(err instanceof Error ? err : new ErrorNotAnErrorError(err));
         }
     }
 

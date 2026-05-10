@@ -2,13 +2,13 @@ import { MalformedResponseError } from "../../errors/internal/http";
 
 export async function fetchLatestRemoteTag(): Promise<string> {
     const response = await fetch("https://api.github.com/repos/horde-of-greg/elsa/tags");
-    const tags = await validTagsResponseGuardCheck(response);
-    const firstTag = validTagGuardCheck(tags[0]);
+    const tags = await ensureValidTagsResponse(response);
+    const firstTag = ensureValidTag(tags[0]);
 
     return firstTag.name;
 }
 
-async function validTagsResponseGuardCheck(response: Response): Promise<unknown[]> {
+async function ensureValidTagsResponse(response: Response): Promise<unknown[]> {
     const tags: unknown = await response.json();
 
     if (!Array.isArray(tags)) {
@@ -22,7 +22,7 @@ async function validTagsResponseGuardCheck(response: Response): Promise<unknown[
     return tags;
 }
 
-function validTagGuardCheck(tag: unknown): Record<"name", string> {
+function ensureValidTag(tag: unknown): Record<"name", string> {
     const objectTested = "latest remote tag";
     const source = "GitHub";
 

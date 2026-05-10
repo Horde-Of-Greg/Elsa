@@ -1,7 +1,7 @@
 import type { Message } from "discord.js";
 
 import { Configs } from "../../../config/Configs";
-import { core } from "../../../core/Core";
+import { timers } from "../../../core/Timers";
 import { PermLevel } from "../../../db/entities/UserHost";
 import type { TimerResult } from "../../../types/time/timer";
 import { CommandDef, CommandInstance } from "../../Command";
@@ -37,7 +37,7 @@ export class CommandUptimeInstance extends CommandInstance<void> {
     protected async validateData(): Promise<void> {}
 
     protected async execute(): Promise<void> {
-        const timer = core.queryTimer("main");
+        const timer = timers.queryTimer("main");
         this.uptime = timer.getTime();
         this.startDate = timer.getStartDate();
     }

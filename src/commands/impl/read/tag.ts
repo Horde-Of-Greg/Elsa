@@ -1,6 +1,7 @@
 import { EmbedBuilder, type Message } from "discord.js";
 
 import { core } from "../../../core/Core";
+import { timers } from "../../../core/Timers";
 import { PermLevel } from "../../../db/entities/UserHost";
 import { TagNotFoundError } from "../../../errors/client/404";
 import { isProductionEnvironment } from "../../../utils/node/environment";
@@ -111,7 +112,7 @@ class CommandTagInstance extends CommandInstance<tagReplyElements> {
                 },
             )
             .setFooter({
-                text: `took: ${core.queryTimer(this.timerKey).getTime().formatted} | debug: true`,
+                text: `took: ${timers.queryTimer(this.timerKey).getTime().formatted} | debug: true`,
             });
     }
 }

@@ -1,7 +1,7 @@
 import type { Message } from "discord.js";
 
 import { Configs } from "../../../config/Configs";
-import { core } from "../../../core/Core";
+import { timers } from "../../../core/Timers";
 import { PermLevel } from "../../../db/entities/UserHost";
 import type { _ms } from "../../../types/time/time";
 import type { TimerResult } from "../../../types/time/timer";
@@ -38,7 +38,7 @@ export class CommandPingInstance extends CommandInstance<void> {
     protected async execute(): Promise<void> {}
 
     protected async reply(): Promise<Message> {
-        this.serverLatency = core.queryTimer(this.timerKey).getTime("ms");
+        this.serverLatency = timers.queryTimer(this.timerKey).getTime("ms");
         return this.context.message.reply(`${Configs.emoji.PING_PONG} Pinging...`);
     }
 

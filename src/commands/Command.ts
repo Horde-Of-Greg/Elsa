@@ -4,6 +4,7 @@ import { Cache } from "../caching/Cache";
 import { Configs } from "../config/Configs";
 import type { ServicesResolver } from "../core/containers/Services";
 import { core } from "../core/Core";
+import { timers } from "../core/Timers";
 import { AppError } from "../errors/AppError";
 import { MissingArgumentError } from "../errors/client/400";
 import { ArgNotDefinedError, NoArgsDefinedError } from "../errors/internal/commands";
@@ -132,7 +133,7 @@ export abstract class CommandInstance<TReply> {
     async run(): Promise<void> {
         try {
             this.timerKey = this.parseToTimerKey();
-            core.startTimer(this.timerKey);
+            timers.startTimer(this.timerKey);
             await this.validateData();
             await this.validatePermissions();
             await this.checkCooldown();
@@ -144,7 +145,7 @@ export abstract class CommandInstance<TReply> {
         } catch (error: unknown) {
             await this.replyError(error instanceof Error ? error : new ErrorNotAnErrorError(error));
         } finally {
-            core.stopTimer(this.timerKey);
+            timers.stopTimer(this.timerKey);
         }
     }
 

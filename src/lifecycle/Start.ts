@@ -1,6 +1,7 @@
 import { Configs } from "../config/Configs";
 import { core } from "../core/Core";
 import { dependencies } from "../core/Dependencies";
+import { timers } from "../core/Timers";
 import { Seeder } from "../db/seeding/Seeder";
 import { isActionsEnvironment, isProductionEnvironment } from "../utils/node/environment";
 
@@ -14,7 +15,7 @@ export const Start = {
     },
 
     initCore(): void {
-        core.startTimer("main");
+        timers.startTimer("main");
 
         this.Status.core = true;
         core.logger.info("Core Ready");

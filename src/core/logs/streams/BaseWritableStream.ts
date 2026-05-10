@@ -73,13 +73,15 @@ export abstract class BaseWritableStream extends Writable {
             })
 
             .catch((cleanupError: unknown) => {
-                if (cleanupError instanceof Error || cleanupError === null) {
+                if (cleanupError instanceof Error) {
                     callback(cleanupError);
                     return;
                 }
-                // eslint-disable-next-line no-restricted-syntax
-                throw new Error(
-                    "Could not get error for cleanupError. If this ever happens, it is VERY worrying",
+                callback(
+                    // eslint-disable-next-line no-restricted-syntax
+                    new Error(
+                        "Could not get error for cleanupError. If this ever happens, it is VERY worrying",
+                    ),
                 );
             });
     }

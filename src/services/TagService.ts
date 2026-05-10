@@ -8,7 +8,7 @@ import { dependencies } from "../core/Dependencies";
 import type { TagTable } from "../db/entities/Tag";
 import type { UserTable } from "../db/entities/User";
 import type { TagRepository } from "../db/repositories/TagRepository";
-import { TagNotFoundError } from "../errors/client/404";
+import { DeletedTagNotFound, TagNotFoundError } from "../errors/client/404";
 import type { SHA256Hash } from "../types/crypto";
 import type { TagElements, TagHostElements } from "../types/db/repositories";
 import { computeSHA256 } from "../utils/crypto/sha256Hash";
@@ -104,7 +104,7 @@ export class TagService {
     async retrieveTag(tagName: string): Promise<TagTable> {
         const tag = await this.deletionMemory.get(tagName);
         if (tag === null) {
-            throw new TagNotFoundError(tagName, true);
+            throw new DeletedTagNotFound(tagName);
         }
         return tag;
     }

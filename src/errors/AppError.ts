@@ -2,7 +2,6 @@ import type { MessagePayload, MessageReplyOptions } from "discord.js";
 
 import type { AppErrorClientResponse, AppErrorData, AppErrorParams } from "../types/errors/appError";
 import type { AppDate } from "../types/time/time";
-import { getTimeNow } from "../utils/time";
 
 export abstract class AppError extends Error {
     abstract readonly code?: string;
@@ -16,7 +15,7 @@ export abstract class AppError extends Error {
     ) {
         super(message);
         this.name = this.constructor.name;
-        this.timestamp = getTimeNow();
+        this.timestamp = new Date();
 
         Error.captureStackTrace(this, this.constructor);
     }

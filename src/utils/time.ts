@@ -1,7 +1,6 @@
 import { core } from "../core/Core";
 import type { PositiveNumber } from "../types/numbers";
 import type { _day, _h, _min, _ms, _ns, _s, _µs, AdjustedTime, AppDate, TimeUnit } from "../types/time/time";
-import { ensurePositive } from "./numbers/positive";
 
 /**
  * Get the timestamp using the Date class.
@@ -24,58 +23,62 @@ export async function sleep(ms: number): Promise<void> {
     return new Promise((resolve) => void setTimeout(resolve, ms));
 }
 
-export function adjustTime(time_ns: _ns, unitToStopAt?: TimeUnit): AdjustedTime & { highestUnit: TimeUnit } {
+export function adjustTime(
+    time_ns: _ns & PositiveNumber,
+    unitToStopAt?: TimeUnit,
+): AdjustedTime & { highestUnit: TimeUnit } {
     core.logger.debug("raw time ns:", time_ns);
-    let d = ensurePositive(0 as _day);
-    let h = ensurePositive(0 as _h);
-    let m = ensurePositive(0 as _min);
-    let s = ensurePositive(0 as _s);
-    let ms = ensurePositive(0 as _ms);
-    let micro = ensurePositive(0 as _µs);
-    let nano: _ns & PositiveNumber;
+
+    let d = 0 as _day;
+    let h = 0 as _h;
+    let m = 0 as _min;
+    let s = 0 as _s;
+    let ms = 0 as _ms;
+    let micro = 0 as _µs;
+    let nano: _ns;
 
     if (time_ns < 1000 || unitToStopAt === "nano") {
-        nano = ensurePositive(time_ns);
+        nano = time_ns;
         return { d, h, m, s, ms, micro, nano, highestUnit: "nano" };
     }
-    nano = ensurePositive((Math.round((time_ns % 1000) * 1000) / 1000) as _ns);
+    nano = (Math.round((time_ns % 1000) * 1000) / 1000) as _ns;
     // Round everything because IEEE754
     const time_µs = (Math.round(time_ns - nano) / 1000) as _µs;
 
     if (time_µs < 1000 || unitToStopAt === "micro") {
-        micro = ensurePositive(time_µs);
+        micro = time_µs;
         return { d, h, m, s, ms, micro, nano, highestUnit: "micro" };
     }
-    micro = ensurePositive((Math.round((time_µs % 1000) * 1000) / 1000) as _µs);
+    micro = (Math.round((time_µs % 1000) * 1000) / 1000) as _µs;
     const time_ms = (Math.round(time_µs - micro) / 1000) as _ms;
 
     if (time_ms < 1000 || unitToStopAt === "ms") {
-        ms = ensurePositive(time_ms);
+        ms = time_ms;
         return { d, h, m, s, ms, micro, nano, highestUnit: "ms" };
     }
-    ms = ensurePositive((Math.round((time_ms % 1000) * 1000) / 1000) as _ms);
+    ms = (Math.round((time_ms % 1000) * 1000) / 1000) as _ms;
     const time_s = (Math.round(time_ms - ms) / 1000) as _s;
 
     if (time_s < 60 || unitToStopAt === "s") {
-        s = ensurePositive(time_s);
+        s = time_s;
         return { d, h, m, s, ms, micro, nano, highestUnit: "s" };
     }
-    s = ensurePositive((Math.round((time_s % 60) * 1000) / 1000) as _s);
+    s = (Math.round((time_s % 60) * 1000) / 1000) as _s;
     const time_m = (Math.round(time_s - s) / 60) as _min;
 
     if (time_m < 60 || unitToStopAt === "m") {
-        m = ensurePositive(time_m);
+        m = time_m;
         return { d, h, m, s, ms, micro, nano, highestUnit: "m" };
     }
-    m = ensurePositive((Math.round((time_m % 60) * 1000) / 1000) as _min);
+    m = (Math.round((time_m % 60) * 1000) / 1000) as _min;
     const time_h = (Math.round(time_m - m) / 60) as _h;
 
     if (time_h < 24 || unitToStopAt === "h") {
-        h = ensurePositive(time_h);
+        h = time_h;
         return { d, h, m, s, ms, micro, nano, highestUnit: "h" };
     }
-    h = ensurePositive((Math.round((time_h % 24) * 1000) / 1000) as _h);
-    d = ensurePositive((Math.round(((time_h - h) / 24) * 1000) / 1000) as _day);
+    h = (Math.round((time_h % 24) * 1000) / 1000) as _h;
+    d = (Math.round(((time_h - h) / 24) * 1000) / 1000) as _day;
 
     return { d, h, m, s, ms, micro, nano, highestUnit: "d" };
 }
@@ -115,7 +118,10 @@ export function formatTime(adjustedTime: AdjustedTime & { highestUnit: TimeUnit 
     return formatted;
 }
 
-export function castNumberToTime(number: number, unit: TimeUnit): AdjustedTime & { highestUnit: TimeUnit } {
+export function castNumberToTime(
+    number: PositiveNumber,
+    unit: TimeUnit,
+): AdjustedTime & { highestUnit: TimeUnit } {
     let multiplier: number;
     switch (unit) {
         case "nano":
@@ -146,6 +152,6 @@ export function castNumberToTime(number: number, unit: TimeUnit): AdjustedTime &
             multiplier = 1000 * 1000 * 1000 * 60 * 60 * 24;
             break;
     }
-    const time_ns: _ns = (number * multiplier) as _ns;
+    const time_ns = (number * multiplier) as _ns & PositiveNumber;
     return adjustTime(time_ns);
 }

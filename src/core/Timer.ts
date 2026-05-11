@@ -1,5 +1,6 @@
 import type { _ns, TimeUnit } from "../types/time/time";
 import type { TimerResult } from "../types/time/timer";
+import { ensurePositive } from "../utils/numbers/positive";
 import { adjustTime, formatTime } from "../utils/time";
 
 export class Timer {
@@ -24,7 +25,8 @@ export class Timer {
      */
     getTime(unit: TimeUnit | "auto" = "auto", precision = 2): TimerResult {
         const raw: _ns = (this.queryTime() - this.startTime) as _ns;
-        const adjusted = adjustTime(raw, unit !== "auto" ? unit : undefined);
+        const rawPositive = ensurePositive(raw);
+        const adjusted = adjustTime(rawPositive, unit !== "auto" ? unit : undefined);
         const formatted = formatTime(adjusted, precision);
 
         return { raw, adjusted, formatted };

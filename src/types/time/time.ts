@@ -1,14 +1,13 @@
-import type { PositiveNumber } from "../numbers";
 export type AppDate = Date;
 
 export type AdjustedTime = {
-    d: _day & PositiveNumber;
-    h: _h & PositiveNumber;
-    m: _min & PositiveNumber;
-    s: _s & PositiveNumber;
-    ms: _ms & PositiveNumber;
-    micro: _µs & PositiveNumber;
-    nano: _ns & PositiveNumber;
+    d: _day;
+    h: _h;
+    m: _min;
+    s: _s;
+    ms: _ms;
+    micro: _µs;
+    nano: _ns;
 };
 export type TimeUnit = keyof AdjustedTime;
 

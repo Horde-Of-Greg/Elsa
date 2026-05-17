@@ -1,9 +1,11 @@
+import type { DatabaseContainerResolver } from "../../types/core/containers";
+import type { HostRepositoryResolver } from "../../types/db/repositories";
 import { HostTable } from "../entities/Host";
 import { BaseRepository } from "./BaseRepository";
 
-export class HostRepository extends BaseRepository<HostTable> {
-    constructor() {
-        super(HostTable);
+export class HostRepository extends BaseRepository<HostTable> implements HostRepositoryResolver {
+    constructor(databaseContainer: DatabaseContainerResolver) {
+        super(HostTable, databaseContainer);
     }
 
     async findByDiscordId(discordId: string): Promise<HostTable | null> {

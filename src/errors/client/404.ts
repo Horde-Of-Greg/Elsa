@@ -1,8 +1,8 @@
 import { EmbedBuilder, type MessageReplyOptions } from "discord.js";
 
 import { EmbedColors } from "../../assets/colors/colors";
-import { Configs } from "../../config/Configs";
-import { dependencies } from "../../core/Dependencies";
+import type { ConfigsResolver } from "../../types/config/config";
+import type { FormatterContainerResolver } from "../../types/core/containers";
 import { AppError } from "../AppError";
 
 export class TagNotFoundError extends AppError {
@@ -12,6 +12,7 @@ export class TagNotFoundError extends AppError {
     constructor(
         public readonly tagName: string,
         readonly strict: boolean,
+        protected readonly configs: ConfigsResolver,
     ) {
         super(`Tag "${tagName}" not found`, { tagName });
     }
@@ -23,7 +24,7 @@ export class TagNotFoundError extends AppError {
                     .setTitle("Could not Find Tag")
                     .setColor(EmbedColors.MAGENTA)
                     .setDescription(
-                        `Could not find tag \`${this.tagName}\` by name${this.strict ? "" : " or alias"}. ${Configs.emoji.QUESTION_MARK}`,
+                        `Could not find tag \`${this.tagName}\` by name${this.strict ? "" : " or alias"}. ${this.configs.emoji.QUESTION_MARK}`,
                     ),
             ],
         };
@@ -87,7 +88,10 @@ export class DeletedTagNotFound extends AppError {
     readonly code = "DELETED_TAG_NOT_FOUND";
     readonly httpStatus = 404;
 
-    constructor(readonly name: string) {
+    constructor(
+        readonly name: string,
+        private readonly formatter: FormatterContainerResolver,
+    ) {
         super(`Could not find the tag ${name} in the cache of recently deleted tags.`);
     }
 
@@ -97,7 +101,7 @@ export class DeletedTagNotFound extends AppError {
                 new EmbedBuilder()
                     .setTitle("Could Not Retrieve Tag")
                     .setDescription(
-                        `Could not retrieve a tag named \`${this.name}\` in the cache of tags deleted in the past ${dependencies.formatter.app.formattedDelay}. Either this tag was never deleted, or you ran this command too late`,
+                        `Could not retrieve a tag named \`${this.name}\` in the cache of tags deleted in the past ${this.formatter.app.formattedDelay}. Either this tag was never deleted, or you ran this command too late`,
                     ),
             ],
         };

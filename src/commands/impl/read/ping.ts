@@ -1,14 +1,14 @@
 import type { Message } from "discord.js";
 
-import { Configs } from "../../../config/Configs";
-import { timers } from "../../../core/Timers";
-import { PermLevel } from "../../../db/entities/UserHost";
+import { PermLevel } from "../../../assets/db/permLevel";
+import type { DependenciesResolver } from "../../../types/core/dependencies";
 import type { _ms } from "../../../types/time/time";
 import type { TimerResult } from "../../../types/time/timer";
 import { CommandDef, CommandInstance } from "../../Command";
+import type { Commands } from "../../Commands";
 
 export class CommandPingDef extends CommandDef<void, CommandPingInstance> {
-    constructor() {
+    constructor(dependencies: DependenciesResolver, commands: Commands) {
         super(
             {
                 name: "ping",
@@ -26,6 +26,8 @@ export class CommandPingDef extends CommandDef<void, CommandPingInstance> {
             {
                 useCache: false,
             },
+            dependencies,
+            commands,
         );
     }
 }
@@ -38,8 +40,8 @@ export class CommandPingInstance extends CommandInstance<void> {
     protected async execute(): Promise<void> {}
 
     protected async reply(): Promise<Message> {
-        this.serverLatency = timers.queryTimer(this.timerKey).getTime("ms");
-        return this.context.message.reply(`${Configs.emoji.PING_PONG} Pinging...`);
+        this.serverLatency = this.dependencies.timers.queryTimer(this.timerKey).getTime("ms");
+        return this.context.message.reply(`${this.dependencies.configs.emoji.PING_PONG} Pinging...`);
     }
 
     protected async postReply(sentMessage: Message): Promise<void> {
@@ -47,9 +49,9 @@ export class CommandPingInstance extends CommandInstance<void> {
             this.context.message.createdTimestamp) as _ms;
 
         await sentMessage.edit(
-            `${Configs.emoji.PING_PONG} Pong!\n` +
-                `**Total latency:** \`${roundTripLatency}ms\` ${roundTripLatency > 1000 ? Configs.emoji.WORRIED : ""}\n` +
-                `**Server latency:** \`${this.serverLatency.formatted}\` ${this.serverLatency.raw > 1e8 ? Configs.emoji.WORRIED : ""}\n`,
+            `${this.dependencies.configs.emoji.PING_PONG} Pong!\n` +
+                `**Total latency:** \`${roundTripLatency}ms\` ${roundTripLatency > 1000 ? this.dependencies.configs.emoji.WORRIED : ""}\n` +
+                `**Server latency:** \`${this.serverLatency.formatted}\` ${this.serverLatency.raw > 1e8 ? this.dependencies.configs.emoji.WORRIED : ""}\n`,
         );
     }
 

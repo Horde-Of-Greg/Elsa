@@ -1,15 +1,17 @@
 import type { Client } from "discord.js";
 
-import { core } from "../../core/Core";
-import { dependencies } from "../../core/Dependencies";
 import { DiscordEventHandler } from "../DiscordEventHandler";
+import type { DiscordEventHandlerResolver } from "./../../types/discord/eventHandler";
 
-export class ReadyHandler extends DiscordEventHandler<"clientReady"> {
+export class ReadyHandler
+    extends DiscordEventHandler<"clientReady">
+    implements DiscordEventHandlerResolver<"clientReady">
+{
     readonly eventName = "clientReady";
     readonly once = true;
 
     handle(client: Client): void {
-        core.logger.info(`Ready as ${client.user?.tag}`);
-        dependencies.discord.bot.notifyReady();
+        this.logger.info(`Ready as ${client.user?.tag}`);
+        this.discordBot.notifyReady();
     }
 }

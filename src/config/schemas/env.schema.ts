@@ -10,6 +10,7 @@ const DEFAULT_PORT = {
     REDIS: 6379,
 };
 
+// eslint-disable-next-line no-restricted-syntax
 export const EnvSchema = z
     .object({
         DISCORD_TOKEN: z.string().refine(isDiscordToken, "Invalid DISCORD_TOKEN"),

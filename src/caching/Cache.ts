@@ -1,16 +1,22 @@
-import type { CacheResolver } from "../core/containers/Cache";
-import { dependencies } from "../core/Dependencies";
+import type { CacheResolver } from "../types/cache/cache";
+import type { ConfigsResolver } from "../types/config/config";
+import type { CacheContainerResolver } from "../types/core/containers";
+import type { RedisKey } from "../types/keys/redis";
 import type { StrictPositiveNumber } from "../types/numbers";
-import { parseToRedisKey, type RedisKey } from "./keys";
+import { RedisKeys } from "../utils/keys/RedisKeys";
 
-export class Cache<T = string> {
+export class Cache<T = string> implements CacheResolver<T> {
+    private readonly redisKeys: RedisKeys;
+
     constructor(
         private readonly prefix: string,
         private readonly ttl_s: StrictPositiveNumber,
         readonly clearOnRestart: boolean,
-        private readonly resolver: CacheResolver = dependencies.cache,
+        private readonly resolver: CacheContainerResolver,
+        configs: ConfigsResolver,
     ) {
         this.resolver.registry.register(this);
+        this.redisKeys = new RedisKeys(configs);
     }
 
     async get(key: string): Promise<T | null> {
@@ -30,7 +36,7 @@ export class Cache<T = string> {
         await this.resolver.client.delete([this.parseToCacheKey(`${key}`)]);
     }
 
-    async clear(): Promise<void> {
+    async reset(): Promise<void> {
         const keys = await this.resolver.client.getKeys(this.parseToCacheKey("*"));
         const min_length = 0;
 
@@ -40,6 +46,6 @@ export class Cache<T = string> {
     }
 
     private parseToCacheKey(keyProto: string): RedisKey {
-        return parseToRedisKey(`${this.prefix}:${keyProto}`);
+        return this.redisKeys.parseToRedisKey(`${this.prefix}:${keyProto}`);
     }
 }

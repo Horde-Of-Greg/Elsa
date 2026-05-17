@@ -1,15 +1,9 @@
+/* eslint-disable import/no-cycle */
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
+import { PermLevel } from "../../assets/db/permLevel";
 import { HostTable } from "./Host";
 import { UserTable } from "./User";
-
-export enum PermLevel {
-    DEFAULT = 0,
-    TRUSTED = 1,
-    MOD = 2,
-    ADMIN = 3,
-    OWNER = 4,
-}
 
 @Entity({ name: "user_hosts" })
 @Index(["userId", "hostId"], { unique: true })

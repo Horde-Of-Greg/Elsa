@@ -1,17 +1,16 @@
 import type { DataSource } from "typeorm";
 
-import { dataSourceAppConfig } from "../../db/dataSource";
+import { dataSource } from "../../db/dataSource";
+import type { ConfigsResolver } from "../../types/config/config";
+import type { DatabaseContainerResolver } from "../../types/core/containers";
 
-export interface DatabaseResolver {
-    get dataSource(): DataSource;
-    reset(): void;
-}
-
-export class DatabaseContainer {
+export class DatabaseContainer implements DatabaseContainerResolver {
     private _dataSource?: DataSource;
 
+    constructor(private readonly configs: ConfigsResolver) {}
+
     get dataSource(): DataSource {
-        return (this._dataSource ??= dataSourceAppConfig);
+        return (this._dataSource ??= dataSource(this.configs));
     }
 
     reset(): void {

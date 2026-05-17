@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import type z from "zod";
 
 export class Config<TSchema extends z.ZodObject> {
-    data: z.infer<TSchema>;
+    private readonly _data: z.infer<TSchema>;
 
     private readonly configsPath = "config";
     private readonly fileLocation: string;
@@ -15,7 +15,11 @@ export class Config<TSchema extends z.ZodObject> {
         readonly schema: TSchema,
     ) {
         this.fileLocation = fileName === ".env" ? fileName : path.join(this.configsPath, fileName);
-        this.data = this.validate();
+        this._data = this.validate();
+    }
+
+    get data(): z.infer<TSchema> {
+        return this._data;
     }
 
     private validate(): z.infer<TSchema> {

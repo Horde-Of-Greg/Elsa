@@ -1,16 +1,16 @@
 import type { Message } from "discord.js";
 
-import { Configs } from "../../../config/Configs";
-import { core } from "../../../core/Core";
-import { PermLevel } from "../../../db/entities/UserHost";
+import { PermLevel } from "../../../assets/db/permLevel";
 import { TagBodyExistsError } from "../../../errors/client/409";
+import type { DependenciesResolver } from "../../../types/core/dependencies";
 import type { SHA256Hash } from "../../../types/crypto";
 import { ensureStrictPositive } from "../../../utils/numbers/positive";
 import { CommandDef } from "../../Command";
+import type { Commands } from "../../Commands";
 import { TagHandlingCommandInstance } from "../../TagHandlingCommand";
 
 export class CommandEditDef extends CommandDef<void, CommandEditInstance> {
-    constructor() {
+    constructor(dependencies: DependenciesResolver, commands: Commands) {
         super(
             {
                 name: "edit",
@@ -43,6 +43,8 @@ export class CommandEditDef extends CommandDef<void, CommandEditInstance> {
             {
                 useCache: false,
             },
+            dependencies,
+            commands,
         );
     }
 }
@@ -73,14 +75,14 @@ export class CommandEditInstance extends TagHandlingCommandInstance<void> {
 
     protected async reply(): Promise<Message> {
         return this.context.message.reply(
-            `Tag \`${this.tagName}\` edited successfully! ${Configs.emoji.CHECKMARK}`,
+            `Tag \`${this.tagName}\` edited successfully! ${this.dependencies.configs.emoji.CHECKMARK}`,
         );
     }
 
     protected async postReply(sentMessage: Message): Promise<void> {}
 
     protected logExecution(): void {
-        core.logger.info(`User ${this.context.author.tag} edited tag: ${this.tagName}`);
+        this.dependencies.logger.info(`User ${this.context.author.tag} edited tag: ${this.tagName}`);
     }
 
     /*
@@ -92,9 +94,21 @@ export class CommandEditInstance extends TagHandlingCommandInstance<void> {
 
         if (hashContext.exists) {
             if (hashContext.tagWithBody.name === this.tagName) {
-                throw new TagBodyExistsError(this.tagName, this.newTagBody, hashContext.tagWithBody, "edit");
+                throw new TagBodyExistsError(
+                    this.tagName,
+                    this.newTagBody,
+                    hashContext.tagWithBody,
+                    "edit",
+                    this.dependencies.configs,
+                );
             }
-            throw new TagBodyExistsError(this.tagName, this.newTagBody, hashContext.tagWithBody, "add");
+            throw new TagBodyExistsError(
+                this.tagName,
+                this.newTagBody,
+                hashContext.tagWithBody,
+                "add",
+                this.dependencies.configs,
+            );
         }
         this.tagBodyHash = hashContext.hash;
     }

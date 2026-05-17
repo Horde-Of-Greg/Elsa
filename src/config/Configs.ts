@@ -1,17 +1,11 @@
+import type { ConfigsResolver } from "../types/config/config";
 import { Config } from "./Config";
 import { type AppConfig, AppConfigSchema } from "./schemas/app.schema";
 import { type EmojiConfig, EmojiConfigSchema } from "./schemas/emoji.schema";
 import { type Env, EnvSchema } from "./schemas/env.schema";
 import { type SeederConfig, SeederConfigSchema } from "./schemas/seeder.schema";
 
-export interface ConfigsResolver {
-    app: AppConfig;
-    env: Env;
-    emoji: EmojiConfig;
-    seeder: SeederConfig;
-}
-
-class ConfigRepository implements ConfigsResolver {
+export class ConfigRegistry implements ConfigsResolver {
     private _env?: Env;
     private _app?: AppConfig;
     private _emoji?: EmojiConfig;
@@ -40,5 +34,3 @@ class ConfigRepository implements ConfigsResolver {
         this._seeder = undefined;
     }
 }
-
-export const Configs: ConfigsResolver = new ConfigRepository();

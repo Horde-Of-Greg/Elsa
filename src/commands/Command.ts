@@ -1,38 +1,36 @@
 import type { Message } from "discord.js";
 
 import { Cache } from "../caching/Cache";
-import { Configs } from "../config/Configs";
-import type { ServicesResolver } from "../core/containers/Services";
-import { core } from "../core/Core";
-import { timers } from "../core/Timers";
 import { AppError } from "../errors/AppError";
 import { MissingArgumentError } from "../errors/client/400";
 import { ArgNotDefinedError, NoArgsDefinedError } from "../errors/internal/commands";
 import { ErrorNotAnErrorError } from "../errors/internal/critical";
 import { UnknownInternalError } from "../errors/InternalError";
-import type { CooldownService } from "../services/CooldownService";
-import type { HostService } from "../services/HostService";
-import type { PermissionsService } from "../services/PermsService";
-import type { TagService } from "../services/TagService";
-import type { UserService } from "../services/UserService";
 import type {
     CacheParams,
     CommandContext,
     CommandParams,
     ParseResult,
     RequirableParseResult,
-} from "../types/command";
+} from "../types/commands/command";
+import type { DependenciesResolver } from "../types/core/dependencies";
+import type { CooldownServiceResolver } from "../types/services/cooldown";
+import type { HostServiceResolver } from "../types/services/host";
+import type { PermissionsServiceResolver } from "../types/services/permissions";
+import type { TagServiceResolver } from "../types/services/tag";
+import type { UserServiceResolver } from "../types/services/user";
 import { parseToTimerKey, type TimerKey } from "../types/time/timer";
-import { dependencies } from "./../core/Dependencies";
+import type { Commands } from "./Commands";
 
 type CommandInstanceConstructor<TReply, LInstance extends CommandInstance<TReply>> = new (
     context: CommandContext,
     parseResult: ParseResult,
     cacheKey: string,
     params: CommandParams,
-    services: ServicesResolver,
+    dependencies: DependenciesResolver,
     cache: Cache<TReply> | undefined,
     cacheParams: CacheParams,
+    commands: Commands,
     commandMap: Map<string, CommandDef<unknown, CommandInstance<unknown>>>,
 ) => LInstance;
 
@@ -43,8 +41,8 @@ export abstract class CommandDef<TReply, LInstance extends CommandInstance<TRepl
         protected params: CommandParams,
         private readonly instanceConstructor: CommandInstanceConstructor<TReply, LInstance>,
         private readonly cacheParams: CacheParams,
-        private readonly services = dependencies.services,
-        private readonly cacheProvider = dependencies.cache,
+        protected readonly dependencies: DependenciesResolver,
+        protected readonly commands: Commands,
     ) {
         this.buildCache();
     }
@@ -77,9 +75,10 @@ export abstract class CommandDef<TReply, LInstance extends CommandInstance<TRepl
             parseResult,
             cacheKey,
             this.params,
-            this.services,
+            this.dependencies,
             this.cache,
             this.cacheParams,
+            this.commands,
             commandMap,
         );
     }
@@ -90,7 +89,8 @@ export abstract class CommandDef<TReply, LInstance extends CommandInstance<TRepl
                 `cmd-run:${this.params.name}`,
                 this.cacheParams.ttl_s,
                 this.cacheParams.clear,
-                this.cacheProvider,
+                this.dependencies.cache,
+                this.dependencies.configs,
             );
         } else {
             this.cache = undefined;
@@ -100,16 +100,16 @@ export abstract class CommandDef<TReply, LInstance extends CommandInstance<TRepl
 
     async invalidateCache(): Promise<void> {
         if (!this.cache) return;
-        await this.cache.clear();
+        await this.cache.reset();
     }
 }
 
 export abstract class CommandInstance<TReply> {
-    protected cooldownService: CooldownService;
-    protected permsService: PermissionsService;
-    protected hostService: HostService;
-    protected tagService: TagService;
-    protected userService: UserService;
+    protected cooldownService: CooldownServiceResolver;
+    protected permsService: PermissionsServiceResolver;
+    protected hostService: HostServiceResolver;
+    protected tagService: TagServiceResolver;
+    protected userService: UserServiceResolver;
     protected content: TReply;
     protected timerKey: string;
 
@@ -118,22 +118,23 @@ export abstract class CommandInstance<TReply> {
         protected parseResult: ParseResult,
         protected cacheKey: string,
         protected params: CommandParams,
-        protected readonly services: ServicesResolver,
+        protected readonly dependencies: DependenciesResolver,
         protected cache: Cache<TReply> | undefined,
         protected cacheParams: CacheParams,
+        protected commands: Commands,
         protected commandMap: Map<string, CommandDef<unknown, CommandInstance<unknown>>>,
     ) {
-        this.cooldownService = this.services.cooldownService;
-        this.permsService = this.services.permsService;
-        this.hostService = this.services.hostService;
-        this.tagService = this.services.tagService;
-        this.userService = this.services.userService;
+        this.cooldownService = this.dependencies.services.cooldownService;
+        this.permsService = this.dependencies.services.permsService;
+        this.hostService = this.dependencies.services.hostService;
+        this.tagService = this.dependencies.services.tagService;
+        this.userService = this.dependencies.services.userService;
     }
 
     async run(): Promise<void> {
         try {
             this.timerKey = this.parseToTimerKey();
-            timers.startTimer(this.timerKey);
+            this.dependencies.timers.startTimer(this.timerKey);
             await this.validateData();
             await this.validatePermissions();
             await this.checkCooldown();
@@ -145,7 +146,7 @@ export abstract class CommandInstance<TReply> {
         } catch (error: unknown) {
             await this.replyError(error instanceof Error ? error : new ErrorNotAnErrorError(error));
         } finally {
-            timers.stopTimer(this.timerKey);
+            this.dependencies.timers.stopTimer(this.timerKey);
         }
     }
 
@@ -183,7 +184,7 @@ export abstract class CommandInstance<TReply> {
         let content = await this.cache.get(this.cacheKey);
 
         if (content) {
-            core.logger.debug(`${this.params.name}: Cache Hit!`);
+            this.dependencies.logger.debug(`${this.params.name}: Cache Hit!`);
         }
 
         content = await this.execute();
@@ -192,7 +193,7 @@ export abstract class CommandInstance<TReply> {
     }
 
     private async linkMessage(sentMessage: Message): Promise<void> {
-        await this.services.messageLinkService.linkNewMessage(this.context.message, sentMessage);
+        await this.dependencies.services.messageLinkService.linkNewMessage(this.context.message, sentMessage);
     }
 
     /*
@@ -251,7 +252,7 @@ export abstract class CommandInstance<TReply> {
         const value = this.parseResult[key];
         if (value === undefined) {
             throw new MissingArgumentError(
-                `See \`${Configs.app.PREFIX}help\` for details on command usages.`,
+                `See \`${this.dependencies.configs.app.PREFIX}help\` for details on command usages.`,
             );
         }
 
@@ -271,7 +272,7 @@ export abstract class CommandInstance<TReply> {
             error = new UnknownInternalError(e.message, e.stack);
         }
 
-        error.log();
+        error.log(this.dependencies.logger);
         await this.context.message.reply(error.reply);
     }
 }

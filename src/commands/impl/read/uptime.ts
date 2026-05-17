@@ -1,13 +1,13 @@
 import type { Message } from "discord.js";
 
-import { Configs } from "../../../config/Configs";
-import { timers } from "../../../core/Timers";
-import { PermLevel } from "../../../db/entities/UserHost";
+import { PermLevel } from "../../../assets/db/permLevel";
+import type { DependenciesResolver } from "../../../types/core/dependencies";
 import type { TimerResult } from "../../../types/time/timer";
 import { CommandDef, CommandInstance } from "../../Command";
+import type { Commands } from "../../Commands";
 
 export class CommandUptimeDef extends CommandDef<void, CommandUptimeInstance> {
-    constructor() {
+    constructor(dependencies: DependenciesResolver, commands: Commands) {
         super(
             {
                 name: "uptime",
@@ -26,6 +26,8 @@ export class CommandUptimeDef extends CommandDef<void, CommandUptimeInstance> {
             {
                 useCache: false,
             },
+            dependencies,
+            commands,
         );
     }
 }
@@ -37,7 +39,7 @@ export class CommandUptimeInstance extends CommandInstance<void> {
     protected async validateData(): Promise<void> {}
 
     protected async execute(): Promise<void> {
-        const timer = timers.queryTimer("main");
+        const timer = this.dependencies.timers.queryTimer("main");
         this.uptime = timer.getTime();
         this.startDate = timer.getStartDate();
     }
@@ -46,7 +48,7 @@ export class CommandUptimeInstance extends CommandInstance<void> {
         const unixTimestamp = Math.floor(this.startDate.getTime() / 1000);
 
         return this.context.message.reply(
-            `**${Configs.app.NAME}** has been up for \`${this.uptime.formatted}\` (Since <t:${unixTimestamp}:F>)`,
+            `**${this.dependencies.configs.app.NAME}** has been up for \`${this.uptime.formatted}\` (Since <t:${unixTimestamp}:F>)`,
         );
     }
 

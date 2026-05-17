@@ -1,26 +1,26 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { Configs } from "../../config/Configs";
 import { ErrorNotAnErrorError } from "../../errors/internal/critical";
 import { ReaddirError } from "../../errors/internal/schedules";
 import { isProductionEnvironment } from "../../utils/node/environment";
-import { core } from "../Core";
-import { consoleContainer } from "./ConsoleContainer";
+import type { Dependencies } from "./../Dependencies";
 
 export class LogRotation {
     private dirSize = 0;
     private files!: string[];
-    private readonly dir = Configs.app.LOGS.OUTPUT_PATH;
     private readonly maxSingleSizeBytes = 10 * 1024 * 1024;
     private readonly maxTotalSizeBytes = 25 * 1024 * 1024;
 
+    constructor(private readonly dependencies: Dependencies) {}
+
     async main(): Promise<void> {
+        const dir = this.dependencies.configs.app.LOGS.OUTPUT_PATH;
         if (!isProductionEnvironment()) return;
         try {
-            this.files = await fs.promises.readdir(this.dir);
+            this.files = await fs.promises.readdir(dir);
             for (const file of this.files) {
-                const filePath = path.join(this.dir, file);
+                const filePath = path.join(dir, file);
                 const stats = await fs.promises.stat(filePath);
                 if (stats.isDirectory()) continue;
 
@@ -38,9 +38,9 @@ export class LogRotation {
     }
 
     private async rotate(): Promise<void> {
-        await core.logger.stop();
-        await consoleContainer.archiveLogs();
-        await consoleContainer.clearLogs();
-        core.logger.start();
+        await this.dependencies.logger.stop();
+        await this.dependencies.consoles.archiveLogs();
+        await this.dependencies.consoles.clearLogs();
+        this.dependencies.logger.start();
     }
 }

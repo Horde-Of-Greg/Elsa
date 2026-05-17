@@ -1,8 +1,5 @@
-import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream";
-
-export interface TerminalStreamConfig extends StreamConfig {
-    target: "stdout" | "stderr";
-}
+import type { TerminalStreamConfig } from "../../../types/core/streams";
+import { BaseWritableStream } from "./BaseWritableStream";
 
 export class TerminalStream extends BaseWritableStream {
     private readonly target: NodeJS.WriteStream;

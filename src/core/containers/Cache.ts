@@ -1,18 +1,20 @@
 import { CacheRegistry } from "../../caching/CacheRegistry";
 import { RedisClient } from "../../caching/RedisClient";
+import type { ConfigsResolver } from "../../types/config/config";
+import type { CacheContainerResolver } from "../../types/core/containers";
+import type { LoggerResolver } from "../../types/core/logs";
 
-export interface CacheResolver {
-    get client(): RedisClient;
-    get registry(): CacheRegistry;
-    reset(): void;
-}
-
-export class CacheContainer {
+export class CacheContainer implements CacheContainerResolver {
     private _client?: RedisClient;
     private _registry?: CacheRegistry;
 
+    constructor(
+        private readonly configs: ConfigsResolver,
+        private readonly logger: LoggerResolver,
+    ) {}
+
     get client(): RedisClient {
-        return (this._client ??= new RedisClient());
+        return (this._client ??= new RedisClient(this.configs, this.logger));
     }
 
     get registry(): CacheRegistry {

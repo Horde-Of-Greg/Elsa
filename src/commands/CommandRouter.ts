@@ -1,10 +1,10 @@
 import type { Message } from "discord.js";
 
-import { Configs } from "../config/Configs";
-import type { CommandContext, ParseResult } from "../types/command";
+import type { CommandContext, ParseResult } from "../types/commands/command";
+import type { DependenciesResolver } from "../types/core/dependencies";
 import { computeSHA256 } from "../utils/crypto/sha256Hash";
 import type { CommandDef, CommandInstance } from "./Command";
-import { commands } from "./Commands";
+import { Commands } from "./Commands";
 
 const PARSE_INDEX = {
     COMMAND: 1,
@@ -14,12 +14,12 @@ const PARSE_INDEX = {
 };
 
 export class CommandRouter {
-    private readonly commandList: CommandDef<unknown, CommandInstance<unknown>>[];
+    private readonly commands: Commands;
     public readonly commandMap: Map<string, CommandDef<unknown, CommandInstance<unknown>>>;
     private _matcher?: RegExp;
 
-    constructor() {
-        this.commandList = commands.allCommands;
+    constructor(private readonly dependencies: DependenciesResolver) {
+        this.commands = new Commands(this.dependencies);
         this.commandMap = new Map();
         this.buildHashMap();
     }
@@ -38,7 +38,7 @@ export class CommandRouter {
     }
 
     private buildHashMap(): void {
-        for (const command of this.commandList) {
+        for (const command of this.commands.allCommands) {
             const aliases = command.getIdentifiers();
             for (const alias of aliases) {
                 this.commandMap.set(alias, command);
@@ -80,13 +80,15 @@ export class CommandRouter {
         return matcher;
     }
 
-    private readonly pattern = [
-        "^",
-        `\\${Configs.app.PREFIX}`,
-        "([a-z0-9]+)",
-        "(?:-([a-z0-9]*))?",
-        String.raw`(?:\s(\w+))?`,
-        String.raw`(?:\s(.+))?`,
-        "$",
-    ].join("");
+    private get pattern(): string {
+        return [
+            "^",
+            `\\${this.dependencies.configs.app.PREFIX}`,
+            "([a-z0-9]+)",
+            "(?:-([a-z0-9]*))?",
+            String.raw`(?:\s(\w+))?`,
+            String.raw`(?:\s(.+))?`,
+            "$",
+        ].join("");
+    }
 }

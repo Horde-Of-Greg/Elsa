@@ -1,14 +1,14 @@
 import type { Message } from "discord.js";
 
-import { Configs } from "../../../config/Configs";
-import { core } from "../../../core/Core";
-import { PermLevel } from "../../../db/entities/UserHost";
+import { PermLevel } from "../../../assets/db/permLevel";
+import type { DependenciesResolver } from "../../../types/core/dependencies";
 import { ensureStrictPositive } from "../../../utils/numbers/positive";
 import { CommandDef } from "../../Command";
+import type { Commands } from "../../Commands";
 import { TagHandlingCommandInstance } from "../../TagHandlingCommand";
 
 export class CommandAliasDef extends CommandDef<void, CommandAliasInstance> {
-    constructor() {
+    constructor(dependencies: DependenciesResolver, commands: Commands) {
         super(
             {
                 name: "alias",
@@ -43,6 +43,8 @@ export class CommandAliasDef extends CommandDef<void, CommandAliasInstance> {
             {
                 useCache: false,
             },
+            dependencies,
+            commands,
         );
     }
 }
@@ -64,14 +66,14 @@ export class CommandAliasInstance extends TagHandlingCommandInstance<void> {
 
     protected async reply(): Promise<Message> {
         return this.context.message.reply(
-            `Aliased \`${this.tagName}\` as \`${this.aliasName}\` ${Configs.emoji.CHECKMARK}`,
+            `Aliased \`${this.tagName}\` as \`${this.aliasName}\` ${this.dependencies.configs.emoji.CHECKMARK}`,
         );
     }
 
     protected async postReply(sentMessage: Message): Promise<void> {}
 
     protected logExecution(): void {
-        core.logger.info(
+        this.dependencies.logger.info(
             `User ${this.context.author.username} created alias ${this.aliasName} to tag ${this.tagName}`,
         );
     }

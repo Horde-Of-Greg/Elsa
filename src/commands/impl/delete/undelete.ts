@@ -1,14 +1,13 @@
 import type { Message } from "discord.js";
 
-import { Configs } from "../../../config/Configs";
-import { core } from "../../../core/Core";
-import { dependencies } from "../../../core/Dependencies";
-import { PermLevel } from "../../../db/entities/UserHost";
+import { PermLevel } from "../../../assets/db/permLevel";
+import type { DependenciesResolver } from "../../../types/core/dependencies";
 import { CommandDef } from "../../Command";
+import type { Commands } from "../../Commands";
 import { TagHandlingCommandInstance } from "../../TagHandlingCommand";
 
 export class CommandUndeleteDef extends CommandDef<void, CommandUndeleteInstance> {
-    constructor() {
+    constructor(dependencies: DependenciesResolver, commands: Commands) {
         super(
             {
                 name: "undelete",
@@ -34,6 +33,8 @@ export class CommandUndeleteDef extends CommandDef<void, CommandUndeleteInstance
             {
                 useCache: false,
             },
+            dependencies,
+            commands,
         );
     }
 }
@@ -58,13 +59,13 @@ export class CommandUndeleteInstance extends TagHandlingCommandInstance<void> {
 
     protected async reply(): Promise<Message> {
         return this.context.message.reply(
-            `Tag **${this.tagName}** retrieved successfully! ${Configs.emoji.CHECKMARK}.`,
+            `Tag **${this.tagName}** retrieved successfully! ${this.dependencies.configs.emoji.CHECKMARK}.`,
         );
     }
 
     protected async postReply(sentMessage: Message): Promise<void> {}
 
     protected logExecution(): void {
-        core.logger.info(`User ${this.context.author.tag} retrieved tag: ${this.tagName}`);
+        this.dependencies.logger.info(`User ${this.context.author.tag} retrieved tag: ${this.tagName}`);
     }
 }

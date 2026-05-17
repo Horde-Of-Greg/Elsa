@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-parameters */
 import type { DeepPartial, FindOptionsRelations, FindOptionsWhere, Repository } from "typeorm";
 
-import type { DatabaseResolver } from "../../core/containers/Database";
-import { dependencies } from "../../core/Dependencies";
 import { RelationNotFoundError } from "../../errors/internal/db";
+import type { DatabaseContainerResolver } from "../../types/core/containers";
 import type { ValidEntity } from "../../types/db/entities";
 
 //TODO: Add Transaction support.
@@ -19,7 +18,7 @@ export abstract class BaseRepository<T extends ValidEntity> {
 
     constructor(
         entityClass: new () => T,
-        private readonly database: DatabaseResolver = dependencies.database,
+        private readonly database: DatabaseContainerResolver,
     ) {
         this.repo = this.database.dataSource.getRepository(entityClass);
     }

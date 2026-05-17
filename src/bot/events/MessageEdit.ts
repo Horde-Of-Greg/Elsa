@@ -1,16 +1,19 @@
 import type { Message, PartialMessage } from "discord.js";
 
-import { core } from "../../core/Core";
-import type { CommandContext } from "../../types/command";
+import type { CommandContext } from "../../types/commands/command";
+import type { DiscordEventHandlerResolver } from "../../types/discord/eventHandler";
 import { DiscordEventHandler } from "../DiscordEventHandler";
 
-export class MessageEditHandler extends DiscordEventHandler<"messageUpdate"> {
+export class MessageEditHandler
+    extends DiscordEventHandler<"messageUpdate">
+    implements DiscordEventHandlerResolver<"messageUpdate">
+{
     readonly eventName = "messageUpdate";
     readonly once = false;
 
     async handle(oldMessage: Message | PartialMessage, newMessage: Message | PartialMessage): Promise<void> {
         if (newMessage.partial || !newMessage.guild) return;
-        core.logger.debug("Received Edited Message");
+        this.logger.debug("Received Edited Message");
 
         await this.services.messageLinkService.deleteLinkedMessage(oldMessage);
 

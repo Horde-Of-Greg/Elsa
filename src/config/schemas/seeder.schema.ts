@@ -2,6 +2,7 @@ import z from "zod";
 
 export type SeederConfig = z.infer<typeof SeederConfigSchema>;
 
+// eslint-disable-next-line no-restricted-syntax
 export const SeederConfigSchema = z.object({
     DEPTH: z.number().int().min(1).max(100000),
     DROP_DB: z.boolean(),

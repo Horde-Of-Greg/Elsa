@@ -1,22 +1,18 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { Configs } from "../../../config/Configs";
+import type { ConfigsResolver } from "../../../types/config/config";
+import type { FileStreamConfig } from "../../../types/core/streams";
 import { isActionsEnvironment } from "../../../utils/node/environment";
-import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream";
-
-export interface FileStreamConfig extends StreamConfig {
-    fileName: string;
-    flags?: "a" | "w";
-}
+import { BaseWritableStream } from "./BaseWritableStream";
 
 export class FileStream extends BaseWritableStream {
     private readonly filePath: string;
     private fileHandle: fs.WriteStream | null = null;
 
-    constructor(config: FileStreamConfig) {
+    constructor(config: FileStreamConfig, appConfigs: ConfigsResolver) {
         super(config);
-        this.filePath = path.join(Configs.app.LOGS.OUTPUT_PATH, config.fileName);
+        this.filePath = path.join(appConfigs.app.LOGS.OUTPUT_PATH, config.fileName);
         this.ensureDirectory();
         this.openFile(config.flags ?? "a");
     }

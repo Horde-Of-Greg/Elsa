@@ -45,3 +45,11 @@ export class NoArgsDefinedError extends InternalError {
         );
     }
 }
+
+export class CommandRouterNotFoundError extends InternalError {
+    readonly code = "COMMAND_ROUTER_NOT_FOUND";
+
+    constructor() {
+        super("Tried to use a command router, but could not find it.");
+    }
+}

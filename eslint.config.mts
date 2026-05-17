@@ -1,5 +1,6 @@
 import eslint from "@eslint/js";
 import { defineConfig } from "eslint/config";
+import importPlugin from "eslint-plugin-import";
 import nodePlugin from "eslint-plugin-n";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import sonarJs from "eslint-plugin-sonarjs";
@@ -15,10 +16,12 @@ declare global {
 
 export default defineConfig(
     {
-        ignores: ["dist/**", "config/**", "ecosystem.config.js"],
+        ignores: ["dist/**", "config/**", "ecosystem.config.js", "tools/**"],
     },
     eslint.configs.recommended,
     ...tseslint.configs.recommended,
+    importPlugin.flatConfigs.recommended,
+    importPlugin.flatConfigs.typescript,
     {
         languageOptions: {
             globals: {
@@ -32,6 +35,14 @@ export default defineConfig(
         },
     },
     {
+        settings: {
+            "import/resolver": {
+                typescript: {
+                    project: "./tsconfig.eslint.json",
+                },
+                node: true,
+            },
+        },
         plugins: {
             "unused-imports": unusedImports,
             "n": nodePlugin,
@@ -50,6 +61,11 @@ export default defineConfig(
                     selector: "NewExpression[callee.name='Error']",
                     message:
                         "Use a custom Error class, that extends AppError, instead of using the Error class itself.",
+                },
+                {
+                    selector: "ExportNamedDeclaration > VariableDeclaration[kind='const']",
+                    message:
+                        "Do not export consts directly. Export functions, classes, interfaces or types, and pass down values through constructor arguments instead.",
                 },
             ],
 
@@ -155,6 +171,8 @@ export default defineConfig(
             "sonarjs/no-identical-functions": "warn",
 
             "unused-imports/no-unused-imports": "error",
+
+            "import/no-cycle": ["error", { maxDepth: 10 }],
         },
     },
 );

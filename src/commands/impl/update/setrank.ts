@@ -1,14 +1,14 @@
 import type { Message, User } from "discord.js";
 
-import { Configs } from "../../../config/Configs";
-import { core } from "../../../core/Core";
-import { PermLevel } from "../../../db/entities/UserHost";
+import { PermLevel } from "../../../assets/db/permLevel";
 import { BadArgumentError } from "../../../errors/client/400";
+import type { DependenciesResolver } from "../../../types/core/dependencies";
 import { getUserById } from "../../../utils/discord/users";
 import { CommandDef, CommandInstance } from "../../Command";
+import type { Commands } from "../../Commands";
 
 export class CommandSetRankDef extends CommandDef<void, CommandSetRankInstance> {
-    constructor() {
+    constructor(dependencies: DependenciesResolver, commands: Commands) {
         super(
             {
                 name: "setrank",
@@ -41,6 +41,8 @@ export class CommandSetRankDef extends CommandDef<void, CommandSetRankInstance> 
             {
                 useCache: false,
             },
+            dependencies,
+            commands,
         );
     }
 }
@@ -71,20 +73,20 @@ class CommandSetRankInstance extends CommandInstance<void> {
 
     protected async reply(): Promise<Message> {
         return this.context.message.reply(
-            `Successfully updated <@${this.user.id}>'s rank to ${PermLevel[this.newRank]} ${Configs.emoji.CHECKMARK}`,
+            `Successfully updated <@${this.user.id}>'s rank to ${PermLevel[this.newRank]} ${this.dependencies.configs.emoji.CHECKMARK}`,
         );
     }
 
     protected async postReply(sentMessage: Message): Promise<void> {}
 
     protected logExecution(): void {
-        core.logger.warnUser(
+        this.dependencies.logger.warnUser(
             `Successfully updated ${this.user.username}'s rank to ${PermLevel[this.newRank]}`,
         );
     }
 
     private async ensureUserExists(): Promise<void> {
-        const user_dc = await getUserById(this.userId);
+        const user_dc = await getUserById(this.userId, this.dependencies.discord.bot);
         this.user = user_dc;
     }
 }

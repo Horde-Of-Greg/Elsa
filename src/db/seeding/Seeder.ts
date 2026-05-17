@@ -1,51 +1,53 @@
-import type { SeederConfig } from "../../config/schemas/seeder.schema";
-import { core } from "../../core/Core";
-import { dependencies } from "../../core/Dependencies";
+import { PermLevel } from "../../assets/db/permLevel";
 import { getGuildById } from "../../utils/discord/guilds";
 import { getUserById } from "../../utils/discord/users";
 import { sleep } from "../../utils/time";
-import { PermLevel } from "../entities/UserHost";
+import type { Dependencies } from "./../../core/Dependencies";
 
 export class Seeder {
-    constructor(private readonly seederConfig: SeederConfig) {}
+    constructor(private readonly dependencies: Dependencies) {}
 
     async seed(): Promise<void> {
         await this.drop();
         await this.createSudoers();
-        core.logger.info("Seeded Database.");
+        this.dependencies.logger.info("Seeded Database.");
     }
 
     private async drop(): Promise<void> {
-        if (!this.seederConfig.DROP_DB) return;
+        if (!this.dependencies.configs.seeder.DROP_DB) return;
 
         const wait_s = 3;
 
-        core.logger.warnUser(
-            `Clearing all data from database ${this.seederConfig.WAIT_TO_DROP_DB ? `in ${wait_s.toString()}s. Ctrl + C to stop.` : ""}`,
+        this.dependencies.logger.warnUser(
+            `Clearing all data from database ${this.dependencies.configs.seeder.WAIT_TO_DROP_DB ? `in ${wait_s.toString()}s. Ctrl + C to stop.` : ""}`,
         );
 
-        if (this.seederConfig.WAIT_TO_DROP_DB) {
+        if (this.dependencies.configs.seeder.WAIT_TO_DROP_DB) {
             for (let i = 0; i < wait_s; i++) {
-                core.logger.warnUser((wait_s - i).toString());
+                this.dependencies.logger.warnUser((wait_s - i).toString());
                 await sleep(1000);
             }
         }
 
-        await dependencies.database.dataSource.synchronize(true);
+        await this.dependencies.database.dataSource.synchronize(true);
 
-        core.logger.info("Database cleared.");
+        this.dependencies.logger.info("Database cleared.");
     }
 
     private async createSudoers(): Promise<void> {
-        const sudoers = this.seederConfig.SUDOERS.USERS;
+        const sudoers = this.dependencies.configs.seeder.SUDOERS.USERS;
 
-        const guild_ids = this.seederConfig.SUDOERS.GUILDS;
+        const guild_ids = this.dependencies.configs.seeder.SUDOERS.GUILDS;
         for (const guild_id of guild_ids) {
-            const guild = await getGuildById(guild_id);
+            const guild = await getGuildById(guild_id, this.dependencies.discord.bot);
 
             for (const sudoer of sudoers) {
-                const user_dc = await getUserById(sudoer);
-                await dependencies.services.userService.createUserWithPerms(user_dc, guild, PermLevel.OWNER);
+                const user_dc = await getUserById(sudoer, this.dependencies.discord.bot);
+                await this.dependencies.services.userService.createUserWithPerms(
+                    user_dc,
+                    guild,
+                    PermLevel.OWNER,
+                );
             }
         }
     }

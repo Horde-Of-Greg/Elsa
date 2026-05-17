@@ -1,4 +1,3 @@
-import { core } from "../core/Core";
 import type { PositiveNumber } from "../types/numbers";
 import type { _day, _h, _min, _ms, _ns, _s, _µs, AdjustedTime, AppDate, TimeUnit } from "../types/time/time";
 
@@ -27,8 +26,6 @@ export function adjustTime(
     time_ns: _ns & PositiveNumber,
     unitToStopAt?: TimeUnit,
 ): AdjustedTime & { highestUnit: TimeUnit } {
-    core.logger.debug("raw time ns:", time_ns);
-
     let d = 0 as _day;
     let h = 0 as _h;
     let m = 0 as _min;
@@ -84,7 +81,6 @@ export function adjustTime(
 }
 
 export function formatTime(adjustedTime: AdjustedTime & { highestUnit: TimeUnit }, precision = 2): string {
-    core.logger.debug("adjustedTime:", adjustedTime);
     let formatted: string;
     switch (adjustedTime.highestUnit) {
         case "nano":

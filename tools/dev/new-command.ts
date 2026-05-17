@@ -96,7 +96,7 @@ export class Command${CmdName}Instance extends CommandInstance<void> {
     protected async reply(): Promise<void> {}
 
     protected logExecution(): void {
-        core.logger.debug(\`You forgot to change the default values of \${this.params.name}\`);
+        console.debug(\`You forgot to change the default values of \${this.params.name}\`);
     }
 }`;
     await fs.promises.writeFile(filePath, text(capitalizeWithDashes(cmdName), cmdName));

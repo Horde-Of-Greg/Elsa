@@ -1,5 +1,7 @@
 import type { MessagePayload, MessageReplyOptions } from "discord.js";
 
+import type { ConfigsResolver } from "../types/config/config";
+import type { LoggerResolver } from "../types/core/logs";
 import type { AppErrorClientResponse, AppErrorData, AppErrorParams } from "../types/errors/appError";
 import type { AppDate } from "../types/time/time";
 
@@ -12,6 +14,7 @@ export abstract class AppError extends Error {
         message: string,
         public readonly data?: AppErrorData,
         public readonly stack?: string,
+        protected readonly configs?: ConfigsResolver,
     ) {
         super(message);
         this.name = this.constructor.name;
@@ -41,5 +44,5 @@ export abstract class AppError extends Error {
 
     abstract get reply(): string | MessagePayload | MessageReplyOptions;
 
-    abstract log(): void;
+    abstract log(logger: LoggerResolver): void;
 }

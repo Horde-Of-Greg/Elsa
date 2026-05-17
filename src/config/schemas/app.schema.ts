@@ -4,6 +4,7 @@ import { ensureStrictPositive } from "../../utils/numbers/positive";
 
 export type AppConfig = z.infer<typeof AppConfigSchema>;
 
+// eslint-disable-next-line no-restricted-syntax
 export const AppConfigSchema = z
     .object({
         PREFIX: z.string().min(1).max(3).default("!"),

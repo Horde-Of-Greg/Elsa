@@ -2,15 +2,18 @@ import { EmbedBuilder } from "@discordjs/builders";
 import type { MessageReplyOptions } from "discord.js";
 
 import { EmbedColors } from "../../assets/colors/colors";
-import { Configs } from "../../config/Configs";
 import type { TagTable } from "../../db/entities/Tag";
+import type { ConfigsResolver } from "../../types/config/config";
 import { AppError } from "../AppError";
 
 export class TagExistsError extends AppError {
     readonly code = "TAG_EXISTS";
     readonly httpStatus = 409;
 
-    constructor(readonly tag: TagTable) {
+    constructor(
+        readonly tag: TagTable,
+        protected readonly configs: ConfigsResolver,
+    ) {
         super(`Tag "${tag.name}" already exists`, { tag });
     }
 
@@ -21,7 +24,7 @@ export class TagExistsError extends AppError {
                     .setTitle("Tag already exists")
                     .setColor(EmbedColors.YELLOW)
                     .setDescription(
-                        `Cannot add tag ${this.tag.name} as it already exists, and is owned by <@${this.tag.author.discordId}> ${Configs.emoji.EXCLAMATION_MARK}`,
+                        `Cannot add tag ${this.tag.name} as it already exists, and is owned by <@${this.tag.author.discordId}> ${this.configs.emoji.EXCLAMATION_MARK}`,
                     ),
             ],
         };
@@ -39,6 +42,7 @@ export class TagBodyExistsError extends AppError {
         readonly tagBody: string,
         readonly existingTag: TagTable,
         readonly type: "edit" | "add",
+        protected readonly configs: ConfigsResolver,
     ) {
         super(
             type === "edit"
@@ -56,8 +60,8 @@ export class TagBodyExistsError extends AppError {
                     .setColor(EmbedColors.YELLOW)
                     .setDescription(
                         this.type === "edit"
-                            ? `Cannot edit tag ${this.tagName} as it already contains the same body. ${Configs.emoji.EXCLAMATION_MARK}`
-                            : `Cannot add tag ${this.tagName} as it contains the same body as tag: ${this.existingTag.name} ${Configs.emoji.WORRIED}. Please use ${Configs.app.PREFIX}alias instead.`,
+                            ? `Cannot edit tag ${this.tagName} as it already contains the same body. ${this.configs.emoji.EXCLAMATION_MARK}`
+                            : `Cannot add tag ${this.tagName} as it contains the same body as tag: ${this.existingTag.name} ${this.configs.emoji.WORRIED}. Please use ${this.configs.app.PREFIX}alias instead.`,
                     ),
             ],
         };

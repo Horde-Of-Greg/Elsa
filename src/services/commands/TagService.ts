@@ -1,44 +1,48 @@
-import type { Guild, User } from "discord.js";
+import { Cache } from "../../caching/Cache";
+import type { TagTable } from "../../db/entities/Tag";
+import type { UserTable } from "../../db/entities/User";
+import { DeletedTagNotFound, TagNotFoundError } from "../../errors/client/404";
+import type { ConfigsResolver } from "../../types/config/config";
+import type {
+    CacheContainerResolver,
+    FormatterContainerResolver,
+    RepositoryContainerResolver,
+    ServicesContainerResolver,
+} from "../../types/core/containers";
+import type { SHA256Hash } from "../../types/crypto";
+import type { TagElements, TagHostElements, TagRepositoryResolver } from "../../types/db/repositories";
+import type { HostServiceResolver } from "../../types/services/host";
+import type { CreateTagContext, TagServiceResolver } from "../../types/services/tag";
+import type { UserServiceResolver } from "../../types/services/user";
+import { computeSHA256 } from "../../utils/crypto/sha256Hash";
 
-import { Cache } from "../caching/Cache";
-import { Configs } from "../config/Configs";
-import type { RepositoryResolver } from "../core/containers/Repository";
-import type { ServicesResolver } from "../core/containers/Services";
-import { dependencies } from "../core/Dependencies";
-import type { TagTable } from "../db/entities/Tag";
-import type { UserTable } from "../db/entities/User";
-import type { TagRepository } from "../db/repositories/TagRepository";
-import { DeletedTagNotFound, TagNotFoundError } from "../errors/client/404";
-import type { SHA256Hash } from "../types/crypto";
-import type { TagElements, TagHostElements } from "../types/db/repositories";
-import { computeSHA256 } from "../utils/crypto/sha256Hash";
-import type { HostService } from "./HostService";
-import type { UserService } from "./UserService";
-
-export class TagService {
-    private readonly tagRepo: TagRepository;
-    private readonly userService: UserService;
-    private readonly hostService: HostService;
+export class TagService implements TagServiceResolver {
+    private readonly tagRepo: TagRepositoryResolver;
+    private readonly userService: UserServiceResolver;
+    private readonly hostService: HostServiceResolver;
     private readonly deletionMemory: Cache<TagTable>;
 
     constructor(
-        repositories: RepositoryResolver = dependencies.repositories,
-        services: ServicesResolver = dependencies.services,
+        repositories: RepositoryContainerResolver,
+        services: ServicesContainerResolver,
+        cacheContainer: CacheContainerResolver,
+        private readonly formatter: FormatterContainerResolver,
+        private readonly configs: ConfigsResolver,
     ) {
         this.tagRepo = repositories.tagRepo;
         this.userService = services.userService;
         this.hostService = services.hostService;
 
-        this.deletionMemory = new Cache("deletion_memory", Configs.app.COMMANDS.UNDELETE.DELAY_S, true);
+        this.deletionMemory = new Cache(
+            "deletion_memory",
+            this.configs.app.COMMANDS.UNDELETE.DELAY_S,
+            true,
+            cacheContainer,
+            this.configs,
+        );
     }
 
-    async createTag(context: {
-        tagName: string;
-        tagBody: string;
-        tagBodyHash: SHA256Hash;
-        author: User;
-        guild: Guild;
-    }): Promise<TagTable> {
+    async createTag(context: CreateTagContext): Promise<TagTable> {
         const authorUser = await this.userService.findOrCreateUser(context.author);
         const hostRecord = await this.hostService.findOrCreateHost(context.guild.id, context.guild.name);
 
@@ -63,7 +67,7 @@ export class TagService {
         if (context.type === "literal") {
             const tagToAlias = await this.tagRepo.findByName(context.tagToAlias);
             if (tagToAlias === null) {
-                throw new TagNotFoundError(context.tagToAlias, true);
+                throw new TagNotFoundError(context.tagToAlias, true, this.configs);
             }
             return this.tagRepo.createAlias(aliasName, tagToAlias, aliasAuthor);
         }
@@ -78,7 +82,7 @@ export class TagService {
     }): Promise<TagTable> {
         const tag = await this.tagRepo.findByName(context.tagName);
         if (tag === null) {
-            throw new TagNotFoundError(context.tagName, true);
+            throw new TagNotFoundError(context.tagName, true, this.configs);
         }
         tag.body = context.tagBody;
         tag.bodyHash = context.tagBodyHash;
@@ -88,11 +92,11 @@ export class TagService {
     async deleteTag(tagName?: string, tag?: TagTable): Promise<void> {
         if (tag === undefined) {
             if (tagName === undefined) {
-                throw new TagNotFoundError("unknown", true);
+                throw new TagNotFoundError("unknown", true, this.configs);
             }
             const foundTag = await this.findTag(tagName);
             if (foundTag === null) {
-                throw new TagNotFoundError(tagName, true);
+                throw new TagNotFoundError(tagName, true, this.configs);
             }
             await this.tagRepo.deleteTag(foundTag);
             return;
@@ -104,7 +108,7 @@ export class TagService {
     async retrieveTag(tagName: string): Promise<TagTable> {
         const tag = await this.deletionMemory.get(tagName);
         if (tag === null) {
-            throw new DeletedTagNotFound(tagName);
+            throw new DeletedTagNotFound(tagName, this.formatter);
         }
         return tag;
     }

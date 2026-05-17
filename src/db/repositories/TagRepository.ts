@@ -1,5 +1,6 @@
+import type { DatabaseContainerResolver } from "../../types/core/containers";
 import type { SHA256Hash } from "../../types/crypto";
-import type { TagElements, TagHostElements } from "../../types/db/repositories";
+import type { TagElements, TagHostElements, TagRepositoryResolver } from "../../types/db/repositories";
 import { CategoryTable } from "../entities/Category";
 import { CategoryTagTable } from "../entities/CategoryTag";
 import { HostTable } from "../entities/Host";
@@ -9,9 +10,9 @@ import { TagHostStatus, TagHostTable } from "../entities/TagHost";
 import { UserTable } from "../entities/User";
 import { BaseRepository } from "./BaseRepository";
 
-export class TagRepository extends BaseRepository<TagTable> {
-    constructor() {
-        super(TagTable);
+export class TagRepository extends BaseRepository<TagTable> implements TagRepositoryResolver {
+    constructor(databaseContainer: DatabaseContainerResolver) {
+        super(TagTable, databaseContainer);
     }
 
     /*

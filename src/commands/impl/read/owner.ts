@@ -1,14 +1,15 @@
 import type { Message } from "discord.js";
 
-import { core } from "../../../core/Core";
+import { PermLevel } from "../../../assets/db/permLevel";
 import type { UserTable } from "../../../db/entities/User";
-import { PermLevel } from "../../../db/entities/UserHost";
 import { TagNotFoundError } from "../../../errors/client/404";
+import type { DependenciesResolver } from "../../../types/core/dependencies";
 import { ensureStrictPositive } from "../../../utils/numbers/positive";
 import { CommandDef, CommandInstance } from "../../Command";
+import type { Commands } from "../../Commands";
 
 export class CommandOwnerDef extends CommandDef<UserTable, CommandOwnerInstance> {
-    constructor() {
+    constructor(dependencies: DependenciesResolver, commands: Commands) {
         super(
             {
                 name: "owner",
@@ -36,6 +37,8 @@ export class CommandOwnerDef extends CommandDef<UserTable, CommandOwnerInstance>
                 clear: false,
                 ttl_s: ensureStrictPositive(3600 * 3),
             },
+            dependencies,
+            commands,
         );
     }
 }
@@ -50,7 +53,7 @@ export class CommandOwnerInstance extends CommandInstance<UserTable> {
     protected async execute(): Promise<UserTable> {
         const tag = await this.tagService.findTag(this.tagName);
         if (!tag) {
-            throw new TagNotFoundError(this.tagName, true);
+            throw new TagNotFoundError(this.tagName, true, this.dependencies.configs);
         }
         return tag.author;
     }
@@ -62,6 +65,6 @@ export class CommandOwnerInstance extends CommandInstance<UserTable> {
     protected async postReply(sentMessage: Message): Promise<void> {}
 
     protected logExecution(): void {
-        core.logger.debug(`You forgot to change the default values of ${this.params.name}`);
+        this.dependencies.logger.debug(`You forgot to change the default values of ${this.params.name}`);
     }
 }

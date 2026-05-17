@@ -1,23 +1,16 @@
 import { EmbedBuilder, type Message } from "discord.js";
 
-import { core } from "../../../core/Core";
-import { timers } from "../../../core/Timers";
-import { PermLevel } from "../../../db/entities/UserHost";
+import { PermLevel } from "../../../assets/db/permLevel";
 import { TagNotFoundError } from "../../../errors/client/404";
+import type { CommandTagReplyElements } from "../../../types/commands/tag";
+import type { DependenciesResolver } from "../../../types/core/dependencies";
 import { isProductionEnvironment } from "../../../utils/node/environment";
 import { ensureStrictPositive } from "../../../utils/numbers/positive";
 import { CommandDef, CommandInstance } from "../../Command";
+import type { Commands } from "../../Commands";
 
-type tagReplyElements = {
-    name: string;
-    body: string;
-    authorId_db: string;
-    authorId_dc: string;
-    authorName: string;
-};
-
-export class CommandTagDef extends CommandDef<tagReplyElements, CommandTagInstance> {
-    constructor() {
+export class CommandTagDef extends CommandDef<CommandTagReplyElements, CommandTagInstance> {
+    constructor(dependencies: DependenciesResolver, commands: Commands) {
         super(
             {
                 name: "tag",
@@ -52,11 +45,13 @@ export class CommandTagDef extends CommandDef<tagReplyElements, CommandTagInstan
                 clear: true,
                 ttl_s: ensureStrictPositive(3600 * 3),
             },
+            dependencies,
+            commands,
         );
     }
 }
 
-class CommandTagInstance extends CommandInstance<tagReplyElements> {
+class CommandTagInstance extends CommandInstance<CommandTagReplyElements> {
     private tagName!: string;
     // eslint-disable-next-line @typescript-eslint/no-unused-private-class-members
     private tagArgs?: string[];
@@ -65,10 +60,10 @@ class CommandTagInstance extends CommandInstance<tagReplyElements> {
         this.tagName = this.arg<string>("tag-name");
         this.tagArgs = this.arg<string[]>("tag-args");
     }
-    protected async execute(): Promise<tagReplyElements> {
+    protected async execute(): Promise<CommandTagReplyElements> {
         const tag = await this.tagService.findTag(this.tagName);
         if (!tag) {
-            throw new TagNotFoundError(this.tagName, false);
+            throw new TagNotFoundError(this.tagName, false, this.dependencies.configs);
         }
         return {
             name: tag.name,
@@ -89,7 +84,7 @@ class CommandTagInstance extends CommandInstance<tagReplyElements> {
     protected async postReply(sentMessage: Message): Promise<void> {}
 
     protected logExecution(): void {
-        core.logger.debug(`Sent tag ${this.content.name}`);
+        this.dependencies.logger.debug(`Sent tag ${this.content.name}`);
     }
 
     private get debugEmbed(): EmbedBuilder {
@@ -112,7 +107,7 @@ class CommandTagInstance extends CommandInstance<tagReplyElements> {
                 },
             )
             .setFooter({
-                text: `took: ${timers.queryTimer(this.timerKey).getTime().formatted} | debug: true`,
+                text: `took: ${this.dependencies.timers.queryTimer(this.timerKey).getTime().formatted} | debug: true`,
             });
     }
 }

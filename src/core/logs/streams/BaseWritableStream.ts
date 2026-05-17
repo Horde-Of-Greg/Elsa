@@ -1,9 +1,6 @@
 import { Writable, type WritableOptions } from "node:stream";
 
-export interface StreamConfig {
-    name: string;
-    encoding?: BufferEncoding;
-}
+import type { StreamConfig } from "../../../types/core/streams";
 
 export abstract class BaseWritableStream extends Writable {
     protected readonly name: string;

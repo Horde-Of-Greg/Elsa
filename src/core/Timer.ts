@@ -1,9 +1,9 @@
 import type { _ns, TimeUnit } from "../types/time/time";
-import type { TimerResult } from "../types/time/timer";
+import type { TimerResolver, TimerResult } from "../types/time/timer";
 import { ensurePositive } from "../utils/numbers/positive";
 import { adjustTime, formatTime } from "../utils/time";
 
-export class Timer {
+export class Timer implements TimerResolver {
     private readonly startDate: Date;
     private readonly startTime: _ns;
 

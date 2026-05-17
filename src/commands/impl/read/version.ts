@@ -1,15 +1,17 @@
 import { EmbedBuilder } from "@discordjs/builders";
 import type { Message } from "discord.js";
 
-import { PermLevel } from "../../../db/entities/UserHost";
-import type { Versions } from "../../../types/command";
+import { PermLevel } from "../../../assets/db/permLevel";
+import type { Versions } from "../../../types/commands/command";
+import type { DependenciesResolver } from "../../../types/core/dependencies";
 import { fetchLatestRemoteTag } from "../../../utils/github/tags";
 import { getSemVer } from "../../../utils/node/version";
 import { ensureStrictPositive } from "../../../utils/numbers/positive";
 import { CommandDef, CommandInstance } from "../../Command";
+import type { Commands } from "../../Commands";
 
 export class CommandVersionDef extends CommandDef<Versions, CommandVersionInstance> {
-    constructor() {
+    constructor(dependencies: DependenciesResolver, commands: Commands) {
         super(
             {
                 name: "version",
@@ -30,6 +32,8 @@ export class CommandVersionDef extends CommandDef<Versions, CommandVersionInstan
                 clear: true,
                 ttl_s: ensureStrictPositive(60),
             },
+            dependencies,
+            commands,
         );
     }
 }

@@ -1,9 +1,9 @@
 import { EmbedBuilder, type MessageReplyOptions, type User } from "discord.js";
 
 import { EmbedColors } from "../../assets/colors/colors";
-import { Configs } from "../../config/Configs";
-import { core } from "../../core/Core";
-import { type CommandParams } from "../../types/command";
+import { type CommandParams } from "../../types/commands/command";
+import type { ConfigsResolver } from "../../types/config/config";
+import type { LoggerResolver } from "../../types/core/logs";
 import { AppError } from "../AppError";
 
 export class CooldownError extends AppError {
@@ -14,6 +14,7 @@ export class CooldownError extends AppError {
         readonly tryAgainIn_s: number,
         readonly user: User,
         readonly commandParams: CommandParams,
+        readonly configs: ConfigsResolver,
     ) {
         super(`User ${user.username} made too many requests on command ${commandParams.name}`, {
             user,
@@ -40,13 +41,13 @@ export class CooldownError extends AppError {
                     .setDescription(
                         `You hit the cooldown for ${
                             this.commandParams.name
-                        } ${Configs.emoji.EXCLAMATION_MARK}. Try again in ${tryAgainIn.toFixed(2)}${unit}`,
+                        } ${this.configs.emoji.EXCLAMATION_MARK}. Try again in ${tryAgainIn.toFixed(2)}${unit}`,
                     ),
             ],
         };
     }
 
-    log(): void {
-        core.logger.warn(this.message);
+    log(logger: LoggerResolver): void {
+        logger.warn(this.message);
     }
 }

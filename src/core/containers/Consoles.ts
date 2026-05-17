@@ -2,15 +2,15 @@ import { Console } from "node:console";
 import fs from "node:fs";
 import path from "node:path";
 
-import { Configs } from "../../config/Configs";
+import type { ConfigsResolver } from "../../types/config/config";
 import type { StreamsContainer } from "../../types/logs";
 import { compressWithZstd } from "../../utils/compression/zstd";
 import { isProductionEnvironment } from "../../utils/node/environment";
-import { FileStream } from "./streams/FileStream";
-import { MultiStream } from "./streams/MultiStream";
-import { TerminalStream } from "./streams/TerminalStream";
+import { FileStream } from "../logs/streams/FileStream";
+import { MultiStream } from "../logs/streams/MultiStream";
+import { TerminalStream } from "../logs/streams/TerminalStream";
 
-class ConsoleContainer {
+export class ConsoleContainer {
     private _infoStreams?: StreamsContainer;
     private _debugStreams?: StreamsContainer;
     private _errStreams?: StreamsContainer;
@@ -22,24 +22,26 @@ class ConsoleContainer {
     private _appConsole?: Console;
     private _debugConsole?: Console;
 
+    constructor(private readonly configs: ConfigsResolver) {}
+
     private get infoStreams(): StreamsContainer {
         return (this._infoStreams ??= {
             terminal: new TerminalStream({ name: "info-terminal", target: "stdout" }),
-            files: new FileStream({ name: "info-files", fileName: "logs.log" }),
+            files: new FileStream({ name: "info-files", fileName: "logs.log" }, this.configs),
         });
     }
 
     private get debugStreams(): StreamsContainer {
         return (this._debugStreams ??= {
             terminal: new TerminalStream({ name: "debug-terminal", target: "stdout" }),
-            files: new FileStream({ name: "debug-files", fileName: "debug.log" }),
+            files: new FileStream({ name: "debug-files", fileName: "debug.log" }, this.configs),
         });
     }
 
     private get errStreams(): StreamsContainer {
         return (this._errStreams ??= {
             terminal: new TerminalStream({ name: "err-terminal", target: "stderr" }),
-            files: new FileStream({ name: "error-files", fileName: "errors.log" }),
+            files: new FileStream({ name: "error-files", fileName: "errors.log" }, this.configs),
         });
     }
 
@@ -125,22 +127,25 @@ class ConsoleContainer {
         await this.stop();
     }
 
+    async reset(): Promise<void> {
+        await this.shutdown();
+        this.start();
+    }
+
     async archiveLogs(): Promise<void> {
         const timestamp = new Date().toISOString().replaceAll(/[:.]/g, "-");
-        const logDir = Configs.app.LOGS.OUTPUT_PATH;
-        const archiveDir = path.join(logDir, "archive");
+        const archiveDir = path.join(this.logDir, "archive");
 
         await fs.promises.mkdir(archiveDir, { recursive: true });
-        compressWithZstd(logDir, path.join(archiveDir, timestamp));
+        compressWithZstd(this.logDir, path.join(archiveDir, timestamp));
     }
 
     async clearLogs(): Promise<void> {
-        const logDir = Configs.app.LOGS.OUTPUT_PATH;
-        const files = await fs.promises.readdir(logDir);
+        const files = await fs.promises.readdir(this.logDir);
 
         for (const file of files) {
             if (file.endsWith(".log")) {
-                await fs.promises.truncate(path.join(logDir, file), 0);
+                await fs.promises.truncate(path.join(this.logDir, file), 0);
             }
         }
     }
@@ -152,6 +157,8 @@ class ConsoleContainer {
             ...Object.values(this._errStreams ?? {}),
         ];
     }
-}
 
-export const consoleContainer = new ConsoleContainer();
+    private get logDir(): string {
+        return this.configs.app.LOGS.OUTPUT_PATH;
+    }
+}

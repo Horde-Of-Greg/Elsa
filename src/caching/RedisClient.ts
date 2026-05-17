@@ -1,20 +1,24 @@
 import { createClient, type RedisArgument, type RedisClientOptions, type SetOptions } from "redis";
 
-import { Configs } from "../config/Configs";
-import { core } from "../core/Core";
+import type { ConfigsResolver } from "../types/config/config";
+import type { LoggerResolver } from "../types/core/logs";
+import type { RedisKey } from "../types/keys/redis";
 import type { PositiveNumber } from "../types/numbers";
-import type { RedisKey } from "./keys";
 
 export class RedisClient {
     private readonly client: ReturnType<typeof createClient>;
 
-    constructor(readonly options: RedisClientOptions = this.defaultOptions) {
-        this.client = createClient(this.options);
+    constructor(
+        private readonly configs: ConfigsResolver,
+        private readonly logger: LoggerResolver,
+        readonly options?: RedisClientOptions,
+    ) {
+        this.client = createClient(this.options ?? this.defaultOptions);
         this.client.on("error", (err) => {
-            core.logger.error("Redis error:", err);
+            this.logger.error("Redis error:", err);
         });
         this.client.on("connect", () => {
-            core.logger.info("Redis connected");
+            this.logger.info("Redis connected");
         });
     }
 
@@ -50,13 +54,15 @@ export class RedisClient {
         await this.client.quit();
     }
 
-    private readonly defaultOptions: RedisClientOptions = {
-        username: Configs.env.REDIS_USERNAME,
-        password: Configs.env.REDIS_PASSWORD,
-        socket: {
-            host: Configs.env.REDIS_HOST,
-            port: Configs.env.REDIS_PORT,
-            tls: false,
-        },
-    };
+    private get defaultOptions(): RedisClientOptions {
+        return {
+            username: this.configs.env.REDIS_USERNAME,
+            password: this.configs.env.REDIS_PASSWORD,
+            socket: {
+                host: this.configs.env.REDIS_HOST,
+                port: this.configs.env.REDIS_PORT,
+                tls: false,
+            },
+        };
+    }
 }

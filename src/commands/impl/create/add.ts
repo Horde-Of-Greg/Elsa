@@ -1,15 +1,15 @@
 import type { Message } from "discord.js";
 
-import { Configs } from "../../../config/Configs";
-import { core } from "../../../core/Core";
-import { PermLevel } from "../../../db/entities/UserHost";
+import { PermLevel } from "../../../assets/db/permLevel";
 import { TagBodyExistsError, TagExistsError } from "../../../errors/client/409";
+import type { DependenciesResolver } from "../../../types/core/dependencies";
 import type { SHA256Hash } from "../../../types/crypto";
 import { ensureStrictPositive } from "../../../utils/numbers/positive";
 import { CommandDef, CommandInstance } from "../../Command";
+import type { Commands } from "../../Commands";
 
 export class CommandAddDef extends CommandDef<void, CommandAddInstance> {
-    constructor() {
+    constructor(dependencies: DependenciesResolver, commands: Commands) {
         super(
             {
                 name: "add",
@@ -43,6 +43,8 @@ export class CommandAddDef extends CommandDef<void, CommandAddInstance> {
             {
                 useCache: false,
             },
+            dependencies,
+            commands,
         );
     }
 }
@@ -74,14 +76,14 @@ class CommandAddInstance extends CommandInstance<void> {
 
     protected async reply(): Promise<Message> {
         return this.context.message.reply(
-            `Tag \`${this.tagName}\` created successfully! ${Configs.emoji.CHECKMARK}`,
+            `Tag \`${this.tagName}\` created successfully! ${this.dependencies.configs.emoji.CHECKMARK}`,
         );
     }
 
     protected async postReply(sentMessage: Message): Promise<void> {}
 
     protected logExecution(): void {
-        core.logger.info(`User ${this.context.author.tag} created tag: ${this.tagName}`);
+        this.dependencies.logger.info(`User ${this.context.author.tag} created tag: ${this.tagName}`);
     }
 
     /*
@@ -91,7 +93,7 @@ class CommandAddInstance extends CommandInstance<void> {
     private async ensureUniqueTagName(): Promise<void> {
         const candidate = await this.tagService.findTag(this.tagName);
         if (candidate) {
-            throw new TagExistsError(candidate);
+            throw new TagExistsError(candidate, this.dependencies.configs);
         }
     }
 
@@ -99,7 +101,13 @@ class CommandAddInstance extends CommandInstance<void> {
         const hashContext = await this.tagService.tagBodyExists(this.tagBody);
 
         if (hashContext.exists) {
-            throw new TagBodyExistsError(this.tagName, this.tagBody, hashContext.tagWithBody, "add");
+            throw new TagBodyExistsError(
+                this.tagName,
+                this.tagBody,
+                hashContext.tagWithBody,
+                "add",
+                this.dependencies.configs,
+            );
         }
         this.tagBodyHash = hashContext.hash;
     }

@@ -2,6 +2,7 @@ import z from "zod";
 
 export type EmojiConfig = z.infer<typeof EmojiConfigSchema>;
 
+// eslint-disable-next-line no-restricted-syntax
 export const EmojiConfigSchema = z.object({
     CHECKMARK: z.string().default(":white_check_mark:"),
     X_MARK: z.string().default(":x:"),

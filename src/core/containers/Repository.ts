@@ -2,35 +2,30 @@ import { HostRepository } from "../../db/repositories/HostRepository";
 import { TagOverridesRepository } from "../../db/repositories/TagOverridesRepository";
 import { TagRepository } from "../../db/repositories/TagRepository";
 import { UserRepository } from "../../db/repositories/UserRepository";
+import type { DatabaseContainerResolver, RepositoryContainerResolver } from "../../types/core/containers";
 
-export interface RepositoryResolver {
-    get tagRepo(): TagRepository;
-    get userRepo(): UserRepository;
-    get hostRepo(): HostRepository;
-    get tagOverridesRepo(): TagOverridesRepository;
-    reset(): void;
-}
-
-export class RepositoryContainer {
+export class RepositoryContainer implements RepositoryContainerResolver {
     private _tagRepo?: TagRepository;
     private _userRepo?: UserRepository;
     private _hostRepo?: HostRepository;
     private _tagOverridesRepo?: TagOverridesRepository;
 
+    constructor(private readonly databaseContainer: DatabaseContainerResolver) {}
+
     get tagRepo(): TagRepository {
-        return (this._tagRepo ??= new TagRepository());
+        return (this._tagRepo ??= new TagRepository(this.databaseContainer));
     }
 
     get userRepo(): UserRepository {
-        return (this._userRepo ??= new UserRepository());
+        return (this._userRepo ??= new UserRepository(this.databaseContainer));
     }
 
     get hostRepo(): HostRepository {
-        return (this._hostRepo ??= new HostRepository());
+        return (this._hostRepo ??= new HostRepository(this.databaseContainer));
     }
 
     get tagOverridesRepo(): TagOverridesRepository {
-        return (this._tagOverridesRepo ??= new TagOverridesRepository());
+        return (this._tagOverridesRepo ??= new TagOverridesRepository(this.databaseContainer));
     }
 
     reset(): void {

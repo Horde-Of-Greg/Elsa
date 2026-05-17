@@ -1,18 +1,11 @@
 import { Console } from "node:console";
 
 import { AnsiFg, AnsiFgBright, AnsiStyle } from "../../assets/colors/ansi";
+import type { ConsoleContainerResolver } from "../../types/core/containers";
+import type { LoggerResolver } from "../../types/core/logs";
 import { LogLevel } from "../../types/logs";
 import { isProductionEnvironment } from "../../utils/node/environment";
 import { getTimestampNow } from "../../utils/time";
-import { consoleContainer } from "./ConsoleContainer";
-
-interface LogConfigs {
-    trace: AnsiFgBright | AnsiFg;
-    debug: AnsiFgBright | AnsiFg;
-    info: AnsiFgBright | AnsiFg;
-    warn: AnsiFgBright | AnsiFg;
-    error: AnsiFgBright | AnsiFg;
-}
 
 const logConfigs: Record<keyof typeof LogLevel, AnsiFg | AnsiFgBright> = {
     TRACE: AnsiFg.RED,
@@ -23,13 +16,13 @@ const logConfigs: Record<keyof typeof LogLevel, AnsiFg | AnsiFgBright> = {
     FATAL: AnsiFgBright.RED,
 };
 
-export class Logger {
+export class Logger implements LoggerResolver {
     private console: Console;
     private terminalConsole: Console;
     private debugConsole: Console;
     private debugFileConsole: Console;
 
-    constructor() {
+    constructor(private readonly consoleContainer: ConsoleContainerResolver) {
         this.initConsoles();
     }
 
@@ -72,19 +65,24 @@ export class Logger {
     }
 
     async shutdown(): Promise<void> {
-        await consoleContainer.shutdown();
+        await this.consoleContainer.shutdown();
     }
 
     async stop(): Promise<void> {
         this.warnUser("Stopping Logger!");
-        await consoleContainer.stop();
+        await this.consoleContainer.stop();
         this.switchToBackupConsoles();
     }
 
     start(): void {
-        consoleContainer.start();
+        this.consoleContainer.start();
         this.initConsoles();
         this.info("Logger Back!");
+    }
+
+    async reset(): Promise<void> {
+        await this.stop();
+        this.start();
     }
 
     private switchToBackupConsoles(): void {
@@ -100,9 +98,9 @@ export class Logger {
     }
 
     private initConsoles(): void {
-        this.console = consoleContainer.appConsole;
-        this.terminalConsole = consoleContainer.terminalConsole;
-        this.debugConsole = consoleContainer.debugConsole;
-        this.debugFileConsole = consoleContainer.debugFileConsole;
+        this.console = this.consoleContainer.appConsole;
+        this.terminalConsole = this.consoleContainer.terminalConsole;
+        this.debugConsole = this.consoleContainer.debugConsole;
+        this.debugFileConsole = this.consoleContainer.debugFileConsole;
     }
 }

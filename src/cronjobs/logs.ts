@@ -1,10 +1,19 @@
 import nodeCron from "node-cron";
 
-import { core } from "../core/Core";
 import { LogRotation } from "../core/logs/LogRotation";
+import type { Dependencies } from "./../core/Dependencies";
 
-// Every day at midnight
-nodeCron.schedule("0 0 * * *", async () => {
-    core.logger.warnUser("Rotating...");
-    await new LogRotation().main();
-});
+export class CronScheduler {
+    constructor(private readonly dependencies: Dependencies) {}
+
+    setupAllTasks(): void {
+        this.setupRotateBackups();
+    }
+
+    private setupRotateBackups(): void {
+        nodeCron.schedule("0 0 * * *", async () => {
+            this.dependencies.logger.warnUser("Rotating...");
+            await new LogRotation(this.dependencies).main();
+        });
+    }
+}

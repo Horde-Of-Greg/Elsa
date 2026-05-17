@@ -1,15 +1,18 @@
 import { DiscordBot } from "../../bot/DiscordBot";
+import type { DiscordContainerResolver, ServicesContainerResolver } from "../../types/core/containers";
+import type { LoggerResolver } from "../../types/core/logs";
+import type { DiscordBotResolver } from "../../types/discord/bot";
 
-export interface DiscordResolver {
-    get bot(): DiscordBot;
-    reset(): void;
-}
+export class DiscordContainer implements DiscordContainerResolver {
+    private _bot?: DiscordBotResolver;
 
-export class DiscordContainer {
-    private _bot?: DiscordBot;
+    constructor(
+        private readonly services: ServicesContainerResolver,
+        private readonly logger: LoggerResolver,
+    ) {}
 
-    get bot(): DiscordBot {
-        return (this._bot ??= new DiscordBot());
+    get bot(): DiscordBotResolver {
+        return (this._bot ??= new DiscordBot(this.services, this.logger));
     }
 
     reset(): void {

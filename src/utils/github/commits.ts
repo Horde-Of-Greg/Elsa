@@ -2,12 +2,7 @@ import * as github from "@actions/github";
 
 import { EnvVariableNotFound } from "../../errors/internal/config";
 import { FailedToFetchError } from "../../errors/internal/http";
-
-interface GitHubCommitResponse {
-    commit: {
-        message: string;
-    };
-}
+import type { GitHubCommitResponse } from "../../types/github/commit";
 
 export async function getCommitMessage(sha: string): Promise<string> {
     const token = process.env.GITHUB_TOKEN;

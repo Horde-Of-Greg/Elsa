@@ -1,13 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { core } from "../../src/core/Core";
 import { isDevelopmentEnvironment } from "../../src/utils/node/environment";
 
 if (isDevelopmentEnvironment()) process.exit(1);
 const ARG: string | undefined = process.argv[2];
 if (!ARG) {
-    core.logger.error(
+    console.error(
         "Tried to run search-error without args. Usage: npm run tools:search-error -- <ERROR_CODE>",
     );
 }
@@ -27,7 +26,7 @@ async function main(): Promise<void> {
     for (const matching_class of MATCHING_CLASSES) {
         const matches = await searchDir(SRC, USAGE_MATCHER(matching_class.match[1]));
         for (const match of matches) {
-            core.logger.debug(`Found ${ARG} in ${match.fileName.replace(/(?:\/?\w+\/)*src\/(.+)/, "$1")}`);
+            console.debug(`Found ${ARG} in ${match.fileName.replace(/(?:\/?\w+\/)*src\/(.+)/, "$1")}`);
         }
     }
 }

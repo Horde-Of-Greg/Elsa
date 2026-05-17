@@ -1,19 +1,21 @@
 import { DataSource } from "typeorm";
 
-import { Configs } from "../config/Configs";
+import type { ConfigsResolver } from "../types/config/config";
 import { isProductionEnvironment } from "../utils/node/environment";
 
-export const dataSourceAppConfig = new DataSource({
-    type: "postgres",
-    host: Configs.env.POSTGRES_HOST,
-    port: Configs.env.POSTGRES_PORT,
-    username: Configs.env.POSTGRES_USER,
-    password: Configs.env.POSTGRES_PASSWORD,
-    database: Configs.env.POSTGRES_DB,
+export function dataSource(configs: ConfigsResolver): DataSource {
+    return new DataSource({
+        type: "postgres",
+        host: configs.env.POSTGRES_HOST,
+        port: configs.env.POSTGRES_PORT,
+        username: configs.env.POSTGRES_USER,
+        password: configs.env.POSTGRES_PASSWORD,
+        database: configs.env.POSTGRES_DB,
 
-    synchronize: true, // isDevelopmentEnvironment(), // Auto-create tables in development
+        synchronize: true, // isDevelopmentEnvironment(), // Auto-create tables in development
 
-    migrations: [isProductionEnvironment() ? "dist/db/migrations/**/*.js" : "src/db/migrations/**/*.ts"],
+        migrations: [isProductionEnvironment() ? "dist/db/migrations/**/*.js" : "src/db/migrations/**/*.ts"],
 
-    entities: [isProductionEnvironment() ? "dist/db/entities/**/*.js" : "src/db/entities/**/*.ts"],
-});
+        entities: [isProductionEnvironment() ? "dist/db/entities/**/*.js" : "src/db/entities/**/*.ts"],
+    });
+}

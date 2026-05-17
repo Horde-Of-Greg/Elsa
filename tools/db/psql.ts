@@ -1,13 +1,10 @@
 import { execSync } from "child_process";
 
-import { Configs } from "../../src/config/Configs";
-import { core } from "../../src/core/Core";
+const user = process.env.POSTGRES_USER;
+const host = process.env.POSTGRES_HOST;
+const db = process.env.POSTGRES_DB;
 
-const user = Configs.env.POSTGRES_USER;
-const host = Configs.env.POSTGRES_HOST;
-const db = Configs.env.POSTGRES_DB;
-
-core.logger.info(`Connecting to database: ${db}`);
+console.info(`Connecting to database: ${db}`);
 
 try {
     execSync(`psql -U ${user} -h ${host} -d ${db}`, { stdio: "inherit" });

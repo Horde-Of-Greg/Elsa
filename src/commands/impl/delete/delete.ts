@@ -1,13 +1,13 @@
 import type { Message } from "discord.js";
 
-import { Configs } from "../../../config/Configs";
-import { core } from "../../../core/Core";
-import { PermLevel } from "../../../db/entities/UserHost";
+import { PermLevel } from "../../../assets/db/permLevel";
+import type { DependenciesResolver } from "../../../types/core/dependencies";
 import { CommandDef } from "../../Command";
+import type { Commands } from "../../Commands";
 import { TagHandlingCommandInstance } from "../../TagHandlingCommand";
 
 export class CommandDeleteDef extends CommandDef<void, CommandDeleteInstance> {
-    constructor() {
+    constructor(dependencies: DependenciesResolver, commands: Commands) {
         super(
             {
                 name: "delete",
@@ -33,6 +33,8 @@ export class CommandDeleteDef extends CommandDef<void, CommandDeleteInstance> {
             {
                 useCache: false,
             },
+            dependencies,
+            commands,
         );
     }
 }
@@ -51,14 +53,14 @@ export class CommandDeleteInstance extends TagHandlingCommandInstance<void> {
 
     protected async reply(): Promise<Message> {
         return this.context.message.reply(
-            `Tag **${this.tagName}** deleted successfully! ${Configs.emoji.CHECKMARK}.` +
-                `\nYou have  minutes to undo this action with \`${Configs.app.PREFIX} undelete ${this.tagName}\``,
+            `Tag **${this.tagName}** deleted successfully! ${this.dependencies.configs.emoji.CHECKMARK}.` +
+                `\nYou have  minutes to undo this action with \`${this.dependencies.configs.app.PREFIX} undelete ${this.tagName}\``,
         );
     }
 
     protected async postReply(sentMessage: Message): Promise<void> {}
 
     protected logExecution(): void {
-        core.logger.debug(`User ${this.context.author.username} deleted tag ${this.tagName}`);
+        this.dependencies.logger.debug(`User ${this.context.author.username} deleted tag ${this.tagName}`);
     }
 }

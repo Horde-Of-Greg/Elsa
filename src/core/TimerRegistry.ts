@@ -1,7 +1,8 @@
 import { TimerIdNotFound } from "../errors/internal/timer";
+import type { TimerRegistryResolver } from "../types/time/timer";
 import { Timer } from "./Timer";
 
-class Timers {
+export class TimerRegistry implements TimerRegistryResolver {
     private readonly _timers = new Map<string, Timer>();
 
     startTimer(id: string): void {
@@ -30,5 +31,3 @@ class Timers {
         return timer;
     }
 }
-
-export const timers = new Timers();

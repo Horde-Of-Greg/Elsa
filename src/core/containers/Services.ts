@@ -1,50 +1,66 @@
-import { CooldownService } from "../../services/CooldownService";
-import { HostService } from "../../services/HostService";
-import { MessageLinkService } from "../../services/MessageLinkService";
-import { PermissionsService } from "../../services/PermsService";
-import { TagService } from "../../services/TagService";
-import { UserService } from "../../services/UserService";
+import { CooldownService } from "../../services/commands/CooldownService";
+import { HostService } from "../../services/commands/HostService";
+import { PermissionsService } from "../../services/commands/PermissionsService";
+import { TagService } from "../../services/commands/TagService";
+import { UserService } from "../../services/commands/UserService";
+import { MessageLinkService } from "../../services/discord/MessageLinkService";
+import type { ConfigsResolver } from "../../types/config/config";
+import type {
+    CacheContainerResolver,
+    FormatterContainerResolver,
+    RepositoryContainerResolver,
+    ServicesContainerResolver,
+} from "../../types/core/containers";
+import type { CooldownServiceResolver } from "../../types/services/cooldown";
+import type { HostServiceResolver } from "../../types/services/host";
+import type { MessageLinkServiceResolver } from "../../types/services/messageLink";
+import type { PermissionsServiceResolver } from "../../types/services/permissions";
+import type { TagServiceResolver } from "../../types/services/tag";
+import type { UserServiceResolver } from "../../types/services/user";
 
-export interface ServicesResolver {
-    get cooldownService(): CooldownService;
-    get hostService(): HostService;
-    get permsService(): PermissionsService;
-    get tagService(): TagService;
-    get userService(): UserService;
-    get messageLinkService(): MessageLinkService;
-    reset(): void;
-}
+export class ServicesContainer implements ServicesContainerResolver {
+    private _cooldownService?: CooldownServiceResolver;
+    private _hostService?: HostServiceResolver;
+    private _permsService?: PermissionsServiceResolver;
+    private _tagService?: TagServiceResolver;
+    private _userService?: UserServiceResolver;
+    private _messageLinkService?: MessageLinkServiceResolver;
 
-export class ServicesContainer {
-    private _cooldownService?: CooldownService;
-    private _hostService?: HostService;
-    private _permsService?: PermissionsService;
-    private _tagService?: TagService;
-    private _userService?: UserService;
-    private _messageLinkService?: MessageLinkService;
+    constructor(
+        private readonly cache: CacheContainerResolver,
+        private readonly repositories: RepositoryContainerResolver,
+        private readonly formatter: FormatterContainerResolver,
+        private readonly configs: ConfigsResolver,
+    ) {}
 
-    get cooldownService(): CooldownService {
-        return (this._cooldownService ??= new CooldownService());
+    get cooldownService(): CooldownServiceResolver {
+        return (this._cooldownService ??= new CooldownService(this.cache, this.configs));
     }
 
-    get hostService(): HostService {
-        return (this._hostService ??= new HostService());
+    get hostService(): HostServiceResolver {
+        return (this._hostService ??= new HostService(this.repositories));
     }
 
-    get permsService(): PermissionsService {
-        return (this._permsService ??= new PermissionsService());
+    get permsService(): PermissionsServiceResolver {
+        return (this._permsService ??= new PermissionsService(this.repositories, this.configs));
     }
 
-    get tagService(): TagService {
-        return (this._tagService ??= new TagService());
+    get tagService(): TagServiceResolver {
+        return (this._tagService ??= new TagService(
+            this.repositories,
+            this,
+            this.cache,
+            this.formatter,
+            this.configs,
+        ));
     }
 
-    get userService(): UserService {
-        return (this._userService ??= new UserService());
+    get userService(): UserServiceResolver {
+        return (this._userService ??= new UserService(this.repositories, this));
     }
 
-    get messageLinkService(): MessageLinkService {
-        return (this._messageLinkService ??= new MessageLinkService());
+    get messageLinkService(): MessageLinkServiceResolver {
+        return (this._messageLinkService ??= new MessageLinkService(this.cache, this.configs));
     }
 
     reset(): void {
@@ -53,5 +69,6 @@ export class ServicesContainer {
         this._tagService = undefined;
         this._hostService = undefined;
         this._userService = undefined;
+        this._messageLinkService = undefined;
     }
 }

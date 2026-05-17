@@ -1,13 +1,16 @@
 import type { Snowflake } from "discord.js";
 
+import type { PermLevel } from "../../assets/db/permLevel";
+import type { DatabaseContainerResolver } from "../../types/core/containers";
+import type { UserRepositoryResolver } from "../../types/db/repositories";
 import type { HostTable } from "../entities/Host";
 import { UserTable } from "../entities/User";
-import { type PermLevel, UserHostTable } from "../entities/UserHost";
+import { UserHostTable } from "../entities/UserHost";
 import { BaseRepository } from "../repositories/BaseRepository";
 
-export class UserRepository extends BaseRepository<UserTable> {
-    constructor() {
-        super(UserTable);
+export class UserRepository extends BaseRepository<UserTable> implements UserRepositoryResolver {
+    constructor(databaseContainer: DatabaseContainerResolver) {
+        super(UserTable, databaseContainer);
     }
 
     async findByDiscordId(discordId: string): Promise<UserTable | null> {

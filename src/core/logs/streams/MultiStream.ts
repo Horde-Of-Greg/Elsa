@@ -1,8 +1,5 @@
-import { BaseWritableStream, type StreamConfig } from "./BaseWritableStream";
-
-export interface MultiStreamConfig extends StreamConfig {
-    streams: BaseWritableStream[];
-}
+import type { MultiStreamConfig } from "../../../types/core/streams";
+import { BaseWritableStream } from "./BaseWritableStream";
 
 export class MultiStream extends BaseWritableStream {
     private readonly streams: BaseWritableStream[];
@@ -34,7 +31,9 @@ export class MultiStream extends BaseWritableStream {
             this.streams.map(
                 async (s) =>
                     new Promise<void>((resolve, reject) => {
-                        s.end(() => { resolve(); });
+                        s.end(() => {
+                            resolve();
+                        });
                         s.once("error", reject);
                     }),
             ),

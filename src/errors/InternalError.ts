@@ -2,7 +2,7 @@ import { EmbedBuilder } from "@discordjs/builders";
 import type { MessageReplyOptions } from "discord.js";
 
 import { EmbedColors } from "../assets/colors/colors";
-import { core } from "../core/Core";
+import type { LoggerResolver } from "../types/core/logs";
 import { AppError } from "./AppError";
 
 export abstract class InternalError extends AppError {
@@ -49,8 +49,8 @@ export abstract class InternalError extends AppError {
         return methodNames.join("\n").slice(0, MAX_STACKTRACE_LENGTH);
     }
 
-    log(): void {
-        core.logger.error(this.message);
+    log(logger: LoggerResolver): void {
+        logger.error(this.message);
     }
 }
 

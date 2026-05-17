@@ -8,18 +8,17 @@ import {
 } from "discord.js";
 
 import { EmbedColors, HogColors } from "../../../assets/colors/colors";
-import { Configs } from "../../../config/Configs";
-import { core } from "../../../core/Core";
-import { PermLevel } from "../../../db/entities/UserHost";
+import { PermLevel } from "../../../assets/db/permLevel";
 import { BadArgumentError } from "../../../errors/client/400";
+import type { DependenciesResolver } from "../../../types/core/dependencies";
 import { ensureStrictPositive } from "../../../utils/numbers/positive";
 import { CommandDef, CommandInstance } from "../../Command";
-import { commands } from "../../Commands";
+import type { Commands } from "../../Commands";
 
 const commandId = "command-name";
 
 export class CommandHelpDef extends CommandDef<MessageReplyOptions, CommandHelpInstance> {
-    constructor() {
+    constructor(dependencies: DependenciesResolver, commands: Commands) {
         super(
             {
                 name: "help",
@@ -48,12 +47,14 @@ export class CommandHelpDef extends CommandDef<MessageReplyOptions, CommandHelpI
                 clear: true,
                 ttl_s: ensureStrictPositive(3600 * 24),
             },
+            dependencies,
+            commands,
         );
     }
 }
 
 export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
-    private readonly commandDefs = commands.allCommands;
+    private readonly commandDefs = this.commands.allCommands;
     private readonly message: APIEmbedField[] = [];
     private command: string | undefined;
 
@@ -80,7 +81,7 @@ export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
     protected async postReply(sentMessage: Message): Promise<void> {}
 
     protected logExecution(): void {
-        core.logger.debug(`Sent command ${this.params.name}`);
+        this.dependencies.logger.debug(`Sent command ${this.params.name}`);
     }
 
     private buildGlobalHelp(): MessageReplyOptions {
@@ -96,7 +97,7 @@ export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
             this.message.push({
                 name: inlineCode(params.name),
                 // prettier-ignore
-                value: `Usage: ${inlineCode( Configs.app.PREFIX + [params.name].concat(params.aliases).join('|') + args.join(" "))}\n`
+                value: `Usage: ${inlineCode( this.dependencies.configs.app.PREFIX + [params.name].concat(params.aliases).join('|') + args.join(" "))}\n`
                      + `Description: ${params.info.description}\n`
                      + `Perm Level Required: ${inlineCode(PermLevel[params.permLevelRequired])}`,
             });
@@ -150,7 +151,10 @@ export class CommandHelpInstance extends CommandInstance<MessageReplyOptions> {
         const embed = new EmbedBuilder()
             .setTitle(`Command \`${capitalizedName}\` Usage Information`)
             .setDescription(
-                "Usage: " + inlineCode(`${Configs.app.PREFIX}${inlineAliases} ${inlineArgs.trim()}`),
+                "Usage: " +
+                    inlineCode(
+                        `${this.dependencies.configs.app.PREFIX}${inlineAliases} ${inlineArgs.trim()}`,
+                    ),
             )
             .setFields(
                 { name: underline("Valid Aliases"), value: aliasList },

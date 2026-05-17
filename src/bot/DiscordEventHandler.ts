@@ -1,10 +1,16 @@
 import type { Client, ClientEvents } from "discord.js";
 
 import type { CommandRouter } from "../commands/CommandRouter";
-import { dependencies } from "../core/Dependencies";
+import type { ServicesContainerResolver } from "../types/core/containers";
+import type { LoggerResolver } from "../types/core/logs";
+import type { DiscordBotResolver } from "../types/discord/bot";
 
-export abstract class DiscordEventHandler<K extends keyof ClientEvents> {
-    constructor(protected readonly services = dependencies.services) {}
+export abstract class DiscordEventHandler<K extends keyof ClientEvents> implements DiscordEventHandler<K> {
+    constructor(
+        protected readonly services: ServicesContainerResolver,
+        protected readonly logger: LoggerResolver,
+        protected readonly discordBot: DiscordBotResolver,
+    ) {}
 
     abstract readonly eventName: K;
     abstract readonly once: boolean;

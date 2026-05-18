@@ -8,7 +8,7 @@ node_modules/
 **/config/*.json
 
 # Logs
-/logs/
+**/logs/
 
 # prod build
 dist/

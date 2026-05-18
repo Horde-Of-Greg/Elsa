@@ -1,9 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { isDevelopmentEnvironment } from "../../src/utils/node/environment";
-
-if (isDevelopmentEnvironment()) process.exit(1);
 const ARG: string | undefined = process.argv[2];
 if (!ARG) {
     console.error(

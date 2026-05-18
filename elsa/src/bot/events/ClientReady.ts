@@ -1,7 +1,7 @@
 import type { Client } from "discord.js";
 
 import { DiscordEventHandler } from "../DiscordEventHandler";
-import type { DiscordEventHandlerResolver } from "./../../types/discord/eventHandler";
+import type { DiscordEventHandlerResolver } from "../../types/discord/eventHandler";
 
 export class ReadyHandler
     extends DiscordEventHandler<"clientReady">

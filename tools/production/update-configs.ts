@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable no-console */
 
 import fs from "node:fs";
 import path from "node:path";
@@ -92,7 +91,6 @@ function scanJsonRecursive(production: Record<string, unknown>, template: Record
                 }
             }
         } else {
-            // eslint-disable-next-line no-restricted-syntax
             throw new Error("Error whilst scanning JSON");
         }
     }

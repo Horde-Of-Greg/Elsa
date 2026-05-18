@@ -6,7 +6,7 @@ import type { UserRepositoryResolver } from "../../types/db/repositories";
 import type { HostTable } from "../entities/Host";
 import { UserTable } from "../entities/User";
 import { UserHostTable } from "../entities/UserHost";
-import { BaseRepository } from "../repositories/BaseRepository";
+import { BaseRepository } from "./BaseRepository";
 
 export class UserRepository extends BaseRepository<UserTable> implements UserRepositoryResolver {
     constructor(databaseContainer: DatabaseContainerResolver) {

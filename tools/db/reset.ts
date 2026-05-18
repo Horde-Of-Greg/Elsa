@@ -1,9 +1,6 @@
 import { execSync } from "child_process";
 import readline from "readline";
 
-import { process } from "../../src/config/process";
-import { core } from "../../src/core/Core";
-
 const user = process.env.POSTGRES_USER;
 const host = process.env.POSTGRES_HOST;
 const db = process.env.POSTGRES_DB;

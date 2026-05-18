@@ -4,7 +4,7 @@ import path from "node:path";
 import { ErrorNotAnErrorError } from "../../errors/internal/critical";
 import { ReaddirError } from "../../errors/internal/schedules";
 import { isProductionEnvironment } from "../../utils/node/environment";
-import type { Dependencies } from "./../Dependencies";
+import type { Dependencies } from "../Dependencies";
 
 export class LogRotation {
     private dirSize = 0;

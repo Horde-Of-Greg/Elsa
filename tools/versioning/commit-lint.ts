@@ -2,7 +2,7 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
-import { getCommitMessage } from "../../src/utils/github/commits";
+import { getCommitMessage } from "../utils/commits";
 import { type AcceptedBump, type AcceptedType, typesRegex } from "./types";
 
 const outputName = "bump-type";
@@ -13,7 +13,6 @@ async function main(): Promise<void> {
 
         const sha: string = context.payload.after ?? context.sha;
         if (typeof sha !== "string") {
-            // eslint-disable-next-line no-restricted-syntax
             throw new Error("Could not get commit SHA");
         }
         const commitTitle: string = (await getCommitMessage(sha)).split("\n")[0];

@@ -1,7 +1,7 @@
 import nodeCron from "node-cron";
 
 import { LogRotation } from "../core/logs/LogRotation";
-import type { Dependencies } from "./../core/Dependencies";
+import type { Dependencies } from "../core/Dependencies";
 
 export class CronScheduler {
     constructor(private readonly dependencies: Dependencies) {}

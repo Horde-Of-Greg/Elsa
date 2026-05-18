@@ -8,6 +8,7 @@ export class Config<TSchema extends z.ZodObject> {
     private readonly _data: z.infer<TSchema>;
 
     private readonly configsPath = "config";
+    private readonly envPath = path.join("..", ".env");
     private readonly fileLocation: string;
 
     constructor(
@@ -34,7 +35,7 @@ export class Config<TSchema extends z.ZodObject> {
 
     private get file(): NodeJS.ProcessEnv | string {
         if (this.fileLocation === ".env") {
-            dotenv.config();
+            dotenv.config({ path: this.envPath });
             return process.env;
         }
         if (this.fileLocation.endsWith(".json")) {

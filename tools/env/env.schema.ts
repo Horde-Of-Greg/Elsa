@@ -1,7 +1,5 @@
 import z from "zod";
 
-import { isDiscordToken } from "../helpers/discord";
-
 export type Env = z.infer<typeof EnvSchema>;
 
 const DEFAULT_PORT = {
@@ -9,16 +7,24 @@ const DEFAULT_PORT = {
     REDIS: 6379,
 };
 
-// eslint-disable-next-line no-restricted-syntax
 export const EnvSchema = z.object({
-    DISCORD_TOKEN: z.string().refine(isDiscordToken, "Invalid DISCORD_TOKEN"),
     POSTGRES_HOST: z.string().default("localhost"),
     POSTGRES_PORT: z.coerce.number().int().positive().default(DEFAULT_PORT.POSTGRES),
-    POSTGRES_DB: z.string(),
-    POSTGRES_USER: z.string(),
-    POSTGRES_PASSWORD: z.string(),
+    POSTGRES_DB: z.string().optional(),
+    POSTGRES_USER: z.string().optional(),
+    POSTGRES_PASSWORD: z.string().optional(),
+
     REDIS_USERNAME: z.string().default("default"),
-    REDIS_PASSWORD: z.string(),
+    REDIS_PASSWORD: z.string().optional(),
     REDIS_HOST: z.string().default("localhost"),
     REDIS_PORT: z.coerce.number().int().positive().default(DEFAULT_PORT.REDIS),
+
+    NODE_ENV: z.literal(["development", "test", "production", "actions"]).optional(),
+
+    GITHUB_TOKEN: z
+        .string()
+        .min(40)
+        .max(300)
+        .regex(/^ghs_[\w]+$/, "Expected a GitHub Actions GITHUB_TOKEN")
+        .optional(),
 });

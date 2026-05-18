@@ -17,6 +17,7 @@
         "@types/node": "^20.19.26",
         "@typescript-eslint/eslint-plugin": "^8.49.0",
         "@typescript-eslint/parser": "^8.59.3",
+        "dotenv": "^17.4.2",
         "eslint": "^9.39.1",
         "eslint-import-resolver-typescript": "^4.4.4",
         "eslint-plugin-n": "^17.23.1",
@@ -28,6 +29,7 @@
         "ts-node": "^10.9.1",
         "tsx": "^4.21.0",
         "typescript": "^5.9.3",
-        "typescript-eslint": "^8.49.0"
+        "typescript-eslint": "^8.49.0",
+        "zod": "^4.4.3"
     }
 }

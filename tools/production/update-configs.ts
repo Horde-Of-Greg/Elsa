@@ -3,11 +3,11 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import dotenv from "dotenv";
+import { env } from "../env/env";
+import type { Env } from "../env/env.schema";
 
 const ROOT_DIR = process.cwd();
 let missingKeys = false;
-dotenv.config();
 
 function recursiveScan(dir: string): void {
     for (const dir_child of fs.readdirSync(dir)) {
@@ -43,12 +43,12 @@ function recursiveScan(dir: string): void {
 }
 
 function scanEnv(templateFileName: string): void {
-    const productionEnv = process.env;
+    const productionEnv = env;
     const templateLines = fs.readFileSync(templateFileName, "utf-8").split("\n");
     for (const line of templateLines) {
         const match = /^([A-Z_]+)=.+$/.exec(line);
         if (!match) continue;
-        const lineKey = match[1];
+        const lineKey = match[1] as keyof Env;
         if (productionEnv[lineKey] === undefined) {
             console.error(`Please set the value of ${lineKey} in .env`);
             missingKeys = true;

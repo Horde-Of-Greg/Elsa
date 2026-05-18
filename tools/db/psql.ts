@@ -1,8 +1,10 @@
 import { execSync } from "child_process";
 
-const user = process.env.POSTGRES_USER;
-const host = process.env.POSTGRES_HOST;
-const db = process.env.POSTGRES_DB;
+import { env } from "../env/env";
+
+const user = env.POSTGRES_USER;
+const host = env.POSTGRES_HOST;
+const db = env.POSTGRES_DB;
 
 console.info(`Connecting to database: ${db}`);
 

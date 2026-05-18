@@ -1,7 +1,10 @@
 import * as github from "@actions/github";
 
+import { env } from "../env/env";
+import type { GitHubCommitResponse } from "../types/github";
+
 export async function getCommitMessage(sha: string): Promise<string> {
-    const token = process.env.GITHUB_TOKEN;
+    const token = env.GITHUB_TOKEN;
     if (token === undefined) {
         throw new Error("Did not find the environment variable: 'GITHUB_TOKEN'");
     }

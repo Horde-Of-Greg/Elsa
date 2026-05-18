@@ -1,7 +1,3 @@
-export function isActionsEnvironment(): boolean {
-    return process.env.NODE_ENV === "actions";
-}
-
 export function isProductionEnvironment(): boolean {
     return process.env.NODE_ENV === "production";
 }

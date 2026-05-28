@@ -3,7 +3,6 @@ import path from "node:path";
 
 import type { ConfigsResolver } from "../../../types/config/config";
 import type { FileStreamConfig } from "../../../types/core/streams";
-import { isActionsEnvironment } from "../../../utils/node/environment";
 import { BaseWritableStream } from "./BaseWritableStream";
 
 export class FileStream extends BaseWritableStream {
@@ -30,7 +29,6 @@ export class FileStream extends BaseWritableStream {
     }
 
     protected processChunk(data: string): void {
-        if (isActionsEnvironment()) return;
         if (!this.fileHandle) {
             // eslint-disable-next-line no-restricted-syntax
             throw new Error(`FileStream "${this.name}" is not open`);

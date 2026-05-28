@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-script_directory="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-project_root="${script_directory}/../.."
+file_directory="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+project_root="${file_directory}/../../../"
 cd -- "$project_root"
 
 git fetch origin
@@ -20,7 +20,7 @@ echo "Installing dependencies..."
 npm ci || { echo "npm ci failed"; exit 1; }
 
 echo "Building..."
-rm -rf "${project_root}/dist/"
+rm -rf "${project_root}/elsa/dist/"
 npm run build || { echo "Build failed"; exit 1; }
 
 echo "Migrating..."

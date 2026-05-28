@@ -42,19 +42,38 @@ jobs:
 
             - name: Analyze Commit
               id: commit-lint
-              run: npm run actions:lint-commit
+              run: npm run cli -- analyzeCommit --to-github
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  NODE_ENV: actions
 
             - name: Configure Git
               run: |
                   git config user.name "hog-management[bot]"
-                  git config user.email "hog-management[bot]@users.noreply.github.com"
+                  git config user.email "1048098+hog-management[bot]@users.noreply.github.com"
 
-            - name: Bump Version
+            - name: Bump Version Elsa
+              id: elsa-bump
+              if: steps.commit-lint.outputs.bump-type != 'none' && github.actor != 'hog-management[bot]' && (steps.commit-lint.outputs.scope == 'elsa' || steps.commit-lint.outputs.scope == 'all')
+              run: npm run cli -- bump elsa ${{ steps.commit-lint.outputs.bump-type }} --to-github
+
+            - name: Bump Version Tools
+              id: tools-bump
+              if: steps.commit-lint.outputs.bump-type != 'none' && github.actor != 'hog-management[bot]' && (steps.commit-lint.outputs.scope == 'tools' || steps.commit-lint.outputs.scope == 'all')
+              run: npm run cli -- bump tools ${{ steps.commit-lint.outputs.bump-type }} --to-github
+
+            - name: Commit Changes
               if: steps.commit-lint.outputs.bump-type != 'none' && github.actor != 'hog-management[bot]'
-              run: npm version ${{ steps.commit-lint.outputs.bump-type }}
+              uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
+              with:
+                  commit_message: "[AUTO]: Bump to v${{  steps.commit-lint.outputs.new-version }}\n\nBump = ${{ steps.commit-lint.outputs.bump-type }}"
+                  commit_author: hog-management[bot] <1048098+hog-management[bot]@users.noreply.github.com>
+                  commit_user_name: hog-management[bot]
+                  commit_user_email: 1048098+hog-management[bot]@users.noreply.github.com
+                  skip_push: true
+
+            - name: Create Tag
+              if: steps.elsa-bump.outputs.new-version != null
+              run: git tag v${{ steps.elsa-bump.outputs.new-version }}
 
             - name: Push Changes
               if: steps.commit-lint.outputs.bump-type != 'none'

@@ -1,14 +1,15 @@
 import { execSync } from "child_process";
 import readline from "readline";
 
-import { env } from "../env/env";
+import { env } from "../../env/env.js";
+import { NodeEnvironment } from "../../types/node/env.js";
 
 const user = env.POSTGRES_USER;
 const host = env.POSTGRES_HOST;
 const db = env.POSTGRES_DB;
 const environment = env.NODE_ENV;
 
-if (environment !== "development") {
+if (environment !== NodeEnvironment.development) {
     console.error(
         `Database reset can only be run in the development environment. Current NODE_ENV is: ${environment ?? "undefined"}`,
     );

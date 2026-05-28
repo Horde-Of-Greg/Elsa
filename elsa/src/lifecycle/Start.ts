@@ -23,7 +23,7 @@ import type {
 } from "../types/core/containers";
 import type { LoggerResolver } from "../types/core/logs";
 import type { TimerRegistryResolver } from "../types/time/timer";
-import { isActionsEnvironment, isProductionEnvironment } from "../utils/node/environment";
+import { isProductionEnvironment } from "../utils/node/environment";
 
 export class Start {
     private readonly status = {
@@ -55,7 +55,6 @@ export class Start {
     }
 
     async initDb(): Promise<void> {
-        if (isActionsEnvironment()) return;
         await this.dependencies.database.dataSource.initialize();
 
         this.status.db = true;
@@ -63,7 +62,6 @@ export class Start {
     }
 
     async initBot(): Promise<void> {
-        if (isActionsEnvironment()) return;
         this.dependencies.discord.bot.setupRouter(this.dependencies);
         this.dependencies.discord.bot.registerEventHandlers();
         await this.dependencies.discord.bot.login(this.dependencies.configs.env.DISCORD_TOKEN);
@@ -74,7 +72,7 @@ export class Start {
     }
 
     async seed(): Promise<void> {
-        if (isProductionEnvironment() || isActionsEnvironment()) return;
+        if (isProductionEnvironment()) return;
         const seeder = new Seeder(this.dependencies);
         await seeder.seed();
 

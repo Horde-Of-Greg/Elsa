@@ -1,37 +1,29 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
-import { typesRegex } from "./types";
+import { type PullRequestContext, type PullRequestTask } from "../types/github/pull-requests.js";
+import { assertPullRequestContext } from "../utils/types/assertions.js";
+import { isValidTitle } from "./title-parsing.js";
 
-function main(): void {
-    try {
-        const context = github.context;
+export function lintPr(): void {
+    const context = github.context;
+    assertPullRequestContext(context);
 
-        if (!context.payload.pull_request) {
-            core.setFailed("Unexpected Error.");
-            process.exit(1);
-        }
+    const tasks: PullRequestTask[] = [lintPrTitle];
 
-        const prTitle = context.payload.pull_request.title as string;
-
-        const match = prTitle.match(typesRegex);
-
-        if (!match) {
-            core.setFailed("Title of the PR is not correct. See CONTRIBUTING.md");
-            process.exit(1);
-        }
-
-        core.info("PR title valid.");
-        process.exit(0);
-    } catch (err) {
-        core.setFailed(`Error: ${err instanceof Error ? err.message : String(err)}`);
-        process.exit(1);
+    for (const task of tasks) {
+        task(context);
     }
 }
 
-try {
-    main();
-} catch (err: unknown) {
-    core.setFailed(`Error: ${err instanceof Error ? err.message : String(err)}`);
-    process.exit(1);
+function lintPrTitle(context: PullRequestContext): void {
+    const prTitle = context.payload.pull_request.title as string;
+    const isValid = isValidTitle(prTitle);
+
+    if (!isValid) {
+        core.setFailed(
+            "Title of the PR is not correct. Expected format: `[<TYPE>] (<scope: optional>): <message>. More info in CONTRIBUTING.md`",
+        );
+        process.exit(1);
+    }
 }

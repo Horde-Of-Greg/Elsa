@@ -1,8 +1,8 @@
 import { PermLevel } from "../../assets/db/permLevel";
+import type { Dependencies } from "../../core/Dependencies";
 import { getGuildById } from "../../utils/discord/guilds";
 import { getUserById } from "../../utils/discord/users";
 import { sleep } from "../../utils/time";
-import type { Dependencies } from "../../core/Dependencies";
 
 export class Seeder {
     constructor(private readonly dependencies: Dependencies) {}

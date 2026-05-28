@@ -1,5 +1,8 @@
 import z from "zod";
 
+import { NodeEnvironment } from "../types/node/env.js";
+import { makeGithubToken } from "../utils/types/constructors/github/token.js";
+
 export type Env = z.infer<typeof EnvSchema>;
 
 const DEFAULT_PORT = {
@@ -19,12 +22,14 @@ export const EnvSchema = z.object({
     REDIS_HOST: z.string().default("localhost"),
     REDIS_PORT: z.coerce.number().int().positive().default(DEFAULT_PORT.REDIS),
 
-    NODE_ENV: z.literal(["development", "test", "production", "actions"]).optional(),
+    NODE_ENV: z.enum(NodeEnvironment).optional(),
 
     GITHUB_TOKEN: z
         .string()
         .min(40)
         .max(300)
         .regex(/^ghs_[\w]+$/, "Expected a GitHub Actions GITHUB_TOKEN")
+        .transform(makeGithubToken)
         .optional(),
+    GITHUB_OUTPUT: z.string().optional(),
 });

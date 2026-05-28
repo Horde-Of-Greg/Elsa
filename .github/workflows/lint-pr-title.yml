@@ -29,7 +29,7 @@ jobs:
               run: npm install --no-save --no-audit --fund=false @actions/core @actions/github
 
             - name: Lint PR Title
-              run: npm run actions:lint-pr
+              run: npm run cli -- lintPr
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   ENVIRONMENT: ${{ vars.NODE_ENV }}

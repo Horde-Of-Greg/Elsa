@@ -1,0 +1,36 @@
+{
+    "private": true,
+    "workspaces": [
+        "elsa",
+        "tools"
+    ],
+    "scripts": {
+        "build": "npm run build -w elsa-app",
+        "cli": "npm run cli -w elsa-tools",
+        "tscheck": "npm run tscheck -w elsa-app",
+        "format": "npm run format -w elsa-app",
+        "format:check": "npm run format:check -w elsa-app",
+        "lint": "npm run lint -w elsa-app",
+        "lint:check": "npm run lint:check -w elsa-app",
+        "lint:report": "npm run lint:report -w elsa-app",
+        "lint:knip": "npm run lint:knip -w elsa-app",
+        "lint:duplicates": "npm run lint:duplicates -w elsa-app",
+        "migration:run": "npm run migration:run -w elsa-app",
+        "tools:tscheck": "npm run tscheck -w elsa-tools",
+        "tools:format": "npm run format -w elsa-tools",
+        "tools:format:check": "npm run format:check -w elsa-tools",
+        "tools:lint": "npm run lint -w elsa-tools",
+        "tools:lint:check": "npm run lint:check -w elsa-tools",
+        "tools:lint:report": "npm run lint:report -w elsa-tools",
+        "tools:lint:knip": "npm run lint:knip -w elsa-tools",
+        "tools:lint:duplicates": "npm run lint:duplicates -w elsa-tools",
+        "all:tscheck": "npm run tscheck --workspaces --if-present",
+        "all:format": "npm run format --workspaces --if-present",
+        "all:format:check": "npm run format:check --workspaces --if-present",
+        "all:lint": "npm run lint --workspaces --if-present",
+        "all:lint:check": "npm run lint:check --workspaces --if-present",
+        "all:lint:report": "npm run lint:report --workspaces --if-present",
+        "all:lint:knip": "npm run lint:knip --workspaces --if-present",
+        "all:lint:duplicates": "npm run lint:duplicates --workspaces --if-present"
+    }
+}

@@ -1,6 +1,6 @@
 import { execSync } from "child_process";
 
-import { env } from "../env/env";
+import { env } from "../../env/env.js";
 
 const user = env.POSTGRES_USER;
 const host = env.POSTGRES_HOST;

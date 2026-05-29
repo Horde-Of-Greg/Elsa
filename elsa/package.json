@@ -22,7 +22,7 @@
         "format:check": "prettier --check .",
         "lint": "eslint . --fix",
         "lint:check": "eslint .",
-        "lint:report": "eslint . --format json --output-file temp/lint/eslint_report.json",
+        "lint:report": "eslint . --format json --output-file ../temp/lint/eslint_report.json",
         "lint:knip": "knip .",
         "lint:duplicates": "jscpd .",
         "migration:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate -d src/db/dataSource.ts",

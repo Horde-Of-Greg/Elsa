@@ -6,7 +6,7 @@ import {
     makeAcceptedTitleType,
 } from "../utils/types/constructors/versioning/title.js";
 
-const titlePattern = /\[(?<type>[A-Z]+)\] (?:\((?<scope>[a-z]+)\) )?(?<message>.+)/;
+const titlePattern = /\[(?<type>[A-Z]+)\](?: \((?<scope>[a-z]+)\)):?(?<message>.+)/;
 
 export function isValidTitle(title: string): boolean {
     return titlePattern.test(title);

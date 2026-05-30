@@ -1,11 +1,11 @@
 {
     "name": "elsa-tools",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "CI/CD tooling for Elsa",
     "license": "MIT",
     "author": "Alessian Dormal",
-    "main": "main.ts",
     "type": "module",
+    "main": "main.ts",
     "scripts": {
         "tscheck": "tsc --noEmit",
         "cli": "tsx cli/index.ts",

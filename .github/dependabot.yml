@@ -20,12 +20,12 @@ updates:
       schedule:
           interval: "weekly"
       groups:
-          elsa-npm-breaking:
+          npm-breaking:
               applies-to: version-updates
               update-types:
                   - major
 
-          elsa-npm-safe:
+          npm-safe:
               applies-to: version-updates
               update-types:
                   - minor

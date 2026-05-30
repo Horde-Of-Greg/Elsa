@@ -7,6 +7,7 @@
     "scripts": {
         "build": "npm run build -w elsa-app",
         "cli": "npm run cli -w elsa-tools",
+        "dev": "npm run dev -w elsa-app",
         "tscheck": "npm run tscheck -w elsa-app",
         "format": "npm run format -w elsa-app",
         "format:check": "npm run format:check -w elsa-app",

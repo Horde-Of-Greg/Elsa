@@ -23,7 +23,7 @@
         "lint": "eslint . --fix",
         "lint:check": "eslint .",
         "lint:report": "eslint . --format json --output-file ../temp/lint/eslint_report.json",
-        "lint:knip": "knip .",
+        "lint:knip": "knip",
         "lint:duplicates": "jscpd .",
         "migration:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate -d src/db/dataSource.ts",
         "migration:run": "typeorm migration:run -d dist/db/dataSource.js",
@@ -46,9 +46,7 @@
         "globals": "^16.5.0",
         "reflect-metadata": "^0.2.2",
         "ts-node": "^10.9.1",
-        "tsx": "^4.21.0",
-        "typescript": "^5.9.3",
-        "typescript-eslint": "^8.49.0"
+        "typescript": "^5.9.3"
     },
     "overrides": {
         "undici": "6.24.0",

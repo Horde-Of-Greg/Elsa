@@ -12,5 +12,3 @@ node_modules/
 
 # prod build
 dist/
-
-package-lock.json

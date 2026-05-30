@@ -16,7 +16,7 @@ updates:
                   - patch
 
     - package-ecosystem: "npm"
-      directory: "/elsa"
+      directory: "/"
       schedule:
           interval: "weekly"
       groups:
@@ -26,22 +26,6 @@ updates:
                   - major
 
           elsa-npm-safe:
-              applies-to: version-updates
-              update-types:
-                  - minor
-                  - patch
-
-    - package-ecosystem: "npm"
-      directory: "/tools"
-      schedule:
-          interval: "weekly"
-      groups:
-          tools-npm-breaking:
-              applies-to: version-updates
-              update-types:
-                  - major
-
-          tools-npm-safe:
               applies-to: version-updates
               update-types:
                   - minor

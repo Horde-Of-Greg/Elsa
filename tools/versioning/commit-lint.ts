@@ -1,5 +1,3 @@
-import * as core from "@actions/core";
-
 import type { GitHubCommitSHA } from "../types/github/commits.js";
 import type { AcceptedBump, AcceptedTitleScope, ParsedTitle, TitleParam } from "../types/versioning/title.js";
 import { getCommitMessage, getCommitSha } from "../utils/github/commits.js";
@@ -17,7 +15,6 @@ export async function lintCommit(
     const scope = getCommitTitleScope(parsedTitle, titleParam);
     const bumpType = getCommitBumpType(titleParam);
 
-    core.info(`✅ Commit Message Valid. Bump Type: ${bumpType}, Scope: ${scope}`);
     return { bumpType, scope };
 }
 

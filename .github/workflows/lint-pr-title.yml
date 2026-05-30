@@ -32,4 +32,3 @@ jobs:
               run: npm run cli -- lintPr
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  ENVIRONMENT: ${{ vars.NODE_ENV }}

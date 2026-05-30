@@ -12,9 +12,8 @@ export async function getCommitMessage(sha: GitHubCommitSHA): Promise<string> {
 
     const url = getCommitURL(sha);
     const response = await fetch(url, {
-        headers: getGitHubHeaders(token),
+        headers: getGitHubHeaders(),
     });
-
     const data = (await response.json()) as GitHubCommitResponse;
     return data.commit.message;
 }

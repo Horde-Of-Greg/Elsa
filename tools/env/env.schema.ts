@@ -26,9 +26,9 @@ export const EnvSchema = z.object({
 
     GITHUB_TOKEN: z
         .string()
-        .min(40)
-        .max(300)
-        .regex(/^ghs_[\w]+$/, "Expected a GitHub Actions GITHUB_TOKEN")
+        .min(20)
+        .max(1000)
+        .regex(/^(gh[psuor]_|github_pat_|v\d+\.)[A-Za-z0-9_./=-]+$/, "Expected a GitHub token-like value")
         .transform(makeGithubToken)
         .optional(),
     GITHUB_OUTPUT: z.string().optional(),

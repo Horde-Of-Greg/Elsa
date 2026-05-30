@@ -1,0 +1,115 @@
+import type { Message } from "discord.js";
+
+import { PermLevel } from "../../../assets/db/permLevel";
+import { TagBodyExistsError } from "../../../errors/client/409";
+import type { DependenciesResolver } from "../../../types/core/dependencies";
+import type { SHA256Hash } from "../../../types/crypto";
+import { ensureStrictPositive } from "../../../utils/numbers/positive";
+import { CommandDef } from "../../Command";
+import type { Commands } from "../../Commands";
+import { TagHandlingCommandInstance } from "../../TagHandlingCommand";
+
+export class CommandEditDef extends CommandDef<void, CommandEditInstance> {
+    constructor(dependencies: DependenciesResolver, commands: Commands) {
+        super(
+            {
+                name: "edit",
+                aliases: ["e"],
+                permLevelRequired: PermLevel.DEFAULT,
+                cooldowns: {
+                    channel: ensureStrictPositive(5),
+                    guild: ensureStrictPositive(5),
+                },
+                info: {
+                    description:
+                        "Edits the content of an existing tag. The tag will have its old body deleted and replaced by the new tag body",
+                    arguments: [
+                        {
+                            name: "tag-name",
+                            required: true,
+                            parseResultKey: "subcommand",
+                            description: "The tag you wish to edit. You must own this tag.",
+                        },
+                        {
+                            name: "new-tag-body",
+                            required: true,
+                            parseResultKey: "args",
+                            description: "The new body of the tag.",
+                        },
+                    ],
+                },
+            },
+            CommandEditInstance,
+            {
+                useCache: false,
+            },
+            dependencies,
+            commands,
+        );
+    }
+}
+
+export class CommandEditInstance extends TagHandlingCommandInstance<void> {
+    private newTagBody!: string;
+    private tagBodyHash!: SHA256Hash;
+
+    protected async validateData(): Promise<void> {
+        this.tagName = this.arg<string>("tag-name");
+        this.newTagBody = this.arg<string[]>("new-tag-body").join(" ");
+
+        //TODO: More validation on name being valid, body not being empty, etc.
+
+        await this.ensureTagNameExists();
+        await this.ensureUniqueBody();
+        await this.ensureOwner();
+    }
+
+    protected async execute(): Promise<void> {
+        await this.tagService.updateTag({
+            tagName: this.tagName,
+            tagBody: this.newTagBody,
+            tagBodyHash: this.tagBodyHash,
+        });
+        await this.invalidateCache();
+    }
+
+    protected async reply(): Promise<Message> {
+        return this.context.message.reply(
+            `Tag \`${this.tagName}\` edited successfully! ${this.dependencies.configs.emoji.CHECKMARK}`,
+        );
+    }
+
+    protected async postReply(sentMessage: Message): Promise<void> {}
+
+    protected logExecution(): void {
+        this.dependencies.logger.info(`User ${this.context.author.tag} edited tag: ${this.tagName}`);
+    }
+
+    /*
+     * Helpers
+     */
+
+    private async ensureUniqueBody(): Promise<void> {
+        const hashContext = await this.tagService.tagBodyExists(this.newTagBody);
+
+        if (hashContext.exists) {
+            if (hashContext.tagWithBody.name === this.tagName) {
+                throw new TagBodyExistsError(
+                    this.tagName,
+                    this.newTagBody,
+                    hashContext.tagWithBody,
+                    "edit",
+                    this.dependencies.configs,
+                );
+            }
+            throw new TagBodyExistsError(
+                this.tagName,
+                this.newTagBody,
+                hashContext.tagWithBody,
+                "add",
+                this.dependencies.configs,
+            );
+        }
+        this.tagBodyHash = hashContext.hash;
+    }
+}

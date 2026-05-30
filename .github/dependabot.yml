@@ -1,0 +1,32 @@
+version: 2
+updates:
+    - package-ecosystem: "github-actions"
+      directory: "/"
+      schedule:
+          interval: "weekly"
+      groups:
+          actions-breaking:
+              applies-to: version-updates
+              update-types:
+                  - major
+          actions-safe-updates:
+              applies-to: version-updates
+              update-types:
+                  - minor
+                  - patch
+
+    - package-ecosystem: "npm"
+      directory: "/"
+      schedule:
+          interval: "weekly"
+      groups:
+          npm-breaking:
+              applies-to: version-updates
+              update-types:
+                  - major
+
+          npm-safe:
+              applies-to: version-updates
+              update-types:
+                  - minor
+                  - patch

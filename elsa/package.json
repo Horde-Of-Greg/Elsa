@@ -1,0 +1,59 @@
+{
+    "name": "elsa-app",
+    "version": "0.11.0",
+    "main": "dist/main.js",
+    "license": "MIT",
+    "description": "A discord bot to handle user created tags and scripts.",
+    "homepage": "ttps://github.com/Horde-Of-Greg/Elsa#readme",
+    "bugs": {
+        "url": "https://github.com/Horde-Of-Greg/Elsa/issues",
+        "email": "alessian@horde-of-greg.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Horde-Of-Greg/Elsa.git"
+    },
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist/main.js",
+        "dev": "ts-node src/main.ts",
+        "tscheck": "tsc --noEmit",
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "lint": "eslint . --fix",
+        "lint:check": "eslint .",
+        "lint:report": "eslint . --format json --output-file ../temp/lint/eslint_report.json",
+        "lint:knip": "knip",
+        "lint:duplicates": "jscpd .",
+        "migration:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate -d src/db/dataSource.ts",
+        "migration:run": "typeorm migration:run -d dist/db/dataSource.js",
+        "migration:revert": "typeorm migration:revert -d dist/db/dataSource.js"
+    },
+    "dependencies": {
+        "@discordjs/builders": "^1.13.1",
+        "discord.js": "^14.14.1",
+        "dotenv": "^16.3.1",
+        "node-cron": "^4.2.1",
+        "pg": "^8.16.3",
+        "redis": "^5.10.0",
+        "typeorm": "^0.3.27",
+        "zod": "^4.1.12"
+    },
+    "devDependencies": {
+        "elsa-tools": "*",
+        "@types/node": "^20.19.26",
+        "@types/pg": "^8.10.9",
+        "globals": "^16.5.0",
+        "reflect-metadata": "^0.2.2",
+        "ts-node": "^10.9.1",
+        "typescript": "^5.9.3"
+    },
+    "overrides": {
+        "undici": "6.24.0",
+        "minimatch": "10.2.3"
+    },
+    "os": [
+        "linux",
+        "darwin"
+    ]
+}

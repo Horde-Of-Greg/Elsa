@@ -1,0 +1,114 @@
+import type { Message } from "discord.js";
+
+import { PermLevel } from "../../../assets/db/permLevel";
+import { TagBodyExistsError, TagExistsError } from "../../../errors/client/409";
+import type { DependenciesResolver } from "../../../types/core/dependencies";
+import type { SHA256Hash } from "../../../types/crypto";
+import { ensureStrictPositive } from "../../../utils/numbers/positive";
+import { CommandDef, CommandInstance } from "../../Command";
+import type { Commands } from "../../Commands";
+
+export class CommandAddDef extends CommandDef<void, CommandAddInstance> {
+    constructor(dependencies: DependenciesResolver, commands: Commands) {
+        super(
+            {
+                name: "add",
+                aliases: ["a"],
+                permLevelRequired: PermLevel.DEFAULT,
+                cooldowns: {
+                    channel: ensureStrictPositive(5),
+                    guild: ensureStrictPositive(5),
+                },
+                info: {
+                    description: "Adds a new tag to the database",
+                    arguments: [
+                        {
+                            name: "tag-name",
+                            required: true,
+                            parseResultKey: "subcommand",
+                            description:
+                                "The name of the tag you wish to create. This name must be unique. It must also be useful as this is how people will call, and search for your tag.",
+                        },
+                        {
+                            name: "tag-body",
+                            required: true,
+                            parseResultKey: "args",
+                            description:
+                                "The body of the tag you wish to add. This can be a simple text, an image link (not an image itself), or it can be a script. To add a script, wrap the text in a codeblock set to the language of the script. Check the README of the bot for language support.",
+                        },
+                    ],
+                },
+            },
+            CommandAddInstance,
+            {
+                useCache: false,
+            },
+            dependencies,
+            commands,
+        );
+    }
+}
+
+class CommandAddInstance extends CommandInstance<void> {
+    private tagName!: string;
+    private tagBody!: string;
+    private tagBodyHash!: SHA256Hash;
+
+    protected async validateData(): Promise<void> {
+        this.tagName = this.arg<string>("tag-name");
+        this.tagBody = this.arg<string[]>("tag-body").join(" ");
+
+        //TODO: More validation on name being valid, body not being empty, etc.
+
+        await this.ensureUniqueTagName();
+        await this.ensureUniqueBody();
+    }
+
+    protected async execute(): Promise<void> {
+        await this.tagService.createTag({
+            tagName: this.tagName,
+            tagBody: this.tagBody,
+            tagBodyHash: this.tagBodyHash,
+            author: this.context.author,
+            guild: this.context.guild,
+        });
+    }
+
+    protected async reply(): Promise<Message> {
+        return this.context.message.reply(
+            `Tag \`${this.tagName}\` created successfully! ${this.dependencies.configs.emoji.CHECKMARK}`,
+        );
+    }
+
+    protected async postReply(sentMessage: Message): Promise<void> {}
+
+    protected logExecution(): void {
+        this.dependencies.logger.info(`User ${this.context.author.tag} created tag: ${this.tagName}`);
+    }
+
+    /*
+     * Helpers
+     */
+
+    private async ensureUniqueTagName(): Promise<void> {
+        const candidate = await this.tagService.findTag(this.tagName);
+        if (candidate) {
+            throw new TagExistsError(candidate, this.dependencies.configs);
+        }
+    }
+
+    private async ensureUniqueBody(): Promise<void> {
+        const hashContext = await this.tagService.tagBodyExists(this.tagBody);
+
+        if (hashContext.exists) {
+            throw new TagBodyExistsError(
+                this.tagName,
+                this.tagBody,
+                hashContext.tagWithBody,
+                "add",
+                this.dependencies.configs,
+            );
+        }
+        this.tagBodyHash = hashContext.hash;
+    }
+}

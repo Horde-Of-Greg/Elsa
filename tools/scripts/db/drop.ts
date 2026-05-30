@@ -9,7 +9,7 @@ const host = env.POSTGRES_HOST;
 const db = env.POSTGRES_DB;
 const environment = env.NODE_ENV;
 
-if (environment !== NodeEnvironment.development) {
+if (environment !== NodeEnvironment.DEV) {
     console.error(
         `Database reset can only be run in the development environment. Current NODE_ENV is: ${environment ?? "undefined"}`,
     );

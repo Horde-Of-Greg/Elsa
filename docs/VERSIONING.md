@@ -40,4 +40,4 @@ PR titles should follow the same rules as commit messages to the branch they're 
 | `REFACTOR`  | None          | Changes to the code that don't change its logic. |
 | `TEST`      | None          | Changes relating to the tests                    |
 | `CI`        | Minor (0.X.0) | Changes relating to CI/CD                        |
-| `AUTO`      | None          | Changes my by the CI/CD                          |
+| `AUTO`      | None          | Changes by the CI/CD                             |

@@ -1,16 +1,19 @@
 #!/usr/bin/env node
 
 import * as core from "@actions/core";
-import { Argument, Command } from "commander";
+import { Argument, Command, Option } from "commander";
 
 import type { GitHubCommitSHA } from "../types/github/commits.js";
+import type { AcceptedProject } from "../types/versioning/projects.js";
 import { bumpProject } from "../versioning/bump.js";
 import { lintCommit } from "../versioning/commit-lint.js";
+import { createBumpCommitMessage } from "../versioning/commit-message.js";
 import { acceptedBumps, acceptedProjects } from "../versioning/constants.js";
 import { lintPr } from "../versioning/pr-lint.js";
 import { parseChoice } from "./choices.js";
 
 const program = new Command();
+const toGithubOption = new Option("-g, --to-github", "write the output to GitHub outputs");
 
 program
     .name("elsa-tools")
@@ -24,7 +27,7 @@ program
     .addArgument(
         new Argument("<bump-type>", "A valid semantic versioning bump type").choices([...acceptedBumps]),
     )
-    .option("-g, --to-github", "write the output to GitHub outputs")
+    .addOption(toGithubOption)
     .option("-t, --to-terminal", "write the output to the Console")
     .option("-d, --dry-run", "simulate the logic without writing to any file")
     .action((project: string, bumpType: string, options) => {
@@ -51,7 +54,7 @@ program
 program
     .command("analyzeCommit")
     .description("Analyze a commit message to trigger some actions based on its metadata.")
-    .option("-g, --to-github", "write the output to GitHub outputs")
+    .addOption(toGithubOption)
     .option("-t, --to-terminal", "write the output to the Console")
     .option("-c, --commit <sha>", "The SHA of a specific commit to analyze")
     .action(async (options) => {
@@ -76,5 +79,34 @@ program
     .command("lintPr")
     .description("Lint a PR's characteristics to determine its validity.")
     .action(lintPr);
+
+program
+    .command("createBumpCommitMessage")
+    .description("Analyze different version bumps to build a commit message")
+    .argument("<project-version...>", "A project/version pair of the format project:version.")
+    .addOption(toGithubOption)
+    .action((projectVersions: string[], options) => {
+        const newVersions: Partial<Record<AcceptedProject, string | undefined>> = {};
+
+        for (const projectVersion of projectVersions) {
+            if (!/^[a-z]+:[a-z0-9.]*$/i.test(projectVersion)) {
+                throw new Error(`Invalid argument '${projectVersion}', must be of format project:version`);
+            }
+
+            const [project, version] = projectVersion.split(":");
+            if (version === "") continue;
+
+            parseChoice(project, acceptedProjects);
+            newVersions[project] = version;
+        }
+
+        const message = createBumpCommitMessage(newVersions);
+        if (options.toGithub === true) {
+            core.info(`✅ Built Bump Commit Message: '${message}'`);
+            core.setOutput("message", message);
+            return;
+        }
+        console.log(`Commit Message: '${message}'`);
+    });
 
 program.parse();

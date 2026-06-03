@@ -1,6 +1,6 @@
 {
     "name": "elsa-tools",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": "CI/CD tooling for Elsa",
     "license": "MIT",
     "author": "Alessian Dormal",

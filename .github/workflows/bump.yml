@@ -64,20 +64,25 @@ jobs:
 
             - name: Bump Version Elsa
               id: elsa-bump
-              if: steps.commit-lint.outputs.bump-type != 'none' && github.actor != 'hog-management[bot]' && (steps.commit-lint.outputs.scope == 'elsa' || steps.commit-lint.outputs.scope == 'all')
+              if: steps.commit-lint.outputs.bump-type != 'none' && (steps.commit-lint.outputs.scope == 'elsa' || steps.commit-lint.outputs.scope == 'all')
               run: npm run cli -- bump elsa ${{ steps.commit-lint.outputs.bump-type }} --to-github
 
             - name: Bump Version Tools
               id: tools-bump
-              if: steps.commit-lint.outputs.bump-type != 'none' && github.actor != 'hog-management[bot]' && (steps.commit-lint.outputs.scope == 'tools' || steps.commit-lint.outputs.scope == 'all')
+              if: steps.commit-lint.outputs.bump-type != 'none' && (steps.commit-lint.outputs.scope == 'tools' || steps.commit-lint.outputs.scope == 'all')
               run: npm run cli -- bump tools ${{ steps.commit-lint.outputs.bump-type }} --to-github
+
+            - name: Build Commit Message
+              id: commit-message
+              if: steps.commit-lint.outputs.bump-type != 'none'
+              run: npm run cli -- createBumpCommitMessage elsa:${{ steps.elsa-bump.outputs.new-version}} tools:${{ steps.tools-bump.outputs.new-version}} --to-github
 
             - name: Commit Changes
               id: auto-commit
-              if: steps.commit-lint.outputs.bump-type != 'none' && github.actor != 'hog-management[bot]'
+              if: steps.commit-lint.outputs.bump-type != 'none'
               uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
               with:
-                  commit_message: "[AUTO]: Bump to v${{  steps.commit-lint.outputs.new-version }}\n\nBump = ${{ steps.commit-lint.outputs.bump-type }}"
+                  commit_message: ${{ steps.commit-message.outputs.message }}
                   commit_author: ${{ steps.app-token.outputs.app-slug }}[bot] <${{ steps.app-user.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>
                   commit_user_name: ${{ steps.app-token.outputs.app-slug }}[bot]
                   commit_user_email: ${{ steps.app-user.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com

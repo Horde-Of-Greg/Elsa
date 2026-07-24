@@ -36,7 +36,7 @@
         "node-cron": "^4.5.0",
         "pg": "^8.22.0",
         "redis": "^5.10.0",
-        "typeorm": "^0.3.27",
+        "typeorm": "^0.3.31",
         "zod": "^4.1.12"
     },
     "devDependencies": {

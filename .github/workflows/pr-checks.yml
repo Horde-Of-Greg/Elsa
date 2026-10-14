@@ -44,7 +44,7 @@ jobs:
               run: mkdir -p temp/lint
 
             - name: Install dependencies
-              run: npm ci
+              run: npm ci --ignore-scripts
 
             - name: Compilation Check
               run: npm run tscheck

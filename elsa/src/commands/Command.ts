@@ -256,7 +256,7 @@ export abstract class CommandInstance<TReply> {
             );
         }
 
-        return value as NonNullable<ParseResult[K]>;
+        return value;
     }
 
     private optionalParseResult<K extends RequirableParseResult>(key: K): ParseResult[K] {

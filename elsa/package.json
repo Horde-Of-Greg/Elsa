@@ -1,14 +1,14 @@
 {
     "name": "elsa-app",
-    "version": "0.11.0",
-    "main": "dist/main.js",
-    "license": "MIT",
+    "version": "0.11.1",
     "description": "A discord bot to handle user created tags and scripts.",
     "homepage": "ttps://github.com/Horde-Of-Greg/Elsa#readme",
     "bugs": {
         "url": "https://github.com/Horde-Of-Greg/Elsa/issues",
         "email": "alessian@horde-of-greg.com"
     },
+    "license": "MIT",
+    "main": "dist/main.js",
     "repository": {
         "type": "git",
         "url": "https://github.com/Horde-Of-Greg/Elsa.git"

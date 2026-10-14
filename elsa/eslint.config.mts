@@ -173,6 +173,8 @@ export default defineConfig(
             "unused-imports/no-unused-imports": "error",
 
             "import/no-cycle": ["error", { maxDepth: 10 }],
+            "import/no-named-as-default": "off",
+            "import/no-named-as-default-member": "off",
         },
     },
 );

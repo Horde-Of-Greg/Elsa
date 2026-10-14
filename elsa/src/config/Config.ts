@@ -30,7 +30,7 @@ export class Config<TSchema extends z.ZodObject> {
             // eslint-disable-next-line no-restricted-syntax
             throw new Error(`Config validation failed: ${errors}`);
         }
-        return parsed.data as z.infer<TSchema>;
+        return parsed.data;
     }
 
     private get file(): NodeJS.ProcessEnv | string {

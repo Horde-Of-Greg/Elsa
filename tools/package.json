@@ -46,7 +46,7 @@
         "tsx": "^4.22.4",
         "typescript": "^5.9.3",
         "typescript-eslint": "^8.62.0",
-        "zod": "^4.4.3",
+        "zod": "^4.6.7",
         "zod-package-json": "^2.1.0"
     }
 }

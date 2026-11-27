@@ -27,8 +27,8 @@
         "@actions/github": "^6.0.1",
         "@eslint/js": "^9.39.1",
         "@types/node": "^20.19.41",
-        "@typescript-eslint/eslint-plugin": "^8.62.0",
-        "@typescript-eslint/parser": "^8.59.3",
+        "@typescript-eslint/eslint-plugin": "^8.74.0",
+        "@typescript-eslint/parser": "^8.74.0",
         "commander": "^14.0.3",
         "dotenv": "^16.3.1",
         "eslint": "^9.39.1",
@@ -36,7 +36,7 @@
         "eslint-plugin-import": "^2.32.0",
         "eslint-plugin-n": "^17.23.1",
         "eslint-plugin-simple-import-sort": "^12.1.1",
-        "eslint-plugin-sonarjs": "^3.0.5",
+        "eslint-plugin-sonarjs": "^4.2.3",
         "eslint-plugin-unused-imports": "^4.3.0",
         "globals": "^16.5.0",
         "jiti": "^2.7.0",
@@ -45,7 +45,7 @@
         "prettier": "^3.8.4",
         "tsx": "^4.22.4",
         "typescript": "^5.9.3",
-        "typescript-eslint": "^8.62.0",
+        "typescript-eslint": "^8.74.0",
         "zod": "^4.4.3",
         "zod-package-json": "^2.1.0"
     }
